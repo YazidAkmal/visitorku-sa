@@ -1,0 +1,22 @@
+/* Google Fonts - Poppins & Inter */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap');
+
+@import "tailwindcss";
+
+@theme {
+  --color-primary-blue: #03A9F4; /* Biru cerah (teks dan ikon aktif) */
+  --color-light-blue: #E1F5FE; /* Biru muda (latar belakang aktif) */
+}
+
+html, body, #app {
+  width: 100% !important;
+  height: 100% !important;
+  margin: 0;
+  padding: 0;
+  max-width: none !important;
+}
+
+body {
+  background-color: #F4F6F8;
+  font-family: var(--font-poppins);
+}
