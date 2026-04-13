@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
+import Login from '../views/Login.vue' 
 import Dashboard from '../views/Dashboard.vue'
 import DaftarPerusahaan from '../views/DaftarPerusahaan.vue'
 import RiwayatTagihan from '../views/RiwayatTagihan.vue'
@@ -11,16 +12,32 @@ import Pengaturan from '../views/Pengaturan.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
-    { path: '/', redirect: '/dashboard' }, 
+    { path: '/login', name: 'Login', component: Login },
+
+    { path: '/', redirect: '/login' }, 
     
-    { path: '/dashboard', component: Dashboard },
-    { path: '/daftar-perusahaan', component: DaftarPerusahaan },
-    { path: '/riwayat-tagihan', component: RiwayatTagihan },
-    { path: '/pengguna', component: Pengguna },
-    { path: '/paket-layanan', component: PaketLayanan },
-    { path: '/bahasa-waktu', component: BahasaWaktu },
-    { path: '/pengaturan', component: Pengaturan },
+    { path: '/dashboard', name: 'Dashboard', component: Dashboard, meta: { requiresAuth: true } },
+    { path: '/daftar-perusahaan', component: DaftarPerusahaan, meta: { requiresAuth: true } },
+    { path: '/riwayat-tagihan', component: RiwayatTagihan, meta: { requiresAuth: true } },
+    { path: '/pengguna', component: Pengguna, meta: { requiresAuth: true } },
+    { path: '/paket-layanan', component: PaketLayanan, meta: { requiresAuth: true } },
+    { path: '/bahasa-waktu', component: BahasaWaktu, meta: { requiresAuth: true } },
+    { path: '/pengaturan', component: Pengaturan, meta: { requiresAuth: true } },
   ]
+})
+
+router.beforeEach((to, from, next) => {
+  const token = localStorage.getItem('token')
+
+  if (to.meta.requiresAuth && !token) {
+    next({ name: 'Login' })
+  } 
+  else if (to.name === 'Login' && token) {
+    next({ name: 'Dashboard' })
+  } 
+  else {
+    next()
+  }
 })
 
 export default router
