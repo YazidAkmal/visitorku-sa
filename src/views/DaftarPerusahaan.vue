@@ -65,6 +65,7 @@ const latestVisitors = [
   <div class="bg-white rounded-2xl p-4 md:p-6 shadow-sm min-h-full flex flex-col min-w-0 w-full">
     
     <PageHeader title="Daftar Perusahaan" subtitle="Daftar perusahaan pengguna Visitorku." />
+    <hr class="border-gray-100 mt-1 mb-4" />
     <SearchFilterBar v-model="searchQuery" placeholderText="Cari berdasarkan nama perusahaan" />
 
     <div class="flex-1 flex flex-col justify-between min-w-0">
@@ -86,8 +87,8 @@ const latestVisitors = [
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path></svg>
               </button>
               <Teleport to="body">
-                <div v-if="activeDropdown === item.id" @click="closeDropdown" class="fixed inset-0 z-[998]"></div>
-                <div v-if="activeDropdown === item.id" class="fixed w-36 bg-white border border-gray-100 rounded-lg shadow-xl z-[999] py-1.5 font-['Poppins']" :style="{ top: dropdownPos.top, right: dropdownPos.right }">
+                <div v-if="activeDropdown === item.id" @click="closeDropdown" class="fixed inset-0 z-998"></div>
+                <div v-if="activeDropdown === item.id" class="fixed w-36 bg-white border border-gray-100 rounded-lg shadow-xl z-999 py-1.5 font-['Poppins']" :style="{ top: dropdownPos.top, right: dropdownPos.right }">
                   <button @click="closeDropdown" class="w-full text-left px-4 py-2.5 text-[13px] font-medium text-gray-700 hover:bg-red-50 hover:text-red-600 transition-colors">Hapus Data</button>
                 </div>
               </Teleport>
@@ -102,7 +103,7 @@ const latestVisitors = [
       
       <template #header v-if="selectedDetail">
         <div class="px-6 md:px-8 pb-6 flex items-center gap-4">
-          <div class="w-[52px] h-[52px] bg-white rounded-full flex items-center justify-center text-[#2BB5F4] text-[18px] font-bold shadow-sm shrink-0">
+          <div class="w-13 h-13 bg-white rounded-full flex items-center justify-center text-[#2BB5F4] text-[18px] font-bold shadow-sm shrink-0">
             DP
           </div>
           <div>
@@ -116,10 +117,10 @@ const latestVisitors = [
 
         <div class="px-6 md:px-8">
           
-          <div class="relative z-20 flex h-14 md:h-[60px] rounded-t-[14px] bg-[#DDF4FF] shadow-[0_4px_12px_rgba(0,0,0,0.06)] border-[1.5px] border-white">
+          <div class="relative z-20 flex h-14 md:h-15 rounded-t-[14px] bg-[#DDF4FF] shadow-[0_4px_12px_rgba(0,0,0,0.06)] border-[1.5px] border-white">
             
-            <div class="bg-gradient-to-r from-[#98E3FF] to-[#2BB5F4] px-5 flex items-center justify-center gap-2.5 shrink-0 rounded-tl-[14px] rounded-br-[16px]">
-              <img :src="FreePlanVector" alt="Free Plan Icon" class="w-[22px] h-[22px]" />
+            <div class="bg-linear-to-r from-[#98E3FF] to-[#2BB5F4] px-5 flex items-center justify-center gap-2.5 shrink-0 rounded-tl-[14px] rounded-br-2xl">
+              <img :src="FreePlanVector" alt="Free Plan Icon" class="w-5.5 h-5.5" />
               <span class="text-white font-medium text-[15px]">Free Plan</span>
             </div>
             
@@ -153,7 +154,7 @@ const latestVisitors = [
               <div class="text-[12px] text-gray-500 font-medium mb-2.5">Total Visit</div>
               <div class="text-2xl font-bold text-gray-900 leading-none">187</div>
             </div>
-            <div class="bg-white rounded-xl p-4 text-cennter">
+            <div class="bg-white rounded-xl p-4 text-center">
               <div class="text-[12px] text-gray-500 font-medium mb-2.5">Total Pengguna</div>
               <div class="text-2xl font-bold text-gray-900 leading-none">1</div>
             </div>
@@ -188,18 +189,32 @@ const latestVisitors = [
           </div>
         </div>
 
-        <div class="px-6 md:px-8 mb-4 border-b border-gray-200 flex gap-4 items-center">
+        <div class="px-6 md:px-8 mb-4 flex gap-4 items-center">
           <span class="text-[13px] text-gray-500 font-medium mr-1.5">Filter</span>
           <button @click="activeTab = 'Jumlah Visitor'" class="px-4 py-1.5 rounded-full text-[12px] font-medium border transition-colors focus:outline-none" :class="activeTab === 'Jumlah Visitor' ? 'border-[#2BB5F4] text-[#2BB5F4] bg-[#2BB5F4]/5' : 'border-gray-200 text-gray-500 hover:bg-gray-50'">Jumlah Visitor</button>
           <button @click="activeTab = 'Latest Visitor'" class="px-4 py-1.5 rounded-full text-[12px] font-medium border transition-colors focus:outline-none" :class="activeTab === 'Latest Visitor' ? 'border-[#2BB5F4] text-[#2BB5F4] bg-[#2BB5F4]/5' : 'border-gray-200 text-gray-500 hover:bg-gray-50'">Latest Visitor</button>
         </div>
 
         <div class="px-6 md:px-8">
-          <div v-if="activeTab === 'Latest Visitor'">
-            <div class="flex items-center justify-between mb-3.5">
-              <h3 class="text-[14px] text-gray-800 font-medium">Visitor Terbaru 30 hari terakhir</h3>
+          <div v-if="activeTab === 'Jumlah Visitor'">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="text-[14px] text-gray-800 font-medium">Jumlah visitor 30 hari terakhir</h3>
+              <div class="flex items-center gap-4 text-[12px]">
+                <div class="flex items-center gap-1.5"><div class="w-3 h-3 rounded-full bg-[#2BB5F4]"></div><span class="text-gray-500">Visitor</span></div>
+                <div class="flex items-center gap-1.5"><div class="w-3 h-3 rounded-full bg-[#F59E0B]"></div><span class="text-gray-500">Visit</span></div>
+              </div>
             </div>
-            <div class="border border-gray-100 rounded-lg overflow-hidden">
+            <div class="w-full h-62.5 border border-gray-100 rounded-xl bg-gray-50/50 flex flex-col items-center justify-center text-gray-400 border-dashed">
+              <span class="text-[13px] font-medium">Area Integrasi Grafik</span>
+            </div>
+          </div>
+        </div>
+
+        <div v-if="activeTab === 'Latest Visitor'">
+            <div class="flex items-center justify-between mb-3.5">
+              <h3 class="text-[14px] text-gray-800 font-medium ml-8">Visitor Terbaru 30 hari terakhir</h3>
+            </div>
+            <div class="border border-gray-100 rounded-lg ml-8 mr-4 overflow-hidden">
               <TableSuperAdmin :columns="miniTableColumns" :data="latestVisitors">
                 <template #nama="{ item }">
                   <div class="flex items-center gap-3">
@@ -217,19 +232,6 @@ const latestVisitors = [
               </TableSuperAdmin>
             </div>
           </div>
-          <div v-if="activeTab === 'Jumlah Visitor'">
-            <div class="flex items-center justify-between mb-4">
-              <h3 class="text-[14px] text-gray-800 font-medium">Jumlah visitor 30 hari terakhir</h3>
-              <div class="flex items-center gap-4 text-[12px]">
-                <div class="flex items-center gap-1.5"><div class="w-3 h-3 rounded-full bg-[#2BB5F4]"></div><span class="text-gray-500">Visitor</span></div>
-                <div class="flex items-center gap-1.5"><div class="w-3 h-3 rounded-full bg-[#F59E0B]"></div><span class="text-gray-500">Visit</span></div>
-              </div>
-            </div>
-            <div class="w-full h-[250px] border border-gray-100 rounded-xl bg-gray-50/50 flex flex-col items-center justify-center text-gray-400 border-dashed">
-              <span class="text-[13px] font-medium">Area Integrasi Grafik</span>
-            </div>
-          </div>
-        </div>
 
       </template>
     </DetailPanel>

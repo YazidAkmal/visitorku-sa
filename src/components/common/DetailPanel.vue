@@ -20,24 +20,23 @@ defineEmits(['close']);
       leave-from-class="opacity-100"
       leave-to-class="opacity-0"
     >
-      <div v-if="isOpen" @click="$emit('close')" class="fixed inset-0 bg-black/40 z-[9990] backdrop-blur-sm"></div>
+      <div v-if="isOpen" @click="$emit('close')" class="fixed inset-0 bg-black/40 z-9990 backdrop-blur-sm"></div>
     </Transition>
 
     <Transition
       enter-active-class="transition ease-in-out duration-300 transform"
-      enter-from-class="translate-x-full"
+      enter-from-class="translate-x-[120%]"
       enter-to-class="translate-x-0"
       leave-active-class="transition ease-in-out duration-300 transform"
       leave-from-class="translate-x-0"
-      leave-to-class="translate-x-full"
+      leave-to-class="translate-x-[120%]"
     >
       <div 
         v-if="isOpen"
-        class="fixed inset-y-0 right-0 z-[9999] w-full sm:w-[90vw] md:w-[80vw] lg:max-w-[850px] bg-[#F5FCFE] shadow-2xl flex flex-col font-['Poppins'] overflow-hidden"
+        class="fixed top-1 bottom-1 right-1 md:top-2.5 md:bottom-2.5 md:right-2.5 z-9999 w-[calc(100%-2rem)] sm:w-[90vw] md:w-[80vw] lg:max-w-212.5 bg-[#F5FCFE] shadow-2xl flex flex-col font-['Poppins'] overflow-hidden rounded-xl"
       >
         
         <div class="relative shrink-0 bg-[#2BB5F4]">
-          
           <div 
             class="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat mix-blend-overlay opacity-90" 
             :style="{ backgroundImage: `url(${HeaderPattern})` }"
