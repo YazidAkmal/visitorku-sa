@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 
 // Import Components
 import PageHeader from '@/components/common/PageHeader.vue';
@@ -14,39 +14,117 @@ import Lunas from '@/assets/images/icon/lunas-state-vector.svg'
 import KonfirmasiBayar from '@/assets/images/alert-konfirmasi-pembayaran.svg'
 import Invoice from '@/assets/images/icon/monthly-invoice-vector.svg'
 
+// Import API
+import { ApiInvoice } from '@/services/ApiInvoice';
+
 // State
 const searchQuery = ref('');
 const currentPage = ref(1);
 const itemsPerPage = ref(5);
 
-// Dummy Data
-const listTagihanLengkap = [
-  { id: 1, noTagihan: 'V/01/2026/2', dateRange: '2026-01-02 • 2026-01-09', perusahaan: 'Diskominfo Pemalang', periode: 'Monthly', status: 'Lunas', statusDesc: 'Diverifikasi pada 2026-01-05', statusCode: 'success' },
-  { id: 2, noTagihan: 'V/01/2026/2', dateRange: '2026-01-02 • 2026-01-09', perusahaan: 'Diskominfo Pemalang', periode: 'Monthly', status: 'Menunggu Pembayaran', statusDesc: 'Tagihan belum dibayar', statusCode: 'pending' },
-  { id: 3, noTagihan: 'V/01/2026/2', dateRange: '2026-01-02 • 2026-01-09', perusahaan: 'Diskominfo Pemalang', periode: 'Monthly', status: 'Menunggu Pembayaran', statusDesc: 'Tagihan belum dibayar', statusCode: 'pending' },
-  { id: 4, noTagihan: 'V/01/2026/3', dateRange: '2026-02-02 • 2026-02-09', perusahaan: 'PT Angkasa Pura', periode: 'Monthly', status: 'Lunas', statusDesc: 'Diverifikasi pada 2026-02-05', statusCode: 'success' },
-  { id: 5, noTagihan: 'V/01/2026/3', dateRange: '2026-02-02 • 2026-02-09', perusahaan: 'PT Angkasa Pura', periode: 'Monthly', status: 'Menunggu Pembayaran', statusDesc: 'Tagihan belum dibayar', statusCode: 'pending' },
-  { id: 6, noTagihan: 'V/01/2026/4', dateRange: '2026-03-02 • 2026-03-09', perusahaan: 'Telkom Indonesia', periode: 'Monthly', status: 'Lunas', statusDesc: 'Diverifikasi pada 2026-03-05', statusCode: 'success' },
-  { id: 7, noTagihan: 'V/01/2026/5', dateRange: '2026-04-02 • 2026-04-09', perusahaan: 'Gmedia', periode: 'Monthly', status: 'Lunas', statusDesc: 'Diverifikasi pada 2026-04-05', statusCode: 'success' }
-];
+// State Data API
+const listTagihan = ref([]);
+const isLoading = ref(false);
 
-// Computed Pagination
+// Format Rupiah
+const formatRupiah = (angka) => {
+  return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(angka || 0);
+};
+
+// Format Tanggal Singkat (YYYY-MM-DD)
+const formatDateShort = (dateStr) => {
+  if (!dateStr) return '-';
+  return dateStr.split('T')[0];
+};
+
+// Fetch Data
+const fetchInvoices = async () => {
+  isLoading.value = true;
+  try {
+    const response = await ApiInvoice.getAllInvoices();
+    if (response.message === "Success" && response.data) {
+      
+      listTagihan.value = response.data.map(item => {
+        const isPaid = item.status === 'paid';
+        const statusText = isPaid ? 'Lunas' : 'Menunggu Pembayaran';
+        const statusCode = isPaid ? 'success' : 'pending';
+        const statusDesc = isPaid ? `Diverifikasi pada ${formatDateShort(item.updated_at)}` : 'Tagihan belum dibayar';
+        
+        const basePrice = item.payment_type === 'yearly' ? item.yearly_price : item.monthly_price;
+        
+        const periodeText = item.payment_type ? item.payment_type.charAt(0).toUpperCase() + item.payment_type.slice(1) : '-';
+
+        return {
+          id: item.id,
+          noTagihan: item.number,
+          dateRange: `${formatDateShort(item.active_from_date)} • ${formatDateShort(item.active_to_date)}`,
+          perusahaan: item.company || '-',
+          periode: periodeText,
+          status: statusText,
+          statusDesc: statusDesc,
+          statusCode: statusCode,         
+          price_type: item.price_type || 'Unknown',
+          base_price: basePrice,
+          disc: item.disc || 0,
+          payment_total: item.payment_total || 0,
+          invoice_url: item.invoice_url
+        };
+      });
+    }
+  } catch (error) {
+    console.error("Gagal mengambil data invoice:", error);
+  } finally {
+    isLoading.value = false;
+  }
+};
+
+onMounted(() => {
+  fetchInvoices();
+});
+
+const summary = computed(() => {
+  let lunas = 0;
+  let belumDibayar = 0;
+  
+  listTagihan.value.forEach(item => {
+    if (item.statusCode === 'success') {
+      lunas += item.payment_total;
+    } else {
+      belumDibayar += item.payment_total;
+    }
+  });
+
+  return {
+    total: lunas + belumDibayar,
+    lunas: lunas,
+    belumDibayar: belumDibayar
+  };
+});
+
+const listTagihanFiltered = computed(() => {
+  if (!searchQuery.value) return listTagihan.value;
+  return listTagihan.value.filter(item => 
+    item.noTagihan.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+    item.perusahaan.toLowerCase().includes(searchQuery.value.toLowerCase())
+  );
+});
+
 const listTagihanDitampilkan = computed(() => {
   const start = (currentPage.value - 1) * itemsPerPage.value;
   const end = start + itemsPerPage.value;
-  return listTagihanLengkap.slice(start, end);
+  return listTagihanFiltered.value.slice(start, end);
 });
 
-// Definisi Kolom Tabel
+// Define Kolom Tabel
 const tableColumns = [
   { key: 'nomor', label: 'Nomor Tagihan', width: 'w-[25%]' },
-  { key: 'perusahaan', label: 'Perusahaan' },
-  { key: 'periode', label: 'Periode' },
-  { key: 'status', label: 'Status' },
-  { key: 'aksi', label: 'Aksi', sortable: false }
+  { key: 'perusahaan', label: 'Perusahaan',width: 'w-[25%]'},
+  { key: 'periode', label: 'Periode',width: 'w-[13%]'},
+  { key: 'status', label: 'Status',width: 'w-[24%]'},
+  { key: 'aksi', label: 'Aksi', sortable: false, width: 'w-[13%]'}
 ];
 
-// State untuk Dropdown Aksi
+// State Dropdown Aksi
 const activeDropdown = ref(null);
 const dropdownPos = ref({ top: '0px', right: '0px' }); 
 
@@ -77,27 +155,46 @@ const openDetail = (item) => {
 };
 
 const isAlertOpen = ref(false);
+const isProcessingPayment = ref(false);
 
 const openAlert = () => {
   isAlertOpen.value = true;
 };
 
 const closeAlert = () => {
-  isAlertOpen.value = false;
+  if(!isProcessingPayment.value) isAlertOpen.value = false;
 };
 
-const confirmPayment = () => {
-  if (selectedDetail.value) {
-    selectedDetail.value.statusCode = 'success';
-    selectedDetail.value.status = 'Lunas';
-    selectedDetail.value.statusDesc = 'Diverifikasi pada hari ini';
+// Fungsi Konfrimasi
+const confirmPayment = async () => {
+  if (!selectedDetail.value) return;
+  
+  isProcessingPayment.value = true;
+  try {
+    await ApiInvoice.approveInvoice(selectedDetail.value.id);
+    
+    await fetchInvoices();
+    
+    isAlertOpen.value = false;
+    isDetailOpen.value = false;
+    
+  } catch (error) {
+    console.error("Gagal konfirmasi pembayaran:", error);
+    alert("Gagal mengkonfirmasi pembayaran. Silakan coba lagi.");
+  } finally {
+    isProcessingPayment.value = false;
   }
-  isAlertOpen.value = false;
+};
+
+// Fungsi PDF
+const openInvoicePDF = (url) => {
+  if (url) window.open(url, '_blank');
+  else alert("Dokumen Invoice tidak tersedia.");
 };
 </script>
 
 <template>
-  <div class="bg-white rounded-2xl p-4 md:p-6 shadow-sm min-h-full flex flex-col min-w-0 w-full">
+  <div class="bg-white rounded-2xl p-4 md:p-6 shadow-sm min-h-full flex flex-col min-w-0 w-full relative">
     
     <PageHeader 
       title="Riwayat Tagihan" 
@@ -110,10 +207,9 @@ const confirmPayment = () => {
       
       <div class="flex-1 w-full p-5 rounded-xl flex flex-col justify-center">
         <div class="flex items-center gap-1.5 mb-1">
-          <span class="text-[13px] font-medium text-gray-800">Total Tagihan Bulan ini</span>
-          <svg class="w-3.5 h-3.5 text-gray-400 cursor-pointer" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+          <span class="text-[13px] font-medium text-gray-800">Total Tagihan</span>
         </div>
-        <div class="text-2xl font-semibold text-gray-900">Rp9.089.141</div>
+        <div class="text-2xl font-semibold text-gray-900">{{ formatRupiah(summary.total) }}</div>
       </div>
 
       <div class="w-8 h-8 shrink-0 rounded-full bg-white shadow-sm flex items-center justify-center font-bold text-gray-500 lg:transform-none transform rotate-90 lg:rotate-0">
@@ -123,9 +219,8 @@ const confirmPayment = () => {
       <div class="flex-1 w-full bg-white p-5 rounded-xl flex flex-col justify-center">
         <div class="flex items-center gap-1.5 mb-1">
           <span class="text-[13px] font-medium text-gray-800">Tagihan Belum Dibayar</span>
-          <svg class="w-3.5 h-3.5 text-gray-400 cursor-pointer" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
         </div>
-        <div class="text-2xl font-semibold text-gray-900">Rp9.089.141</div>
+        <div class="text-2xl font-semibold text-gray-900">{{ formatRupiah(summary.belumDibayar) }}</div>
       </div>
 
       <div class="w-8 h-8 shrink-0 rounded-full bg-white shadow-sm flex items-center justify-center font-bold text-gray-500 lg:transform-none transform rotate-90 lg:rotate-0">
@@ -135,9 +230,8 @@ const confirmPayment = () => {
       <div class="flex-1 w-full bg-white p-5 rounded-xl flex flex-col justify-center">
         <div class="flex items-center gap-1.5 mb-1">
           <span class="text-[13px] font-medium text-gray-800">Tagihan Lunas</span>
-          <svg class="w-3.5 h-3.5 text-gray-400 cursor-pointer" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
         </div>
-        <div class="text-2xl font-semibold text-gray-900">Rp0</div>
+        <div class="text-2xl font-semibold text-gray-900">{{ formatRupiah(summary.lunas) }}</div>
       </div>
     </div>
 
@@ -146,8 +240,12 @@ const confirmPayment = () => {
       placeholderText="Cari nama perusahaan/nomor tagihan"
     />
 
-    <div class="flex-1 flex flex-col justify-between min-w-0">
+    <div class="flex-1 flex flex-col justify-between min-w-0 relative">
       
+      <div v-if="isLoading" class="absolute inset-0 z-10 bg-white/60 flex items-center justify-center">
+         <span class="text-[#2BB5F4] font-medium text-[13px] animate-pulse">Mengambil data...</span>
+      </div>
+
       <TableSuperAdmin :columns="tableColumns" :data="listTagihanDitampilkan">
         
         <template #nomor="{ item }">
@@ -216,7 +314,7 @@ const confirmPayment = () => {
 
       <PaginationSuperAdmin 
         v-model:current-page="currentPage"
-        :total-data="listTagihanLengkap.length"
+        :total-data="listTagihanFiltered.length"
         :per-page="itemsPerPage"
       />
     </div>
@@ -232,7 +330,7 @@ const confirmPayment = () => {
           
           <div class="flex-1">
             <div class="flex items-center gap-3 mb-1.5">
-              <h2 class="text-[20px] font-bold text-white tracking-wide">Monthly Invoice</h2>
+              <h2 class="text-[20px] font-bold text-white tracking-wide">{{ selectedDetail.periode }} Invoice</h2>
               
               <div v-if="selectedDetail.statusCode === 'success'" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#CDF2E6] text-[#38CA99] text-[13px] shadow-sm">
                 <img :src="Lunas" class="w-3.5 h-3.5" alt="Lunas" /> Lunas
@@ -283,16 +381,16 @@ const confirmPayment = () => {
 
             <div class="space-y-4">
               <div class="flex justify-between text-[15px]">
-                <span class="text-gray-500">Business Plan</span>
-                <span class="text-gray-800 font-medium">Rp1.500.000</span>
+                <span class="text-gray-500">{{ selectedDetail.price_type }} Plan</span>
+                <span class="text-gray-800 font-medium">{{ formatRupiah(selectedDetail.base_price) }}</span>
               </div>
               <div class="flex justify-between text-[15px]">
                 <span class="text-gray-500">Diskon</span>
-                <span class="text-gray-800 font-medium">Rp0</span>
+                <span class="text-red-500 font-medium">- {{ formatRupiah(selectedDetail.disc) }}</span>
               </div>
               <div class="flex justify-between text-[15px] pt-4 mt-2 border-t border-gray-100">
-                <span class="text-gray-800 font-bold">Total</span>
-                <span class="text-gray-800 font-bold">Rp1.500.000</span>
+                <span class="text-gray-800 font-bold">Total Pembayaran</span>
+                <span class="text-[#2BB5F4] font-bold">{{ formatRupiah(selectedDetail.payment_total) }}</span>
               </div>
             </div>
           </div>
@@ -300,7 +398,7 @@ const confirmPayment = () => {
           <div class="flex-1"></div>
 
           <div v-if="selectedDetail.statusCode === 'success'" class="mt-4">
-            <button class="w-full py-3.5 rounded-xl border border-[#2BB5F4] text-[#2BB5F4] font-semibold text-[13px] hover:bg-[#EAF8FF] flex items-center justify-center gap-2 transition-colors">
+            <button @click="openInvoicePDF(selectedDetail.invoice_url)" class="w-full py-3.5 rounded-xl border border-[#2BB5F4] text-[#2BB5F4] font-semibold text-[13px] hover:bg-[#EAF8FF] flex items-center justify-center gap-2 transition-colors">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
               </svg>
@@ -311,7 +409,7 @@ const confirmPayment = () => {
           <div v-else-if="selectedDetail.statusCode === 'pending'" class="mt-4 flex flex-col gap-3">
             <p class="text-[11px] text-gray-400 text-right md:w-1/2 self-end">Pastikan pembayaran telah diterima sebelum melakukan konfirmasi.</p>
             <div class="flex flex-col md:flex-row gap-4">
-              <button class="flex-1 py-3.5 rounded-xl border border-[#2BB5F4] text-[#2BB5F4] font-semibold text-[13px] hover:bg-[#EAF8FF] flex items-center justify-center gap-2 transition-colors">
+              <button @click="openInvoicePDF(selectedDetail.invoice_url)" class="flex-1 py-3.5 rounded-xl border border-[#2BB5F4] text-[#2BB5F4] font-semibold text-[13px] hover:bg-[#EAF8FF] flex items-center justify-center gap-2 transition-colors">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
                 </svg>
@@ -341,7 +439,7 @@ const confirmPayment = () => {
           
           <div class="relative bg-white rounded-3xl w-full max-w-100 p-8 flex flex-col items-center text-center shadow-2xl z-10">
             
-            <button @click="closeAlert" class="absolute top-5 right-5 text-gray-400 hover:text-gray-600 focus:outline-none transition-colors">
+            <button @click="closeAlert" :disabled="isProcessingPayment" class="absolute top-5 right-5 text-gray-400 hover:text-gray-600 focus:outline-none transition-colors disabled:opacity-50">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path></svg>
             </button>
 
@@ -353,11 +451,12 @@ const confirmPayment = () => {
             </p>
 
             <div class="flex w-full gap-4">
-              <button @click="closeAlert" class="flex-1 py-2.5 rounded-xl border border-[#2BB5F4] text-[#2BB5F4] font-semibold text-[13px] hover:bg-[#EAF8FF] transition-colors">
+              <button @click="closeAlert" :disabled="isProcessingPayment" class="flex-1 py-2.5 rounded-xl border border-[#2BB5F4] text-[#2BB5F4] font-semibold text-[13px] hover:bg-[#EAF8FF] transition-colors disabled:opacity-50">
                 Batal
               </button>
-              <button @click="confirmPayment" class="flex-1 py-2.5 rounded-xl bg-[#2BB5F4] text-white font-semibold text-[13px] hover:bg-[#14A5E6] transition-colors">
-                Konfirmasi Pembayaran
+              <button @click="confirmPayment" :disabled="isProcessingPayment" class="flex-1 py-2.5 rounded-xl bg-[#2BB5F4] text-white font-semibold text-[13px] hover:bg-[#14A5E6] transition-colors disabled:opacity-70 flex justify-center items-center gap-2">
+                <svg v-if="isProcessingPayment" class="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                {{ isProcessingPayment ? 'Memproses...' : 'Konfirmasi' }}
               </button>
             </div>
 

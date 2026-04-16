@@ -162,8 +162,8 @@ const totalDataFiltered = computed(() => {
 const tableColumns = [
   { key: 'nama', label: 'Nama Perusahaan', width: 'w-[30%]' },
   { key: 'alamat', label: 'Alamat Perusahaan', width: 'w-[40%]' },
-  { key: 'pic', label: 'PIC', width: 'w-[15%]' },
-  { key: 'aksi', label: 'Aksi', width: 'w-[15%]', sortable: false }
+  { key: 'pic', label: 'PIC', width: 'w-[20%]' },
+  { key: 'aksi', label: 'Aksi', width: 'w-[10%]', sortable: false }
 ];
 
 const miniTableColumns = [

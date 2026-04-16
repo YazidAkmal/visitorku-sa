@@ -20,7 +20,6 @@ const emit = defineEmits(['update:currentPage'])
 
 const totalPages = computed(() => Math.ceil(props.totalData / props.perPage) || 1)
 
-// Logika sederhana untuk membatasi tombol halaman yang tampil (maksimal 5 kotak)
 const visiblePages = computed(() => {
   const maxVisible = 5
   let start = Math.max(1, props.currentPage - Math.floor(maxVisible / 2))

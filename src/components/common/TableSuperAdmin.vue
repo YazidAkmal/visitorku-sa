@@ -5,7 +5,6 @@ defineProps({
   columns: {
     type: Array,
     required: true,
-    // Contoh format: [{ key: 'nama', label: 'Nama Perusahaan', sortable: true, width: 'w-[40%]' }]
   },
   data: {
     type: Array,

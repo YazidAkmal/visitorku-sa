@@ -1,9 +1,6 @@
 <script setup>
-import { ref, computed } from 'vue'
-
-// Import Icon
-import SearchLogo from '@/assets/images/icon/search-vector.svg'
-import FilterLogo from '@/assets/images/icon/filter-vector.svg'
+import { ref, computed, onMounted } from 'vue'
+import { SwalHelper } from '@/components/utils/SweetAlertHelper.js';
 
 // Import Components
 import TableSuperAdmin from '@/components/common/TableSuperAdmin.vue' 
@@ -12,26 +9,61 @@ import SearchFilterBar from '@/components/common/SearchFilterBar.vue';
 import PaginationSuperAdmin from '@/components/common/PaginationSuperAdmin.vue';
 import DetailPanel from '@/components/common/DetailPanel.vue'; 
 
+// Import API
+import { ApiPrice } from '@/services/ApiPrice';
+
 // State Search & Pagination
 const searchQuery = ref('');
 const currentPage = ref(1);
-const itemsPerPage = ref(4);
+const itemsPerPage = ref(5);
 
-// Dummy Data
-const listPaketLengkap = [
-  { id: 1, infoPaket: 'Visitorku Free', detail: 'Paket awal untuk mu yang ingin mulai mendata pengunjung', bulanan: 'Rp 0/250', tahunan: 'Rp 0/3000' },
-  { id: 2, infoPaket: 'Visitorku 500', detail: 'Paket Menengah yang terjangkau', bulanan: 'Rp 375000/500', tahunan: 'Rp 4250000/6000' },
-  { id: 3, infoPaket: 'Visitorku 1000', detail: 'Paket besar untuk mu yang memiliki tamu banyak', bulanan: 'Rp 650000/1000', tahunan: 'Rp 7526000/12000' },
-  { id: 4, infoPaket: 'Custom', detail: 'Custom by Sales', bulanan: 'Rp 0/0', tahunan: 'Rp 0/0' },
-  { id: 5, infoPaket: 'Visitorku Enterprise', detail: 'Fitur tanpa batas', bulanan: 'Rp 2.000.000', tahunan: 'Rp 20.000.000' },
-  { id: 6, infoPaket: 'Visitorku Basic', detail: 'Paket untuk UMKM', bulanan: 'Rp 150.000', tahunan: 'Rp 1.500.000' }
-];
+// State Data API
+const listPaketLengkap = ref([]);
+const isLoadingData = ref(false);
 
-// Computed Data untuk Pagination 
+// Helper Format Rupiah
+const formatRupiah = (angka) => {
+  return new Intl.NumberFormat('id-ID').format(angka || 0);
+};
+
+// Fetch Data
+const fetchPrices = async () => {
+  isLoadingData.value = true;
+  try {
+    const response = await ApiPrice.getAllPrices();
+    if (response.message === "Success" && response.data) {
+      listPaketLengkap.value = response.data.map(item => ({
+        id: item.id,
+        infoPaket: item.name,
+        detail: item.description,
+        bulanan: `Rp ${formatRupiah(item.monthly_price)} / ${item.monthly_quota}`,
+        tahunan: `Rp ${formatRupiah(item.yearly_price)} / ${item.yearly_quota}`,
+        raw: item 
+      }));
+    }
+  } catch (error) {
+    console.error("Gagal mengambil data:", error);
+  } finally {
+    isLoadingData.value = false;
+  }
+};
+
+onMounted(() => {
+  fetchPrices();
+});
+
+// Computed Data untuk Pagination & Search
+const listPaketFiltered = computed(() => {
+  if (!searchQuery.value) return listPaketLengkap.value;
+  return listPaketLengkap.value.filter(item => 
+    item.infoPaket.toLowerCase().includes(searchQuery.value.toLowerCase())
+  );
+});
+
 const listPaketDitampilkan = computed(() => {
   const start = (currentPage.value - 1) * itemsPerPage.value;
   const end = start + itemsPerPage.value;
-  return listPaketLengkap.slice(start, end);
+  return listPaketFiltered.value.slice(start, end);
 });
 
 // Pendefinisian Header
@@ -60,10 +92,11 @@ const toggleDropdown = (id, event) => {
 
 const closeDropdown = () => { activeDropdown.value = null; };
 
-// 🌟 STATE UNTUK PANEL (CREATE & EDIT) 🌟
+// State Create n Edit
 const isDetailOpen = ref(false);
 const selectedDetail = ref(null);
-const panelMode = ref('create'); // Menyimpan mode saat ini: 'create' atau 'edit'
+const panelMode = ref('create'); 
+const isSaving = ref(false);
 
 // Form State
 const formData = ref({
@@ -71,6 +104,7 @@ const formData = ref({
   deskripsi: '',
   jenisHarga: 'bulanan',
   harga: '',
+  hargaTahunan: '',
   durasi: '1 Bulan',
   aktifkanTahunan: false,
   kuotaVisit: '',
@@ -79,46 +113,124 @@ const formData = ref({
   storageLimit: ''
 });
 
-// Fungsi Reset Form ke Kosong (Untuk Buat Paket)
+// Fungsi Reset Form
 const resetForm = () => {
   formData.value = {
-    namaPaket: '', deskripsi: '', jenisHarga: 'bulanan', harga: '', durasi: '1 Bulan',
+    namaPaket: '', deskripsi: '', jenisHarga: 'bulanan', harga: '', hargaTahunan: '', durasi: '1 Bulan',
     aktifkanTahunan: false, kuotaVisit: '', jumlahCabang: '', jumlahAkun: '', storageLimit: ''
   };
 };
 
-// 🌟 FUNGSI: BUKA PANEL BUAT PAKET BARU 🌟
 const openCreatePanel = () => {
   panelMode.value = 'create';
-  resetForm(); // Pastikan form kosong
+  resetForm(); 
   isDetailOpen.value = true;
 };
 
-// 🌟 FUNGSI: BUKA PANEL EDIT PAKET 🌟
 const openEditPanel = (item) => {
   panelMode.value = 'edit';
   selectedDetail.value = item;
   
-  // Simulasi isi form dengan data yang mau diedit
-  formData.value.namaPaket = item.infoPaket;
-  formData.value.deskripsi = item.detail;
+  const raw = item.raw; 
+  
+  // Set data form sesuai data API
+  formData.value = {
+    namaPaket: raw.name,
+    deskripsi: raw.description,
+    jenisHarga: (raw.monthly_price == 0 && raw.yearly_price == 0 && raw.name.toLowerCase() === 'free') ? 'free' : 'bulanan',
+    harga: raw.monthly_price || '',
+    hargaTahunan: raw.yearly_price || '',
+    aktifkanTahunan: raw.yearly_price > 0,
+    durasi: '1 Bulan',
+    kuotaVisit: raw.monthly_quota || '',
+    jumlahCabang: raw.branch_limit || '',
+    jumlahAkun: raw.account_limit || '',
+    storageLimit: raw.storage_limit || ''
+  };
   
   isDetailOpen.value = true;
   closeDropdown();
 };
 
-const handleSave = () => {
-  console.log(`Menyimpan data mode ${panelMode.value}:`, formData.value);
-  isDetailOpen.value = false;
+// Fungsi Simpan/Update w SweetAlert
+const handleSave = async () => {
+  isSaving.value = true;
+  try {
+    let mPrice = 0, yPrice = 0;
+    let mQuota = parseInt(formData.value.kuotaVisit) || 0;
+    let yQuota = mQuota * 12;
+
+    if (formData.value.jenisHarga === 'bulanan') {
+      mPrice = parseInt(formData.value.harga) || 0;
+      if (formData.value.aktifkanTahunan) {
+        yPrice = parseInt(formData.value.hargaTahunan) || 0;
+      }
+    }
+
+    const payload = {
+      level: "1",
+      name: formData.value.namaPaket,
+      description: formData.value.deskripsi,
+      monthly_price: mPrice.toString(),
+      yearly_price: yPrice.toString(),
+      monthly_quota: mQuota.toString(),
+      yearly_quota: yQuota.toString(),
+      branch_limit: formData.value.jumlahCabang.toString(),
+      account_limit: formData.value.jumlahAkun.toString(),
+      storage_limit: formData.value.storageLimit.toString(),
+      retention: "3",
+      open_api: false,
+      signage_limit: "1",
+      event_visitor_limit: "1000"
+    };
+
+    if (panelMode.value === 'create') {
+      await ApiPrice.createPrice(payload);
+    } else {
+      await ApiPrice.updatePrice(selectedDetail.value.id, payload);
+    }
+
+    isDetailOpen.value = false;
+    await fetchPrices(); 
+    
+    // Notif
+    SwalHelper.success('Berhasil!', `Paket berhasil di${panelMode.value === 'create' ? 'simpan' : 'perbarui'}.`);
+
+  } catch (error) {
+    console.error("Gagal menyimpan:", error);
+    SwalHelper.error('Gagal Menyimpan', error.message);
+  } finally {
+    isSaving.value = false;
+  }
+};
+
+const handleDelete = async (id) => {
+  closeDropdown();
+
+  const result = await SwalHelper.confirmDelete('Paket');
+
+  if (result.isConfirmed) {
+    try {
+      SwalHelper.showLoading('Menghapus Paket...'); 
+
+      await ApiPrice.deletePrice(id); 
+      await fetchPrices(); 
+
+      SwalHelper.success('Terhapus!', 'Paket berhasil dihapus.'); 
+
+    } catch(error) {
+      SwalHelper.error('Gagal Menghapus', error.message); 
+    }
+  }
 };
 </script>
 
 <template>    
-  <div class="bg-white rounded-2xl p-6 shadow-sm min-h-full flex flex-col">
+  <div class="bg-white rounded-2xl p-6 shadow-sm min-h-full flex flex-col relative">
     
     <PageHeader 
       title="Paket & Layanan" 
-      subtitle="Lorem Ipsum is simply dummy text of the printing and typesetting industry." 
+      subtitle="Manajemen harga dan spesifikasi paket Visitorku." 
     />
 
     <hr class="border-gray-100 mt-1 mb-4" />
@@ -134,12 +246,25 @@ const handleSave = () => {
       </template>
     </SearchFilterBar>
 
-    <div class="flex-1 flex flex-col justify-between">
+    <div class="flex-1 flex flex-col justify-between relative min-h-75">
+      
+      <div v-if="isLoadingData" class="absolute inset-0 z-10 bg-white/60 flex items-center justify-center">
+         <span class="text-[#2BB5F4] font-medium text-[13px] animate-pulse">Mengambil data...</span>
+      </div>
+
       <TableSuperAdmin :columns="tableColumns" :data="listPaketDitampilkan">
         
         <template #info="{ item }">
           <div class="text-gray-700 font-medium">{{ item.infoPaket }}</div>
-          <div class="text-gray-400 mt-0.5">{{ item.detail }}</div>
+          <div class="text-gray-400 mt-0.5 text-[12px]">{{ item.detail }}</div>
+        </template>
+
+        <template #bulanan="{ item }">
+          <div class="text-[13px] text-gray-700">{{ item.bulanan }}</div>
+        </template>
+
+        <template #tahunan="{ item }">
+          <div class="text-[13px] text-gray-700">{{ item.tahunan }}</div>
         </template>
 
         <template #aksi="{ item }">
@@ -162,7 +287,7 @@ const handleSave = () => {
                 <button @click="openEditPanel(item)" class="w-full text-left px-4 py-2.5 text-[13px] font-medium text-gray-700 hover:bg-[#E8F8F3] hover:text-[#2BB5F4] transition-colors">
                   Edit Paket
                 </button>
-                <button @click="closeDropdown" class="w-full text-left px-4 py-2.5 text-[13px] font-medium text-gray-700 hover:bg-red-50 hover:text-red-600 transition-colors">
+                <button @click="handleDelete(item.id)" class="w-full text-left px-4 py-2.5 text-[13px] font-medium text-gray-700 hover:bg-red-50 hover:text-red-600 transition-colors">
                   Hapus Paket
                 </button>
               </div>
@@ -174,7 +299,7 @@ const handleSave = () => {
 
       <PaginationSuperAdmin 
         v-model:current-page="currentPage"
-        :total-data="listPaketLengkap.length"
+        :total-data="listPaketFiltered.length"
         :per-page="itemsPerPage"
       />
       
@@ -217,38 +342,59 @@ const handleSave = () => {
                 <label class="flex items-start gap-3 cursor-pointer">
                   <input type="radio" v-model="formData.jenisHarga" value="bulanan" class="mt-1 w-4 h-4 text-[#2BB5F4] focus:ring-[#2BB5F4]" />
                   <div>
-                    <div class="text-[14px] text-gray-800 font-medium">Harga Bulanan</div>
-                    <div class="text-[12px] text-gray-400">Harga yang harus dibayar pelanggan setiap bulan</div>
+                    <div class="text-[14px] text-gray-800 font-medium">Harga Berbayar</div>
+                    <div class="text-[12px] text-gray-400">Harga yang harus dibayar pelanggan</div>
                   </div>
                 </label>
                 
-                <div v-if="formData.jenisHarga === 'bulanan'" class="mt-4 ml-7 flex flex-col md:flex-row gap-4">
-                  <div class="flex-1">
-                    <label class="block text-[12px] text-gray-800 font-medium mb-1.5">Harga <span class="text-red-500">*</span></label>
-                    <div class="relative">
-                      <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-[13px] font-bold text-gray-800">Rp</span>
-                      <input v-model="formData.harga" type="number" placeholder="Masukan Harga" class="w-full border border-gray-200 rounded-lg pl-10 pr-4 py-2.5 text-[13px] text-gray-700 focus:outline-none focus:border-[#2BB5F4]" />
+                <div v-if="formData.jenisHarga === 'bulanan'" class="mt-4 ml-7 flex flex-col gap-4">
+                  <div class="flex flex-col md:flex-row gap-4">
+                    <div class="flex-1">
+                      <label class="block text-[12px] text-gray-800 font-medium mb-1.5">Harga Bulanan<span class="text-red-500">*</span></label>
+                      <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-[13px] font-bold text-gray-800">Rp</span>
+                        <input v-model="formData.harga" type="number" placeholder="Masukan Harga" class="w-full border border-gray-200 rounded-lg pl-10 pr-4 py-2.5 text-[13px] text-gray-700 focus:outline-none focus:border-[#2BB5F4]" />
+                      </div>
+                    </div>
+                    <div class="flex-1">
+                      <label class="block text-[12px] text-gray-800 font-medium mb-1.5">Durasi <span class="text-red-500">*</span></label>
+                      <div class="relative">
+                        <select v-model="formData.durasi" class="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-[13px] text-gray-700 focus:outline-none focus:border-[#2BB5F4] bg-white">
+                          <option value="1 Bulan">1 Bulan</option>
+                          <option value="3 Bulan">3 Bulan</option>
+                          <option value="6 Bulan">6 Bulan</option>
+                          <option value="12 Bulan">12 Bulan</option>
+                        </select>
+                      </div>
                     </div>
                   </div>
-                  <div class="flex-1">
-                    <label class="block text-[12px] text-gray-800 font-medium mb-1.5">Durasi <span class="text-red-500">*</span></label>
-                    <div class="relative">
-                      <select v-model="formData.durasi" class="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-[13px] text-gray-700 focus:outline-none focus:border-[#2BB5F4] bg-white">
-                        <option value="1 Bulan">1 Bulan</option>
-                        <option value="3 Bulan">3 Bulan</option>
-                        <option value="6 Bulan">6 Bulan</option>
-                        <option value="12 Bulan">12 Bulan</option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
 
-                <div v-if="formData.jenisHarga === 'bulanan'" class="mt-4 ml-7 flex items-center gap-3">
-                  <label class="relative inline-flex items-center cursor-pointer">
-                    <input type="checkbox" v-model="formData.aktifkanTahunan" class="sr-only peer">
-                    <div class="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#2BB5F4]"></div>
-                  </label>
-                  <span class="text-[13px] text-gray-800">Aktifkan harga tahunan</span>
+                  <div class="flex items-center gap-3">
+                    <label class="relative inline-flex items-center cursor-pointer">
+                      <input type="checkbox" v-model="formData.aktifkanTahunan" class="sr-only peer">
+                      <div class="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#2BB5F4]"></div>
+                    </label>
+                    <span class="text-[13px] text-gray-800">Aktifkan harga tahunan</span>
+                  </div>
+
+                  <div v-if="formData.aktifkanTahunan" class="flex flex-col md:flex-row gap-4 pt-1">
+                    <div class="flex-1">
+                      <label class="block text-[12px] text-gray-800 font-medium mb-1.5">Harga Tahunan<span class="text-red-500">*</span></label>
+                      <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-[13px] font-bold text-gray-800">Rp</span>
+                        <input v-model="formData.hargaTahunan" type="number" placeholder="Masukan Harga Tahunan" class="w-full border border-gray-200 rounded-lg pl-10 pr-4 py-2.5 text-[13px] text-gray-700 focus:outline-none focus:border-[#2BB5F4]" />
+                      </div>
+                    </div>
+                    <div class="flex-1">
+                      <label class="block text-[12px] text-gray-800 font-medium mb-1.5">Durasi <span class="text-red-500">*</span></label>
+                      <div class="relative">
+                        <select disabled class="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-[13px] text-gray-500 bg-gray-100 cursor-not-allowed appearance-none">
+                          <option value="1 Tahun">1 Tahun</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+
                 </div>
               </div>
 
@@ -274,7 +420,7 @@ const handleSave = () => {
               <div>
                 <label class="block text-[13px] text-gray-800 font-medium mb-1.5">Kuota Visit <span class="text-red-500">*</span></label>
                 <div class="relative">
-                  <input v-model="formData.kuotaVisit" placeholder="Masukan jumlah kuota" class="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-[13px] text-gray-700 focus:outline-none focus:border-[#2BB5F4]" />
+                  <input v-model="formData.kuotaVisit" type="number" placeholder="Masukan jumlah kuota" class="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-[13px] text-gray-700 focus:outline-none focus:border-[#2BB5F4]" />
                   <span class="absolute inset-y-0 right-0 flex items-center pr-4 text-[13px] text-gray-500">/ Bulan</span>
                 </div>
               </div>
@@ -287,7 +433,7 @@ const handleSave = () => {
                 <input v-model="formData.jumlahAkun" type="number" placeholder="Masukan maksimum akun" class="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-[13px] text-gray-700 focus:outline-none focus:border-[#2BB5F4]" />
               </div>
               <div>
-                <label class="block text-[13px] text-gray-800 font-medium mb-1.5">Storage Limit <span class="text-red-500">*</span></label>
+                <label class="block text-[13px] text-gray-800 font-medium mb-1.5">Storage Limit (MB) <span class="text-red-500">*</span></label>
                 <input v-model="formData.storageLimit" type="number" placeholder="Masukan maksimum storage" class="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-[13px] text-gray-700 focus:outline-none focus:border-[#2BB5F4]" />
               </div>
             </div>
@@ -295,12 +441,17 @@ const handleSave = () => {
           
         </div>
 
-        <div class="sticky bottom-0 bg-white border-t border-gray-100 px-6 md:px-8 py-4 flex gap-4 mt-auto">
+        <div class="sticky bottom-0 bg-white border-t border-gray-100 px-6 md:px-8 py-4 flex gap-4 mt-auto z-30">
           <button @click="isDetailOpen = false" class="flex-1 py-3 rounded-xl border border-[#2BB5F4] text-[#2BB5F4] font-semibold text-[13px] hover:bg-[#EAF8FF] transition-colors">
             Batal
           </button>
-          <button @click="handleSave" class="flex-1 py-3 rounded-xl bg-[#2BB5F4] text-white font-semibold text-[13px] hover:bg-[#14A5E6] transition-colors">
-            Simpan
+          <button 
+            @click="handleSave" 
+            :disabled="isSaving"
+            class="flex-1 py-3 rounded-xl bg-[#2BB5F4] text-white font-semibold text-[13px] hover:bg-[#14A5E6] transition-colors flex items-center justify-center gap-2 disabled:opacity-70"
+          >
+            <svg v-if="isSaving" class="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+            {{ isSaving ? 'Menyimpan...' : 'Simpan' }}
           </button>
         </div>
       </template>
@@ -308,3 +459,15 @@ const handleSave = () => {
 
   </div>
 </template>
+
+<style scoped>
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="number"] {
+  -moz-appearance: textfield; 
+  appearance: textfield;   
+}
+</style>

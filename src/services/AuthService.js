@@ -1,5 +1,3 @@
-// src/services/AuthService.js
-
 const BASE_URL = 'https://visitorku.io/api-stg-su';
 
 export const AuthService = {
