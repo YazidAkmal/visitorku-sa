@@ -4,6 +4,7 @@ import { ref, computed, onMounted } from 'vue';
 // IMPORT ASSET
 import FreePlanVector from '@/assets/images/icon/free-plan-vector.svg'; 
 
+// IMPORT COMPONENTS
 import TableSuperAdmin from '@/components/common/TableSuperAdmin.vue' 
 import PageHeader from '@/components/common/PageHeader.vue';
 import SearchFilterBar from '@/components/common/SearchFilterBar.vue';
@@ -257,7 +258,7 @@ const closeDropdown = () => { activeDropdown.value = null; };
           </div>
         </div>
 
-        <div class="px-6 md:px-8">
+        <div class="px-6 w-211 md:px-8">
           <div class="relative z-20 flex h-14 md:h-15 rounded-t-[14px] bg-[#DDF4FF] shadow-[0_4px_12px_rgba(0,0,0,0.06)] border-[1.5px] border-white">
             <div class="bg-linear-to-r from-[#98E3FF] to-[#2BB5F4] px-5 flex items-center justify-center gap-2.5 shrink-0 rounded-tl-[14px] rounded-br-2xl">
               <img :src="FreePlanVector" alt="Free Plan Icon" class="w-5.5 h-5.5" />

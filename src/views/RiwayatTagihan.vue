@@ -386,11 +386,11 @@ const openInvoicePDF = (url) => {
               </div>
               <div class="flex justify-between text-[15px]">
                 <span class="text-gray-500">Diskon</span>
-                <span class="text-red-500 font-medium">- {{ formatRupiah(selectedDetail.disc) }}</span>
+                <span class="text-gray-800 font-medium">- {{ formatRupiah(selectedDetail.disc) }}</span>
               </div>
-              <div class="flex justify-between text-[15px] pt-4 mt-2 border-t border-gray-100">
-                <span class="text-gray-800 font-bold">Total Pembayaran</span>
-                <span class="text-[#2BB5F4] font-bold">{{ formatRupiah(selectedDetail.payment_total) }}</span>
+              <div class="flex justify-between text-[15px]">
+                <span class="text-gray-800">Total Pembayaran</span>
+                <span class="text-gray-800 font-medium">{{ formatRupiah(selectedDetail.payment_total) }}</span>
               </div>
             </div>
           </div>

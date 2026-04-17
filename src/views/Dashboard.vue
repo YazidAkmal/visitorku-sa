@@ -1,16 +1,195 @@
 <script setup>
+import { ref, onMounted } from 'vue';
 
+// Import Components
+import PageHeader from '@/components/common/PageHeader.vue';
+import TableSuperAdmin from '@/components/common/TableSuperAdmin.vue';
+
+// Import API
+import { ApiDashboard } from '@/services/ApiDashboard';
+
+// ==========================================
+// 🌟 STATE DATA
+// ==========================================
+const isLoading = ref(true);
+
+const counters = ref({
+  visitor: 0,
+  visit: 0,
+  company: 0
+});
+
+const latestCompanies = ref([]);
+
+// ==========================================
+// 🌟 KONFIGURASI APEXCHARTS
+// ==========================================
+const chartSeries = ref([{ name: 'Visitor', data: [] }, { name: 'Visit', data: [] }]);
+
+const chartOptions = ref({
+  chart: { type: 'line', toolbar: { show: false }, fontFamily: 'Poppins, sans-serif', selection: { enabled: false }, zoom: { enabled: false }, dropShadow: { enabled: true, top: 5, left: 0, blur: 5, opacity: 0.2 } },
+  colors: ['#2D51FD', '#ED9D0F'], 
+  stroke: { curve: 'smooth', width: 3 },
+  dataLabels: { enabled: true, background: { enabled: true, foreColor: '#fff', padding: 4, borderRadius: 2, borderWidth: 0 }, offsetY: -2 },
+  markers: { size: 0, hover: { sizeOffset: 4 } },
+  xaxis: { categories: [], title: { text: 'Month', offsetY: 5, style: { color: '#111827', fontSize: '12px', fontWeight: 'bold' } }, labels: { style: { colors: '#64748B', fontSize: '11px' } }, axisBorder: { show: true, color: '#E2E8F0' }, axisTicks: { show: true, color: '#E2E8F0' }, tooltip: { enabled: true }, crosshairs: { show: true, stroke: { color: '#b6b6b6', width: 1, dashArray: 3 } } },
+  yaxis: { min: 0, tickAmount: 4, labels: { formatter: (value) => Math.round(value), style: { colors: '#64748B', fontSize: '12px' } } },
+  grid: { show: true, borderColor: '#E2E8F0', xaxis: { lines: { show: false } }, yaxis: { lines: { show: true } } },
+  tooltip: { enabled: true, shared: true, intersect: false }, 
+  states: { hover: { filter: { type: 'none' } }, active: { filter: { type: 'none' } } },
+  legend: { show: false }, 
+});
+
+// ==========================================
+// 🌟 KONFIGURASI TABEL LATEST COMPANY
+// ==========================================
+const tableColumns = [
+  { key: 'company', label: 'Nama Perusahaan', width: 'w-[40%]' },
+  { key: 'address', label: 'Alamat', width: 'w-[40%]' },
+  { key: 'created', label: 'Tanggal Bergabung', width: 'w-[20%]' }
+];
+
+const formatDate = (dateString) => {
+  if (!dateString) return '-';
+  const options = { day: 'numeric', month: 'numeric', year: 'numeric' };
+  return new Date(dateString).toLocaleDateString('id-ID', options);
+};
+
+// ==========================================
+// 🌟 FETCH SEMUA DATA (PROMISE.ALL)
+// ==========================================
+const fetchDashboardData = async () => {
+  isLoading.value = true;
+  try {
+    const [resCounter, resMonthly, resLatest] = await Promise.all([
+      ApiDashboard.getCounters(),
+      ApiDashboard.getMonthlyData(),
+      ApiDashboard.getLatestCompany()
+    ]);
+
+    // 1. Set Counter
+    if (resCounter.message === "Success" && resCounter.data) {
+      counters.value = {
+        visitor: resCounter.data.visitor_total || 0,
+        visit: resCounter.data.visit_total || 0,
+        company: resCounter.data.company_total || 0
+      };
+    }
+
+    // 2. Set Grafik Bulanan
+    if (resMonthly.message === "Success" && resMonthly.data) {
+      const dataAPI = resMonthly.data;
+      chartOptions.value = { ...chartOptions.value, xaxis: { ...chartOptions.value.xaxis, categories: dataAPI.titles } };
+      chartSeries.value = [ { name: 'Visitor', data: dataAPI.visitors }, { name: 'Visit', data: dataAPI.visits } ];
+    }
+
+    // 3. Set Tabel Latest Company
+    if (resLatest.message === "Success" && resLatest.data) {
+      latestCompanies.value = resLatest.data;
+    }
+
+  } catch (error) {
+    console.error("Gagal memuat data Dashboard:", error);
+  } finally {
+    isLoading.value = false;
+  }
+};
+
+onMounted(() => {
+  fetchDashboardData();
+});
 </script>
 
 <template>
-  <div class="bg-white rounded-2xl p-6 shadow-sm min-h-full flex flex-col">
-    
-    <div>
-      <h1 class="text-2xl font-semibold text-gray-800 mb-1">Dashboard</h1>
-      <p class="text-sm text-gray-500">Dashboard super admin</p>
+  <div class="bg-white rounded-2xl p-4 md:p-6 shadow-sm min-h-full flex flex-col relative">
+    <PageHeader title="Dashboard" subtitle="Dashboard super admin." />
+    <hr class="border-gray-100 mt-1 mb-4" />
+ 
+    <div class="mb-6 flex flex-col lg:flex-row items-center gap-3 bg-[#F9FBFE] p-4 rounded-xl">
+      <div class="flex-1 w-full bg-white p-5 rounded-xl flex flex-col justify-center border border-gray-100/50 shadow-sm">
+        <div class="flex items-center gap-1.5 mb-1">
+          <span class="text-[13px] font-medium text-gray-800">Total Visitor</span>
+        </div>
+        <div class="text-2xl font-semibold text-gray-900">{{ counters.visitor }}</div>
+      </div>
+
+      <div class="flex-1 w-full bg-white p-5 rounded-xl flex flex-col justify-center border border-gray-100/50 shadow-sm">
+        <div class="flex items-center gap-1.5 mb-1">
+          <span class="text-[13px] font-medium text-gray-800">Total Visit</span>
+        </div>
+        <div class="text-2xl font-semibold text-gray-900">{{ counters.visit }}</div>
+      </div>
+
+      <div class="flex-1 w-full bg-white p-5 rounded-xl flex flex-col justify-center border border-gray-100/50 shadow-sm">
+        <div class="flex items-center gap-1.5 mb-1">
+          <span class="text-[13px] font-medium text-gray-800">Total Perusahaan</span>
+        </div>
+        <div class="text-2xl font-semibold text-gray-900">{{ counters.company }}</div>
+      </div>
     </div>
 
-      <hr class="border-gray-100 my-5" />
+    <div class="mb-6 border border-gray-100 rounded-xl p-6 shadow-[0_2px_10px_rgb(0,0,0,0.02)]">
+      <div class="flex items-center justify-between mb-6">
+        <h3 class="text-[15px] font-bold text-gray-800">Statistik Kunjungan Bulanan</h3>
+        <div class="flex items-center gap-4 text-[12px] font-medium">
+          <div class="flex items-center gap-1.5"><div class="w-3 h-3 rounded bg-[#2D51FD]"></div><span class="text-gray-500">Visitor</span></div>
+          <div class="flex items-center gap-1.5"><div class="w-3 h-3 rounded bg-[#ED9D0F]"></div><span class="text-gray-500">Visit</span></div>
+        </div>
+      </div>
+      <div class="w-full h-80">
+        <apexchart 
+          v-if="chartSeries[0].data.length > 0"
+          class="w-full h-full" 
+          type="line" 
+          height="100%" 
+          width="100%" 
+          :options="chartOptions" 
+          :series="chartSeries" 
+        />
+      </div>
+    </div>
+
+    <div class="border border-gray-100 rounded-xl p-6 shadow-[0_2px_10px_rgb(0,0,0,0.02)]">
+      <div class="flex items-center justify-between mb-5">
+        <h3 class="text-[15px] font-bold text-gray-800">Perusahaan Terbaru</h3>
+      </div>
+      
+      <div class="border border-gray-100 rounded-lg overflow-hidden">
+        <TableSuperAdmin :columns="tableColumns" :data="latestCompanies">
+          
+          <template #company="{ item }">
+            <div class="flex items-center gap-3">
+              <img v-if="item.logo" :src="item.logo" class="w-8 h-8 rounded-full object-cover border border-gray-100 shrink-0 bg-white" />
+              <div v-else class="w-8 h-8 rounded-full bg-[#EAF8FF] text-[#2BB5F4] flex items-center justify-center text-[12px] font-bold shrink-0">
+                {{ item.name.charAt(0).toUpperCase() }}
+              </div>
+              <span class="text-[13px] text-gray-800 font-medium whitespace-nowrap">{{ item.name }}</span>
+            </div>
+          </template>
+
+          <template #address="{ item }">
+            <div class="text-gray-600 text-[13px] line-clamp-1 max-w-62.5 md:max-w-100" :title="item.address">
+              {{ item.address }}
+            </div>
+          </template>
+
+          <template #created="{ item }">
+            <span class="text-gray-600 text-[13px] whitespace-nowrap">{{ formatDate(item.created_at) }}</span>
+          </template>
+
+        </TableSuperAdmin>
+      </div>
+    </div>
 
   </div>
 </template>
+
+<style scoped>
+.apexcharts-canvas:focus,
+.apexcharts-canvas svg:focus,
+.vue-apexcharts:focus,
+.vue-apexcharts {
+  outline: none !important;
+  box-shadow: none !important;
+}
+</style>
