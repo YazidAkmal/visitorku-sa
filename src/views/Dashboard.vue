@@ -8,9 +8,6 @@ import TableSuperAdmin from '@/components/common/TableSuperAdmin.vue';
 // Import API
 import { ApiDashboard } from '@/services/ApiDashboard';
 
-// ==========================================
-// 🌟 STATE DATA
-// ==========================================
 const isLoading = ref(true);
 
 const counters = ref({
@@ -21,9 +18,6 @@ const counters = ref({
 
 const latestCompanies = ref([]);
 
-// ==========================================
-// 🌟 KONFIGURASI APEXCHARTS
-// ==========================================
 const chartSeries = ref([{ name: 'Visitor', data: [] }, { name: 'Visit', data: [] }]);
 
 const chartOptions = ref({
@@ -40,9 +34,6 @@ const chartOptions = ref({
   legend: { show: false }, 
 });
 
-// ==========================================
-// 🌟 KONFIGURASI TABEL LATEST COMPANY
-// ==========================================
 const tableColumns = [
   { key: 'company', label: 'Nama Perusahaan', width: 'w-[40%]' },
   { key: 'address', label: 'Alamat', width: 'w-[40%]' },
@@ -55,9 +46,6 @@ const formatDate = (dateString) => {
   return new Date(dateString).toLocaleDateString('id-ID', options);
 };
 
-// ==========================================
-// 🌟 FETCH SEMUA DATA (PROMISE.ALL)
-// ==========================================
 const fetchDashboardData = async () => {
   isLoading.value = true;
   try {
