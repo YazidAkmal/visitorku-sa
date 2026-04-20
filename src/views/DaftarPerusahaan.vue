@@ -185,7 +185,7 @@ const closeDropdown = () => { activeDropdown.value = null; };
 </script>
 
 <template>    
-  <div class="bg-white rounded-2xl p-4 md:p-6 shadow-sm min-h-full flex flex-col min-w-0 w-full relative">
+  <div class="bg-white rounded-2xl p-4 md:p-6 min-h-full flex flex-col min-w-0 w-full relative">
     
     <PageHeader title="Daftar Perusahaan" subtitle="Daftar perusahaan pengguna Visitorku." />
     <hr class="border-gray-100 mt-1 mb-4" />
@@ -230,7 +230,7 @@ const closeDropdown = () => { activeDropdown.value = null; };
               </button>
               <Teleport to="body">
                 <div v-if="activeDropdown === item.id" @click="closeDropdown" class="fixed inset-0 z-998"></div>
-                <div v-if="activeDropdown === item.id" class="fixed w-36 bg-white border border-gray-100 rounded-lg shadow-xl z-999 py-1.5 font-['Poppins']" :style="{ top: dropdownPos.top, right: dropdownPos.right }">
+                <div v-if="activeDropdown === item.id" class="fixed w-36 bg-white border border-gray-100 rounded-lg z-999 py-1.5 font-['Poppins']" :style="{ top: dropdownPos.top, right: dropdownPos.right }">
                   <button @click="closeDropdown" class="w-full text-left px-4 py-2.5 text-[13px] font-medium text-gray-700 hover:bg-red-50 hover:text-red-600 transition-colors">Hapus Data</button>
                 </div>
               </Teleport>
@@ -291,15 +291,15 @@ const closeDropdown = () => { activeDropdown.value = null; };
             <p class="text-[12px] text-gray-400 mb-4">Gambaran singkat kondisi dan aktivitas perusahaan saat ini.</p>
             
             <div class="grid grid-cols-3 gap-3 md:gap-4">
-              <div class="bg-white rounded-xl p-4 text-center border border-gray-100 shadow-sm">
+              <div class="bg-white rounded-xl p-4 text-center border border-gray-100">
                 <div class="text-[12px] text-gray-500 font-medium mb-2.5">Total Visitor</div>
                 <div class="text-2xl font-bold text-gray-900 leading-none">{{ detailCounters.visitor }}</div>
               </div>
-              <div class="bg-white rounded-xl p-4 text-center border border-gray-100 shadow-sm">
+              <div class="bg-white rounded-xl p-4 text-center border border-gray-100">
                 <div class="text-[12px] text-gray-500 font-medium mb-2.5">Total Visit</div>
                 <div class="text-2xl font-bold text-gray-900 leading-none">{{ detailCounters.visit }}</div>
               </div>
-              <div class="bg-white rounded-xl p-4 text-center border border-gray-100 shadow-sm">
+              <div class="bg-white rounded-xl p-4 text-center border border-gray-100">
                 <div class="text-[12px] text-gray-500 font-medium mb-2.5">Total Pengguna</div>
                 <div class="text-2xl font-bold text-gray-900 leading-none">{{ detailCounters.user }}</div>
               </div>
@@ -307,7 +307,7 @@ const closeDropdown = () => { activeDropdown.value = null; };
           </div>
 
           <div class="px-6 md:px-8 mb-8 relative z-20">
-            <div class="bg-white rounded-xl p-6 border border-gray-100 shadow-sm">
+            <div class="bg-white rounded-xl p-6 border border-gray-100">
               <h3 class="text-[14px] font-semibold text-gray-800 mb-5">Informasi Perusahaan</h3>
               <div class="grid grid-cols-1 md:grid-cols-3 gap-y-5 gap-x-4">
                 <div class="col-span-1 md:col-span-3">
@@ -350,7 +350,7 @@ const closeDropdown = () => { activeDropdown.value = null; };
                 </div>
               </div>
               
-              <div class="w-full h-80 border border-gray-100 rounded-xl bg-white shadow-sm flex flex-col p-4 relative">
+              <div class="w-full h-80 border border-gray-100 rounded-xl bg-white flex flex-col p-4 relative">
                 <apexchart 
                   v-if="showChart"
                   class="w-full h-full" 
@@ -373,7 +373,7 @@ const closeDropdown = () => { activeDropdown.value = null; };
                 <h3 class="text-[14px] text-gray-800 font-medium">Visitor Terbaru 30 hari terakhir</h3>
               </div>
               
-              <div v-if="detailLatestVisitors.length" class="border border-gray-100 rounded-lg overflow-hidden bg-white shadow-sm">
+              <div v-if="detailLatestVisitors.length" class="border border-gray-100 rounded-lg overflow-hidden bg-white">
                 <TableSuperAdmin :columns="miniTableColumns" :data="detailLatestVisitors">
                   <template #nama="{ item }">
                     <div class="flex items-center gap-3">

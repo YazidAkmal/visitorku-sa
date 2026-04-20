@@ -1,25 +1,19 @@
 <script setup>
 import { ref } from 'vue';
-import { useRouter } from 'vue-router'; // 👈 Import vue-router untuk pindah halaman
+import { useRouter } from 'vue-router'; 
 
 import bgPattern from '@/assets/images/long-pattern.svg';
 import logoVisitorku from '@/assets/images/visitorku-logo.svg';
 import globeIcon from '@/assets/images/icon/globe-vector.svg';
 
 const isDropdownOpen = ref(false);
-const router = useRouter(); // 👈 Inisialisasi router
+const router = useRouter();
 
-// 🌟 FUNGSI LOGOUT 🌟
 const handleLogout = () => {
-  // 1. Bersihkan token dan data user dari LocalStorage
   localStorage.removeItem('token');
   localStorage.removeItem('user');
   
-  // 2. Tutup dropdown
-  isDropdownOpen.value = false;
-  
-  // 3. Arahkan kembali ke halaman Login
-  router.push('/login');
+  router.push({ name: 'Login' });
 };
 </script>
 

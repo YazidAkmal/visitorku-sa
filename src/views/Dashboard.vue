@@ -8,9 +8,6 @@ import TableSuperAdmin from '@/components/common/TableSuperAdmin.vue';
 // Import API
 import { ApiDashboard } from '@/services/ApiDashboard';
 
-// ==========================================
-// 🌟 STATE DATA
-// ==========================================
 const isLoading = ref(true);
 
 const counters = ref({
@@ -21,9 +18,6 @@ const counters = ref({
 
 const latestCompanies = ref([]);
 
-// ==========================================
-// 🌟 KONFIGURASI APEXCHARTS
-// ==========================================
 const chartSeries = ref([{ name: 'Visitor', data: [] }, { name: 'Visit', data: [] }]);
 
 const chartOptions = ref({
@@ -40,9 +34,6 @@ const chartOptions = ref({
   legend: { show: false }, 
 });
 
-// ==========================================
-// 🌟 KONFIGURASI TABEL LATEST COMPANY
-// ==========================================
 const tableColumns = [
   { key: 'company', label: 'Nama Perusahaan', width: 'w-[40%]' },
   { key: 'address', label: 'Alamat', width: 'w-[40%]' },
@@ -55,9 +46,6 @@ const formatDate = (dateString) => {
   return new Date(dateString).toLocaleDateString('id-ID', options);
 };
 
-// ==========================================
-// 🌟 FETCH SEMUA DATA (PROMISE.ALL)
-// ==========================================
 const fetchDashboardData = async () => {
   isLoading.value = true;
   try {
@@ -101,26 +89,26 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="bg-white rounded-2xl p-4 md:p-6 shadow-sm min-h-full flex flex-col relative">
+  <div class="bg-white rounded-2xl p-4 md:p-6 min-h-full flex flex-col relative">
     <PageHeader title="Dashboard" subtitle="Dashboard super admin." />
     <hr class="border-gray-100 mt-1 mb-4" />
  
     <div class="mb-6 flex flex-col lg:flex-row items-center gap-3 bg-[#F9FBFE] p-4 rounded-xl">
-      <div class="flex-1 w-full bg-white p-5 rounded-xl flex flex-col justify-center border border-gray-100/50 shadow-sm">
+      <div class="flex-1 w-full bg-white p-5 rounded-xl flex flex-col justify-center border border-gray-100/50">
         <div class="flex items-center gap-1.5 mb-1">
           <span class="text-[13px] font-medium text-gray-800">Total Visitor</span>
         </div>
         <div class="text-2xl font-semibold text-gray-900">{{ counters.visitor }}</div>
       </div>
 
-      <div class="flex-1 w-full bg-white p-5 rounded-xl flex flex-col justify-center border border-gray-100/50 shadow-sm">
+      <div class="flex-1 w-full bg-white p-5 rounded-xl flex flex-col justify-center border border-gray-100/50">
         <div class="flex items-center gap-1.5 mb-1">
           <span class="text-[13px] font-medium text-gray-800">Total Visit</span>
         </div>
         <div class="text-2xl font-semibold text-gray-900">{{ counters.visit }}</div>
       </div>
 
-      <div class="flex-1 w-full bg-white p-5 rounded-xl flex flex-col justify-center border border-gray-100/50 shadow-sm">
+      <div class="flex-1 w-full bg-white p-5 rounded-xl flex flex-col justify-center border border-gray-100/50">
         <div class="flex items-center gap-1.5 mb-1">
           <span class="text-[13px] font-medium text-gray-800">Total Perusahaan</span>
         </div>
@@ -128,7 +116,7 @@ onMounted(() => {
       </div>
     </div>
 
-    <div class="mb-6 border border-gray-100 rounded-xl p-6 shadow-[0_2px_10px_rgb(0,0,0,0.02)]">
+    <div class="mb-6 border border-gray-100 rounded-xl p-6">
       <div class="flex items-center justify-between mb-6">
         <h3 class="text-[15px] font-bold text-gray-800">Statistik Kunjungan Bulanan</h3>
         <div class="flex items-center gap-4 text-[12px] font-medium">

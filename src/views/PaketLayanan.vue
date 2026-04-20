@@ -226,7 +226,7 @@ const handleDelete = async (id) => {
 </script>
 
 <template>    
-  <div class="bg-white rounded-2xl p-6 shadow-sm min-h-full flex flex-col relative">
+  <div class="bg-white rounded-2xl p-6     min-h-full flex flex-col relative">
     
     <PageHeader 
       title="Paket & Layanan" 
@@ -281,7 +281,7 @@ const handleDelete = async (id) => {
               
               <div 
                 v-if="activeDropdown === item.id" 
-                class="fixed w-36 bg-white border border-gray-100 rounded-lg shadow-xl z-999 py-1.5 font-['Poppins']"
+                class="fixed w-36 bg-white border border-gray-100 rounded-lg     z-999 py-1.5 font-['Poppins']"
                 :style="{ top: dropdownPos.top, right: dropdownPos.right }"
               >
                 <button @click="openEditPanel(item)" class="w-full text-left px-4 py-2.5 text-[13px] font-medium text-gray-700 hover:bg-[#E8F8F3] hover:text-[#2BB5F4] transition-colors">
@@ -318,13 +318,13 @@ const handleDelete = async (id) => {
       <template #body>
         <div class="px-6 md:px-8 py-6 pb-10 space-y-6 bg-[#F8FAFC]">
           
-          <div class="bg-white rounded-xl border border-gray-100 p-6 shadow-sm">
+          <div class="bg-white rounded-xl border border-gray-100 p-6    ">
             <h3 class="text-[15px] font-bold text-gray-800 mb-5 border-b border-gray-50 pb-3">Informasi Paket</h3>
             
             <div class="space-y-4">
               <div>
                 <label class="block text-[13px] text-gray-800 font-medium mb-1.5">Nama Paket <span class="text-red-500">*</span></label>
-                <input v-model="formData.namaPaket" type="text" placeholder="Contoh: Visitor free" class="w-full border border-[#2BB5F4] rounded-lg px-4 py-2.5 text-[13px] text-gray-700 focus:outline-none focus:ring-1 focus:ring-[#2BB5F4]" />
+                <input v-model="formData.namaPaket" type="text" placeholder="Contoh: Visitor free" class="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-[13px] text-gray-700 focus:outline-none focus:ring-1 focus:ring-[#2BB5F4]" />
               </div>
               <div>
                 <label class="block text-[13px] text-gray-800 font-medium mb-1.5">Deskripsi <span class="text-red-500">*</span></label>
@@ -333,7 +333,7 @@ const handleDelete = async (id) => {
             </div>
           </div>
 
-          <div class="bg-white rounded-xl border border-gray-100 p-6 shadow-sm">
+          <div class="bg-white rounded-xl border border-gray-100 p-6    ">
             <h3 class="text-[15px] font-bold text-gray-800 mb-1">Harga dan Durasi Paket</h3>
             <p class="text-[12px] text-gray-400 mb-5 border-b border-gray-50 pb-3">Harga berlaku untuk pelanggan baru setelah paket diaktifkan.</p>
             
@@ -412,7 +412,7 @@ const handleDelete = async (id) => {
             </div>
           </div>
 
-          <div class="bg-white rounded-xl border border-gray-100 p-6 shadow-sm">
+          <div class="bg-white rounded-xl border border-gray-100 p-6    ">
             <h3 class="text-[15px] font-bold text-gray-800 mb-1">Batas dan Fitur</h3>
             <p class="text-[12px] text-gray-400 mb-5 border-b border-gray-50 pb-3">Batas layanan menentukan kapasitas penggunaan.</p>
             

@@ -14,8 +14,9 @@ import Lunas from '@/assets/images/icon/lunas-state-vector.svg'
 import KonfirmasiBayar from '@/assets/images/alert-konfirmasi-pembayaran.svg'
 import Invoice from '@/assets/images/icon/monthly-invoice-vector.svg'
 
-// Import API
+// Import API & Helper
 import { ApiInvoice } from '@/services/ApiInvoice';
+import { SwalHelper } from '@/components/utils/SweetAlertHelper';
 
 // State
 const searchQuery = ref('');
@@ -31,7 +32,7 @@ const formatRupiah = (angka) => {
   return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(angka || 0);
 };
 
-// Format Tanggal Singkat (YYYY-MM-DD)
+// Format Tanggal 
 const formatDateShort = (dateStr) => {
   if (!dateStr) return '-';
   return dateStr.split('T')[0];
@@ -62,12 +63,15 @@ const fetchInvoices = async () => {
           periode: periodeText,
           status: statusText,
           statusDesc: statusDesc,
-          statusCode: statusCode,         
+          statusCode: statusCode,        
           price_type: item.price_type || 'Unknown',
           base_price: basePrice,
           disc: item.disc || 0,
           payment_total: item.payment_total || 0,
-          invoice_url: item.invoice_url
+          invoice_url: item.invoice_url,
+          raw_status: item.status, 
+          raw_payment_type: item.payment_type,
+          raw: item
         };
       });
     }
@@ -145,7 +149,6 @@ const closeDropdown = () => {
   activeDropdown.value = null;
 };
 
-// State Detail Panel
 const isDetailOpen = ref(false);
 const selectedDetail = ref(null);
 
@@ -154,6 +157,74 @@ const openDetail = (item) => {
   isDetailOpen.value = true;
 };
 
+const isEditOpen = ref(false);
+const isSavingEdit = ref(false);
+const editFormData = ref({
+  id: null,
+  status: '',
+  payment_type: '',
+  active_from_date: '',
+  active_to_date: ''
+});
+
+const openEditPanel = (item) => {
+  const dates = item.dateRange.split(' • ');
+  
+  editFormData.value = {
+    id: item.id,
+    status: item.raw_status || 'unpaid',
+    payment_type: item.raw_payment_type || 'monthly',
+    active_from_date: dates[0] && dates[0] !== '-' ? dates[0] : '',
+    active_to_date: dates[1] && dates[1] !== '-' ? dates[1] : '',
+    raw: item.raw
+  };
+  
+  isEditOpen.value = true;
+  closeDropdown();
+};
+
+const handleEditSave = async () => {
+  isSavingEdit.value = true;
+  try {
+    const raw = editFormData.value.raw; 
+    
+    const payload = {
+      active_from_date: editFormData.value.active_from_date,  
+      active_to_date: editFormData.value.active_to_date,      
+      quota: raw.quota || 0,
+      payment_type: editFormData.value.payment_type,          
+      price_id: raw.price_id || "",
+      status: editFormData.value.status,                      
+      level: raw.level || 0,
+      monthly_price: raw.monthly_price || 0,
+      monthly_quota: raw.monthly_quota || 0,
+      yearly_price: raw.yearly_price || 0,
+      yearly_quota: raw.yearly_quota || 0,
+      description: raw.description || "-", 
+      branch_limit: raw.branch_limit || 0,
+      account_limit: raw.account_limit || 0,
+      storage_limit: raw.storage_limit || 0,
+      retention: raw.retention || 0,
+      open_api: raw.open_api || false,
+      signage_limit: raw.signage_limit || 0,
+      event_visitor_limit: raw.event_visitor_limit || 0
+    };
+
+    await ApiInvoice.updateInvoice(editFormData.value.id, payload);
+    
+    await fetchInvoices(); 
+    isEditOpen.value = false;
+    SwalHelper.success('Berhasil!', 'Data tagihan berhasil diperbarui.');
+
+  } catch (error) {
+    console.error("Gagal mengupdate tagihan:", error);
+    SwalHelper.error('Gagal Menyimpan', error.message);
+  } finally {
+    isSavingEdit.value = false;
+  }
+};
+
+// State Konfirmasi Pembayaran
 const isAlertOpen = ref(false);
 const isProcessingPayment = ref(false);
 
@@ -165,7 +236,7 @@ const closeAlert = () => {
   if(!isProcessingPayment.value) isAlertOpen.value = false;
 };
 
-// Fungsi Konfrimasi
+// Fungsi Konfirmasi Pembayaran
 const confirmPayment = async () => {
   if (!selectedDetail.value) return;
   
@@ -177,10 +248,11 @@ const confirmPayment = async () => {
     
     isAlertOpen.value = false;
     isDetailOpen.value = false;
+    SwalHelper.success('Lunas!', 'Tagihan berhasil dikonfirmasi.');
     
   } catch (error) {
     console.error("Gagal konfirmasi pembayaran:", error);
-    alert("Gagal mengkonfirmasi pembayaran. Silakan coba lagi.");
+    SwalHelper.error("Gagal", "Gagal mengkonfirmasi pembayaran. Silakan coba lagi.");
   } finally {
     isProcessingPayment.value = false;
   }
@@ -189,7 +261,7 @@ const confirmPayment = async () => {
 // Fungsi PDF
 const openInvoicePDF = (url) => {
   if (url) window.open(url, '_blank');
-  else alert("Dokumen Invoice tidak tersedia.");
+  else SwalHelper.error("Gagal", "Dokumen Invoice tidak tersedia.");
 };
 </script>
 
@@ -301,7 +373,7 @@ const openInvoicePDF = (url) => {
                   class="fixed w-32 bg-white border border-gray-100 rounded-lg shadow-xl z-999 py-1.5 font-['Poppins']"
                   :style="{ top: dropdownPos.top, right: dropdownPos.right }"
                 >
-                  <button @click="closeDropdown" class="w-full text-left px-4 py-2.5 text-[13px] font-medium text-gray-700 hover:bg-[#EAF8FF] hover:text-[#2BB5F4] transition-colors">
+                  <button @click="openEditPanel(item)" class="w-full text-left px-4 py-2.5 text-[13px] font-medium text-gray-700 hover:bg-[#EAF8FF] hover:text-[#2BB5F4] transition-colors">
                     Edit
                   </button>
                 </div>
@@ -320,18 +392,14 @@ const openInvoicePDF = (url) => {
     </div>
 
     <DetailPanel :is-open="isDetailOpen" @close="isDetailOpen = false">
-      
       <template #header v-if="selectedDetail">
         <div class="px-6 md:px-8 pb-4 flex items-center gap-4">
-          
           <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center shrink-0 shadow-sm">
             <img :src="Invoice" alt="Invoice Icon" class="w-6 h-6" />
           </div>
-          
           <div class="flex-1">
             <div class="flex items-center gap-3 mb-1.5">
               <h2 class="text-[20px] font-bold text-white tracking-wide">{{ selectedDetail.periode }} Invoice</h2>
-              
               <div v-if="selectedDetail.statusCode === 'success'" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#CDF2E6] text-[#38CA99] text-[13px] shadow-sm">
                 <img :src="Lunas" class="w-3.5 h-3.5" alt="Lunas" /> Lunas
               </div>
@@ -348,8 +416,7 @@ const openInvoicePDF = (url) => {
 
       <template #body v-if="selectedDetail">
         <div class="px-6 md:px-8 py-6 flex flex-col gap-6 h-full min-h-[calc(100vh-200px)]">
-          
-          <div class="bg-white rounded-xl border border-gray-100 p-6 shadow-sm">
+          <div class="bg-white rounded-xl border border-gray-100 p-6">
             <div class="mb-6 border-b border-gray-100 pb-5">
               <div class="text-[13px] text-gray-400 font-medium mb-1">Nama Perusahaan</div>
               <div class="text-[15px] text-gray-800 font-semibold">{{ selectedDetail.perusahaan }}</div>
@@ -375,7 +442,7 @@ const openInvoicePDF = (url) => {
             </div>
           </div>
 
-          <div class="bg-white rounded-xl border border-gray-100 p-6 shadow-sm">
+          <div class="bg-white rounded-xl border border-gray-100 p-6">
             <h3 class="text-[15px] font-bold text-gray-800 mb-1">Rincian Paket</h3>
             <p class="text-[13px] text-gray-400 mb-6">Paket dan layanan yang digunakan selama periode tagihan ini.</p>
 
@@ -386,9 +453,9 @@ const openInvoicePDF = (url) => {
               </div>
               <div class="flex justify-between text-[15px]">
                 <span class="text-gray-500">Diskon</span>
-                <span class="text-gray-800 font-medium">- {{ formatRupiah(selectedDetail.disc) }}</span>
+                <span class="text-gray-800 font-medium"> {{ formatRupiah(selectedDetail.disc) }}</span>
               </div>
-              <div class="flex justify-between text-[15px]">
+              <div class="flex justify-between text-[15px] pt-4 border-t border-gray-100">
                 <span class="text-gray-800">Total Pembayaran</span>
                 <span class="text-gray-800 font-medium">{{ formatRupiah(selectedDetail.payment_total) }}</span>
               </div>
@@ -399,10 +466,7 @@ const openInvoicePDF = (url) => {
 
           <div v-if="selectedDetail.statusCode === 'success'" class="mt-4">
             <button @click="openInvoicePDF(selectedDetail.invoice_url)" class="w-full py-3.5 rounded-xl border border-[#2BB5F4] text-[#2BB5F4] font-semibold text-[13px] hover:bg-[#EAF8FF] flex items-center justify-center gap-2 transition-colors">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
-              </svg>
-              Download Invoice
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg> Download Invoice
             </button>
           </div>
 
@@ -410,20 +474,80 @@ const openInvoicePDF = (url) => {
             <p class="text-[11px] text-gray-400 text-right md:w-1/2 self-end">Pastikan pembayaran telah diterima sebelum melakukan konfirmasi.</p>
             <div class="flex flex-col md:flex-row gap-4">
               <button @click="openInvoicePDF(selectedDetail.invoice_url)" class="flex-1 py-3.5 rounded-xl border border-[#2BB5F4] text-[#2BB5F4] font-semibold text-[13px] hover:bg-[#EAF8FF] flex items-center justify-center gap-2 transition-colors">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
-                </svg>
-                Download Invoice
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg> Download Invoice
               </button>
               <button @click="openAlert" class="flex-1 py-3.5 rounded-xl bg-[#2BB5F4] text-white font-semibold text-[13px] hover:bg-[#14A5E6] transition-colors">
                 Konfirmasi Pembayaran
               </button>
             </div>
           </div>
+        </div>
+      </template>
+    </DetailPanel>
+
+    <DetailPanel :is-open="isEditOpen" @close="isEditOpen = false">
+      <template #header>
+        <div class="px-6 md:px-8 pt-0 pb-0 relative z-20">
+          <h2 class="text-lg mb-4 font-bold text-white tracking-wide">Edit Data Tagihan</h2>
+        </div>
+      </template>
+
+      <template #body>
+        <div class="px-6 md:px-8 py-6 pb-10 bg-[#F8FAFC] h-full min-h-[calc(100vh-150px)] flex flex-col">
+          
+          <div class="bg-white rounded-xl border border-gray-100 p-6 shadow-sm">
+            <h3 class="text-[15px] font-bold text-gray-800 mb-5 border-b border-gray-50 pb-3">Informasi Status & Periode</h3>
+            
+            <div class="space-y-4">
+              <div>
+                <label class="block text-[13px] text-gray-800 font-medium mb-1.5">Status Tagihan <span class="text-red-500">*</span></label>
+                <select v-model="editFormData.status" class="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-[13px] text-gray-700 focus:outline-none focus:border-[#2BB5F4] bg-white">
+                  <option value="paid">Lunas</option>
+                  <option value="unpaid">Menunggu Pembayaran</option>
+                </select>
+              </div>
+              
+              <div>
+                <label class="block text-[13px] text-gray-800 font-medium mb-1.5">Periode Pembayaran <span class="text-red-500">*</span></label>
+                <select v-model="editFormData.payment_type" class="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-[13px] text-gray-700 focus:outline-none focus:border-[#2BB5F4] bg-white">
+                  <option value="monthly">Monthly</option>
+                  <option value="yearly">Yearly</option>
+                </select>
+              </div>
+
+              <div class="flex flex-col md:flex-row gap-4 pt-2">
+                <div class="flex-1">
+                  <label class="block text-[13px] text-gray-800 font-medium mb-1.5">Tanggal Mulai Aktif</label>
+                  <input v-model="editFormData.active_from_date" type="date" class="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-[13px] text-gray-700 focus:outline-none focus:border-[#2BB5F4]" />
+                </div>
+                <div class="flex-1">
+                  <label class="block text-[13px] text-gray-800 font-medium mb-1.5">Tanggal Berakhir</label>
+                  <input v-model="editFormData.active_to_date" type="date" class="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-[13px] text-gray-700 focus:outline-none focus:border-[#2BB5F4]" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex-1"></div>
+
+          <div class="flex gap-4 mt-8">
+            <button @click="isEditOpen = false" class="flex-1 py-3 rounded-xl border border-[#2BB5F4] text-[#2BB5F4] font-semibold text-[13px] hover:bg-[#EAF8FF] transition-colors">
+              Batal
+            </button>
+            <button 
+              @click="handleEditSave" 
+              :disabled="isSavingEdit"
+              class="flex-1 py-3 rounded-xl bg-[#2BB5F4] text-white font-semibold text-[13px] hover:bg-[#14A5E6] transition-colors flex items-center justify-center gap-2 disabled:opacity-70"
+            >
+              <svg v-if="isSavingEdit" class="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+              {{ isSavingEdit ? 'Menyimpan...' : 'Simpan Perubahan' }}
+            </button>
+          </div>
 
         </div>
       </template>
     </DetailPanel>
+
 
     <Teleport to="body">
       <Transition

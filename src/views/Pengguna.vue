@@ -25,7 +25,7 @@ const formatDateShort = (dateStr) => {
   return dateStr.split('T')[0];
 };
 
-// 🌟 FETCH DATA DARI API 🌟
+// Fetch Data API
 const fetchAdminData = async () => {
   isLoadingData.value = true;
   try {
@@ -85,7 +85,6 @@ const toggleDropdown = (id, event) => {
 };
 const closeDropdown = () => { activeDropdown.value = null; };
 
-// 🌟 LOGIKA DETAIL PANEL (CREATE & EDIT) 🌟
 const isDetailOpen = ref(false);
 const panelMode = ref('create'); 
 const isSaving = ref(false);
@@ -95,7 +94,7 @@ const formData = ref({
   nama: '',
   email: '',
   password: '',
-  confirmPassword: '' // 👈 State baru untuk konfirmasi password
+  confirmPassword: '' 
 });
 
 const resetForm = () => {
@@ -121,14 +120,12 @@ const openEditPanel = (item) => {
   closeDropdown();
 };
 
-// 🌟 FUNGSI SIMPAN KE API 🌟
+// FUngsi Add
 const handleSave = async () => {
-  // Validasi 1: Pastikan Password dan Konfirmasi sama (jika diisi)
   if (formData.value.password !== formData.value.confirmPassword) {
     return SwalHelper.error('Validasi Gagal', 'Password dan Konfirmasi Password tidak cocok!');
   }
 
-  // Validasi 2: Kalau bikin baru, password wajib diisi
   if (panelMode.value === 'create' && !formData.value.password) {
     return SwalHelper.error('Validasi Gagal', 'Password wajib diisi untuk Admin baru!');
   }
@@ -140,13 +137,11 @@ const handleSave = async () => {
       email: formData.value.email
     };
 
-    // Hanya kirim password ke API jika field-nya diisi
     if (formData.value.password) {
       payload.password = formData.value.password;
       payload.c_password = formData.value.confirmPassword;
     }
 
-    // Tembak API sesuai mode
     if (panelMode.value === 'create') {
       await ApiAdmin.createAdmin(payload);
     } else {
@@ -154,7 +149,7 @@ const handleSave = async () => {
     }
 
     isDetailOpen.value = false;
-    await fetchAdminData(); // Refresh Data Tabel
+    await fetchAdminData(); 
     SwalHelper.success('Berhasil!', `Data admin berhasil di${panelMode.value === 'create' ? 'simpan' : 'perbarui'}.`);
 
   } catch (error) {
@@ -165,7 +160,7 @@ const handleSave = async () => {
   }
 };
 
-// 🌟 FUNGSI HAPUS API 🌟
+// Fungsi Delete
 const handleDelete = async (id) => {
   closeDropdown();
   const result = await SwalHelper.confirmDelete('Admin');
@@ -174,7 +169,7 @@ const handleDelete = async (id) => {
     try {
       SwalHelper.showLoading('Menghapus Admin...');
       await ApiAdmin.deleteAdmin(id);
-      await fetchAdminData(); // Refresh Data Tabel
+      await fetchAdminData(); 
       SwalHelper.success('Terhapus!', 'Admin berhasil dihapus.');
     } catch (error) {
       SwalHelper.error('Gagal Menghapus', error.message);
@@ -184,7 +179,7 @@ const handleDelete = async (id) => {
 </script>
 
 <template>
-  <div class="bg-white rounded-2xl p-4 md:p-6 shadow-sm min-h-full flex flex-col min-w-0 w-full relative">
+  <div class="bg-white rounded-2xl p-4 md:p-6    min-h-full flex flex-col min-w-0 w-full relative">
     
     <PageHeader title="Daftar Pengguna" subtitle="Manajemen akun akses Super Admin Visitorku." />
     <hr class="border-gray-100 mt-1 mb-4" />
@@ -220,7 +215,7 @@ const handleDelete = async (id) => {
 
         <template #detail_tanggal="{ item }">
           <div class="flex flex-col gap-0.5 text-[12.5px] whitespace-nowrap">
-            <div class="text-gray-800"><span class="font-medium text-gray-500">Create:</span> {{ item.created_at }}</div>
+            <div class="text-gray-400"><span class="font-medium">Create:</span> {{ item.created_at }}</div>
             <div class="text-gray-400"><span class="font-medium">Update:</span> {{ item.updated_at }}</div>
           </div>
         </template>
@@ -238,7 +233,7 @@ const handleDelete = async (id) => {
               <div v-if="activeDropdown === item.id" @click="closeDropdown" class="fixed inset-0 z-998"></div>
               <div 
                 v-if="activeDropdown === item.id" 
-                class="fixed w-36 bg-white border border-gray-100 rounded-lg shadow-xl z-999 py-1.5 font-['Poppins']"
+                class="fixed w-36 bg-white border border-gray-100 rounded-lg    z-999 py-1.5 font-['Poppins']"
                 :style="{ top: dropdownPos.top, right: dropdownPos.right }"
               >
                 <button @click="openEditPanel(item)" class="w-full text-left px-4 py-2.5 text-[13px] font-medium text-gray-700 hover:bg-[#EAF8FF] hover:text-[#2BB5F4] transition-colors">
@@ -273,7 +268,7 @@ const handleDelete = async (id) => {
       <template #body>
         <div class="px-6 md:px-8 py-6 pb-10 bg-[#F8FAFC] h-full min-h-[calc(100vh-150px)] flex flex-col">
           
-          <div class="bg-white rounded-xl border border-gray-100 p-6 shadow-sm">
+          <div class="bg-white rounded-xl border border-gray-100 p-6   ">
             <h3 class="text-[15px] font-bold text-gray-800 mb-5 border-b border-gray-50 pb-3">Informasi Akun</h3>
             
             <div class="space-y-4">
