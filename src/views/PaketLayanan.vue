@@ -9,6 +9,7 @@ import SearchFilterBar from '@/components/common/SearchFilterBar.vue';
 import PaginationSuperAdmin from '@/components/common/PaginationSuperAdmin.vue';
 import DetailPanel from '@/components/common/DetailPanel.vue'; 
 import PaketLayananForm from '@/components/common/PaketLayananForm.vue';
+import ButtonTambah from '@/components/common/ButtonTambah.vue';
 
 // Import API
 import { ApiPrice } from '@/services/ApiPrice';
@@ -170,9 +171,9 @@ const handleDelete = async (id) => {
 
     <SearchFilterBar v-model="searchQuery" placeholderText="Cari berdasarkan nama paket">
       <template #action>
-        <button @click="openCreatePanel" class="px-5 py-2.5 border-2 border-[#2BB5F4] text-[#2BB5F4] rounded-lg font-medium text-[13px] md:text-sm hover:bg-[#2BB5F4] hover:text-white transition-all whitespace-nowrap">
+        <ButtonTambah @click="openCreatePanel">
           + Buat Paket Baru
-        </button>
+        </ButtonTambah>
       </template>
     </SearchFilterBar>
 

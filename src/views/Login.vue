@@ -4,7 +4,7 @@ import { useRouter } from 'vue-router';
 import { AuthService } from '@/services/AuthService.js'; 
 
 import logoVisitorku from '@/assets/images/visitorku-logo.svg';
-import patternBg from '@/assets/images/short-pattern.svg';
+import patternBg from '@/assets/images/Background.svg';
 
 const router = useRouter();
 

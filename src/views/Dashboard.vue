@@ -4,12 +4,14 @@ import { ref, onMounted } from 'vue';
 // Import Components
 import PageHeader from '@/components/common/PageHeader.vue';
 import TableSuperAdmin from '@/components/common/TableSuperAdmin.vue';
+import DashboardCounter from '@/components/common/DashboardCounter.vue'; // Sesuaikan path-nya jika beda
 
 // Import API
 import { ApiDashboard } from '@/services/ApiDashboard';
 
 const isLoading = ref(true);
 
+// Initial State (Jaring Pengaman sebelum API datang)
 const counters = ref({
   visitor: 0,
   visit: 0,
@@ -89,28 +91,7 @@ onMounted(() => {
     <PageHeader title="Dashboard" subtitle="Dashboard super admin." />
     <hr class="border-gray-100 mt-1 mb-4" />
  
-    <div class="mb-6 flex flex-col lg:flex-row items-center gap-3 bg-[#F9FBFE] p-4 rounded-xl">
-      <div class="flex-1 w-full bg-white p-5 rounded-xl flex flex-col justify-center border border-gray-100/50">
-        <div class="flex items-center gap-1.5 mb-1">
-          <span class="text-[13px] font-medium text-gray-800">Total Visitor</span>
-        </div>
-        <div class="text-2xl font-semibold text-gray-900">{{ counters.visitor }}</div>
-      </div>
-
-      <div class="flex-1 w-full bg-white p-5 rounded-xl flex flex-col justify-center border border-gray-100/50">
-        <div class="flex items-center gap-1.5 mb-1">
-          <span class="text-[13px] font-medium text-gray-800">Total Visit</span>
-        </div>
-        <div class="text-2xl font-semibold text-gray-900">{{ counters.visit }}</div>
-      </div>
-
-      <div class="flex-1 w-full bg-white p-5 rounded-xl flex flex-col justify-center border border-gray-100/50">
-        <div class="flex items-center gap-1.5 mb-1">
-          <span class="text-[13px] font-medium text-gray-800">Total Perusahaan</span>
-        </div>
-        <div class="text-2xl font-semibold text-gray-900">{{ counters.company }}</div>
-      </div>
-    </div>
+    <DashboardCounter :counters="counters" />
 
     <div class="mb-6 border border-gray-100 rounded-xl p-6">
       <div class="flex items-center justify-between mb-6">

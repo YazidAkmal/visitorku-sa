@@ -9,6 +9,7 @@ import PaginationSuperAdmin from '@/components/common/PaginationSuperAdmin.vue';
 import DetailPanel from '@/components/common/DetailPanel.vue'; 
 import TagihanViewDetail from '@/components/common/RiwayatTagihanDetail.vue';
 import TagihanEditForm from '@/components/common/RiwayatTagihanForm.vue';
+import TagihanCounter from '@/components/common/TagihanCounter.vue';
 
 // Import Icon
 import MenungguPembayaran from '@/assets/images/icon/menunggu-pembayaran-state-vector.svg'
@@ -138,22 +139,7 @@ const openInvoicePDF = (url) => { url ? window.open(url, '_blank') : SwalHelper.
     <PageHeader title="Riwayat Tagihan" subtitle="Data Seluruh tagihan dan pembayaran." />
     <hr class="border-gray-100 mt-1 mb-4" />
 
-    <div class="mb-8 flex flex-col lg:flex-row items-center gap-3 bg-[#F9FBFE] p-4 rounded-xl">
-      <div class="flex-1 w-full p-5 rounded-xl flex flex-col justify-center">
-        <div class="flex items-center gap-1.5 mb-1"><span class="text-[13px] font-medium text-gray-800">Total Tagihan</span></div>
-        <div class="text-2xl font-semibold text-gray-900">{{ formatRupiah(summary.total) }}</div>
-      </div>
-      <div class="w-8 h-8 shrink-0 rounded-full bg-white shadow-sm flex items-center justify-center font-bold text-gray-500 lg:transform-none transform rotate-90 lg:rotate-0">=</div>
-      <div class="flex-1 w-full bg-white p-5 rounded-xl flex flex-col justify-center">
-        <div class="flex items-center gap-1.5 mb-1"><span class="text-[13px] font-medium text-gray-800">Tagihan Belum Dibayar</span></div>
-        <div class="text-2xl font-semibold text-gray-900">{{ formatRupiah(summary.belumDibayar) }}</div>
-      </div>
-      <div class="w-8 h-8 shrink-0 rounded-full bg-white shadow-sm flex items-center justify-center font-bold text-gray-500 lg:transform-none transform rotate-90 lg:rotate-0">+</div>
-      <div class="flex-1 w-full bg-white p-5 rounded-xl flex flex-col justify-center">
-        <div class="flex items-center gap-1.5 mb-1"><span class="text-[13px] font-medium text-gray-800">Tagihan Lunas</span></div>
-        <div class="text-2xl font-semibold text-gray-900">{{ formatRupiah(summary.lunas) }}</div>
-      </div>
-    </div>
+    <TagihanCounter :summary="summary" />
 
     <SearchFilterBar v-model="searchQuery" placeholderText="Cari nama perusahaan/nomor tagihan" />
 

@@ -52,16 +52,18 @@ const changePage = (page) => {
 </script>
 
 <template>
-  <div class="flex items-center justify-between mt-6 pt-4 border-t border-gray-100">
-    <div class="text-[13px] text-gray-500 font-medium">
+  <div class="flex flex-col md:flex-row items-center justify-between gap-4 mt-6 pt-4 border-t border-gray-100">
+    
+    <div class="text-[13px] text-gray-500 font-medium text-center md:text-left">
       Menampilkan {{ showingCount }} dari {{ totalData }} data
     </div>
 
-    <div v-if="totalPages > 1" class="flex items-center gap-2">
+    <div v-if="totalPages > 1" class="flex flex-wrap items-center justify-center gap-1.5 md:gap-2">
+      
       <button 
         @click="changePage(1)"
         :disabled="currentPage === 1"
-        class="px-4 py-2 border border-gray-200 rounded-lg text-[13px] font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        class="px-3 md:px-4 py-2 border border-gray-200 rounded-lg text-[12px] md:text-[13px] font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
       >
         Pertama
       </button>
@@ -70,7 +72,7 @@ const changePage = (page) => {
         v-for="page in visiblePages" 
         :key="page"
         @click="changePage(page)"
-        class="w-9 h-9 flex items-center justify-center rounded-lg text-[13px] font-medium transition-colors"
+        class="w-8 h-8 md:w-9 md:h-9 flex items-center justify-center rounded-lg text-[12px] md:text-[13px] font-medium transition-colors"
         :class="currentPage === page 
           ? 'bg-[#2BB5F4] text-white border border-[#2BB5F4]' 
           : 'border border-gray-200 text-gray-600 hover:bg-gray-50'"
@@ -81,10 +83,11 @@ const changePage = (page) => {
       <button 
         @click="changePage(totalPages)"
         :disabled="currentPage === totalPages"
-        class="px-4 py-2 border border-gray-200 rounded-lg text-[13px] font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        class="px-3 md:px-4 py-2 border border-gray-200 rounded-lg text-[12px] md:text-[13px] font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
       >
         Terakhir
       </button>
+
     </div>
   </div>
 </template>
