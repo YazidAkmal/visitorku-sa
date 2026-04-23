@@ -21,7 +21,7 @@ export const AuthService = {
   },
 
   async checkPassword(password) {
-    const token = localStorage.getItem('token');
+    const token = sessionStorage.getItem('token');
     const response = await fetch(`${BASE_URL}/check-password`, {
       method: 'POST',
       headers: {

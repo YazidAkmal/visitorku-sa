@@ -4,8 +4,8 @@
 @import "tailwindcss";
 
 @theme {
-  --color-primary-blue: #03A9F4; /* Biru cerah (teks dan ikon aktif) */
-  --color-light-blue: #E1F5FE; /* Biru muda (latar belakang aktif) */
+  --color-primary-blue: #03A9F4;
+  --color-light-blue: #E1F5FE; 
 }
 
 html, body, #app {
@@ -20,3 +20,33 @@ body {
   background-color: #F4F6F8;
   font-family: var(--font-poppins);
 }
+
+.swal2-container {
+  z-index: 100000 !important;
+}
+
+.apexcharts-canvas:focus,
+.apexcharts-canvas svg:focus,
+.vue-apexcharts:focus,
+.vue-apexcharts {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="number"] {
+  -moz-appearance: textfield; 
+  appearance: textfield;   
+}
+
+.hide-scrollbar::-webkit-scrollbar { width: 6px; }
+.hide-scrollbar::-webkit-scrollbar-track { background: transparent; }
+.hide-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+.hide-scrollbar::-webkit-scrollbar { display: none; }
+.hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+.filter-blue { filter: invert(56%) sepia(89%) saturate(1095%) hue-rotate(200deg) brightness(101%) contrast(96%); }

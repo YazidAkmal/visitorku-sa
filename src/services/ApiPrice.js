@@ -3,7 +3,7 @@ const BASE_URL = 'https://visitorku.io/api-stg-su';
 export const ApiPrice = {
   // Ambil Semua Paket
   async getAllPrices() {
-    const token = localStorage.getItem('token');
+    const token = sessionStorage.getItem('token');
     const response = await fetch(`${BASE_URL}/price`, {
       method: 'GET',
       headers: { 'Authorization': `Bearer ${token}` }
@@ -15,7 +15,7 @@ export const ApiPrice = {
 
   // Buat Paket Baru
   async createPrice(data) {
-    const token = localStorage.getItem('token');
+    const token = sessionStorage.getItem('token');
     const response = await fetch(`${BASE_URL}/price`, {
       method: 'POST',
       headers: { 
@@ -31,7 +31,7 @@ export const ApiPrice = {
 
   // Update Paket
   async updatePrice(id, data) {
-    const token = localStorage.getItem('token');
+    const token = sessionStorage.getItem('token');
     const response = await fetch(`${BASE_URL}/price/${id}`, {
       method: 'PUT',
       headers: { 
@@ -47,7 +47,7 @@ export const ApiPrice = {
 
   // Hapus Paket
   async deletePrice(id) {
-    const token = localStorage.getItem('token');
+    const token = sessionStorage.getItem('token');
     const response = await fetch(`${BASE_URL}/price/${id}`, {
       method: 'DELETE',
       headers: { 'Authorization': `Bearer ${token}` }

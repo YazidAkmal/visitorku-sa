@@ -3,7 +3,7 @@ const BASE_URL = 'https://visitorku.io/api-stg-su';
 export const ApiCompanyKey = {
   
   async getCompanies() {
-    const token = localStorage.getItem('token');
+    const token = sessionStorage.getItem('token');
     const response = await fetch(`${BASE_URL}/company`, {
       method: 'GET',
       headers: {
@@ -17,7 +17,7 @@ export const ApiCompanyKey = {
   },
 
   async getCounters(companyId) {
-    const token = localStorage.getItem('token');
+    const token = sessionStorage.getItem('token');
     const response = await fetch(`${BASE_URL}/company/counter-data/${companyId}`, {
       method: 'GET',
       headers: { 'Authorization': `Bearer ${token}` }
@@ -26,7 +26,7 @@ export const ApiCompanyKey = {
   },
 
   async getMonthlyData(companyId) {
-    const token = localStorage.getItem('token');
+    const token = sessionStorage.getItem('token');
     const response = await fetch(`${BASE_URL}/company/monthly-data/${companyId}`, {
       method: 'GET',
       headers: { 'Authorization': `Bearer ${token}` }
@@ -35,7 +35,7 @@ export const ApiCompanyKey = {
   },
 
   async getLatestVisitors(companyId) {
-    const token = localStorage.getItem('token');
+    const token = sessionStorage.getItem('token');
     const response = await fetch(`${BASE_URL}/company/latest-visitor/${companyId}`, {
       method: 'GET',
       headers: { 'Authorization': `Bearer ${token}` }

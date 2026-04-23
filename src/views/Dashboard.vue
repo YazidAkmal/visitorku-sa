@@ -40,10 +40,9 @@ const tableColumns = [
   { key: 'created', label: 'Tanggal Bergabung', width: 'w-[20%]' }
 ];
 
-const formatDate = (dateString) => {
-  if (!dateString) return '-';
-  const options = { day: 'numeric', month: 'numeric', year: 'numeric' };
-  return new Date(dateString).toLocaleDateString('id-ID', options);
+const formatDate = (dateStr) => {
+  if (!dateStr) return '-';
+  return dateStr.split('T')[0];
 };
 
 const fetchDashboardData = async () => {
@@ -55,7 +54,6 @@ const fetchDashboardData = async () => {
       ApiDashboard.getLatestCompany()
     ]);
 
-    // 1. Set Counter
     if (resCounter.message === "Success" && resCounter.data) {
       counters.value = {
         visitor: resCounter.data.visitor_total || 0,
@@ -64,14 +62,12 @@ const fetchDashboardData = async () => {
       };
     }
 
-    // 2. Set Grafik Bulanan
     if (resMonthly.message === "Success" && resMonthly.data) {
       const dataAPI = resMonthly.data;
       chartOptions.value = { ...chartOptions.value, xaxis: { ...chartOptions.value.xaxis, categories: dataAPI.titles } };
       chartSeries.value = [ { name: 'Visitor', data: dataAPI.visitors }, { name: 'Visit', data: dataAPI.visits } ];
     }
 
-    // 3. Set Tabel Latest Company
     if (resLatest.message === "Success" && resLatest.data) {
       latestCompanies.value = resLatest.data;
     }
@@ -171,13 +167,3 @@ onMounted(() => {
 
   </div>
 </template>
-
-<style scoped>
-.apexcharts-canvas:focus,
-.apexcharts-canvas svg:focus,
-.vue-apexcharts:focus,
-.vue-apexcharts {
-  outline: none !important;
-  box-shadow: none !important;
-}
-</style>

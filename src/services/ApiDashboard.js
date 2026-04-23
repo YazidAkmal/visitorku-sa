@@ -2,7 +2,7 @@ const BASE_URL = 'https://visitorku.io/api-stg-su';
 
 export const ApiDashboard = {
   async getCounters() {
-    const token = localStorage.getItem('token');
+    const token = sessionStorage.getItem('token');
     const response = await fetch(`${BASE_URL}/dashboard/counter`, {
       method: 'GET',
       headers: { 'Authorization': `Bearer ${token}` }
@@ -11,7 +11,7 @@ export const ApiDashboard = {
   },
 
   async getMonthlyData() {
-    const token = localStorage.getItem('token');
+    const token = sessionStorage.getItem('token');
     const response = await fetch(`${BASE_URL}/dashboard/monthly-data`, {
       method: 'GET',
       headers: { 'Authorization': `Bearer ${token}` }
@@ -20,7 +20,7 @@ export const ApiDashboard = {
   },
 
   async getLatestCompany() {
-    const token = localStorage.getItem('token');
+    const token = sessionStorage.getItem('token');
     const response = await fetch(`${BASE_URL}/dashboard/latest-company`, {
       method: 'GET',
       headers: { 'Authorization': `Bearer ${token}` }

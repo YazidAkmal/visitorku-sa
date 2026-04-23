@@ -59,9 +59,3 @@ defineEmits(['close']);
     </Transition>
   </Teleport>
 </template>
-
-<style scoped>
-.hide-scrollbar::-webkit-scrollbar { width: 6px; }
-.hide-scrollbar::-webkit-scrollbar-track { background: transparent; }
-.hide-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-</style>

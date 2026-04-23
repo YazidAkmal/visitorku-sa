@@ -2,7 +2,7 @@ const BASE_URL = 'https://visitorku.io/api-stg-su';
 
 export const ApiAdmin = {
   async getAdmins() {
-    const token = localStorage.getItem('token');
+    const token = sessionStorage.getItem('token');
     const response = await fetch(`${BASE_URL}/admin`, {
       method: 'GET',
       headers: { 'Authorization': `Bearer ${token}` }
@@ -13,7 +13,7 @@ export const ApiAdmin = {
   },
 
   async createAdmin(data) {
-    const token = localStorage.getItem('token');
+    const token = sessionStorage.getItem('token');
     const response = await fetch(`${BASE_URL}/admin`, {
       method: 'POST',
       headers: {
@@ -28,7 +28,7 @@ export const ApiAdmin = {
   },
 
   async updateAdmin(id, data) {
-    const token = localStorage.getItem('token');
+    const token = sessionStorage.getItem('token');
     const response = await fetch(`${BASE_URL}/admin/${id}`, {
       method: 'PUT',
       headers: {
@@ -43,7 +43,7 @@ export const ApiAdmin = {
   },
 
   async deleteAdmin(id) {
-    const token = localStorage.getItem('token');
+    const token = sessionStorage.getItem('token');
     const response = await fetch(`${BASE_URL}/admin/${id}`, {
       method: 'DELETE',
       headers: { 'Authorization': `Bearer ${token}` }

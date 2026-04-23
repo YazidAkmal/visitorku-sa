@@ -38,16 +38,18 @@ const isActive = (path) => {
 </script>
 
 <template>
-<aside class="w-65 bg-[#F9FBFE] flex flex-col p-4 gap-3 font-['Poppins'] sticky top-14 h-[calc(100vh-3.5rem)] overflow-y-auto hide-scrollbar">    
-    <div class="bg-white rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.06)] p-4">
-      <h3 class="text-[16px] font-semibold text-[#1E293B] mt-5 mb-3 tracking-wide">Main Menu</h3>
-      <div class="space-y-1">
+  <aside class="w-20 md:w-65 bg-[#F9FBFE] flex flex-col p-2 md:p-4 gap-3 font-['Poppins'] sticky top-14 h-[calc(100vh-3.5rem)] overflow-y-auto hide-scrollbar transition-all duration-300">    
+    
+    <div class="bg-white rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.06)] p-2 md:p-4">
+      <h3 class="hidden md:block text-[16px] font-semibold text-[#1E293B] mt-2 md:mt-5 mb-3 tracking-wide">Main Menu</h3>
+      
+      <div class="space-y-2 md:space-y-1 mt-2 md:mt-0">
         <router-link 
           v-for="item in mainMenuItems" 
           :key="item.name"
           :to="item.path"
           :class="[
-            'flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer transition-all text-[14px] no-underline',
+            'flex items-center justify-center md:justify-start gap-3 p-2.5 md:px-3 md:py-2.5 rounded-lg cursor-pointer transition-all text-[14px] no-underline',
             isActive(item.path) 
               ? 'bg-light-blue text-primary-blue font-medium'
               : 'text-[#64748B] hover:bg-gray-50 font-normal'
@@ -56,23 +58,24 @@ const isActive = (path) => {
           <img 
             :src="isActive(item.path) && item.iconSelected ? item.iconSelected : item.icon" 
             alt="" 
-            class="w-4.5 h-4.5 shrink-0"
+            class="w-5 h-5 md:w-4.5 md:h-4.5 shrink-0"
             :class="{ 'filter-blue': isActive(item.path) && !item.iconSelected }" 
           />
-          <span>{{ item.name }}</span>
+          <span class="hidden md:block">{{ item.name }}</span>
         </router-link>
       </div>
     </div>
     
-    <div class="bg-white rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.06)] p-4">
-      <h3 class="text-[16px] font-semibold text-[#1E293B] mt-5 mb-3 tracking-wide">Master Data</h3>
-      <div class="space-y-1">
+    <div class="bg-white rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.06)] p-2 md:p-4">
+      <h3 class="hidden md:block text-[16px] font-semibold text-[#1E293B] mt-2 md:mt-5 mb-3 tracking-wide">Master Data</h3>
+      
+      <div class="space-y-2 md:space-y-1 mt-2 md:mt-0">
         <router-link 
           v-for="item in masterDataItems" 
           :key="item.name"
           :to="item.path"
           :class="[
-            'flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer transition-all text-[14px] no-underline',
+            'flex items-center justify-center md:justify-start gap-3 p-2.5 md:px-3 md:py-2.5 rounded-lg cursor-pointer transition-all text-[14px] no-underline',
             isActive(item.path) 
               ? 'bg-light-blue text-primary-blue font-medium' 
               : 'text-[#64748B] hover:bg-gray-50 font-normal'
@@ -81,27 +84,13 @@ const isActive = (path) => {
             <img 
               :src="isActive(item.path) && item.iconSelected ? item.iconSelected : item.icon" 
               alt="" 
-              class="w-4.5 h-4.5 shrink-0"
+              class="w-5 h-5 md:w-4.5 md:h-4.5 shrink-0"
               :class="{ 'filter-blue': isActive(item.path) && !item.iconSelected }" 
             />
-            <span>{{ item.name }}</span>
+            <span class="hidden md:block">{{ item.name }}</span>
         </router-link>
       </div>
     </div>
+
   </aside>
 </template>
-
-<style scoped>
-  .hide-scrollbar::-webkit-scrollbar {
-    display: none;
-  }
-
-  .hide-scrollbar {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
-
-  .filter-blue {
-    filter: invert(56%) sepia(89%) saturate(1095%) hue-rotate(200deg) brightness(101%) contrast(96%);
-  }
-</style>

@@ -4,7 +4,7 @@ export const ApiInvoice = {
   
 // Get All Invoice
   async getAllInvoices() {
-    const token = localStorage.getItem('token');
+    const token = sessionStorage.getItem('token');
     const response = await fetch(`${BASE_URL}/invoice`, {
       method: 'GET',
       headers: {
@@ -19,7 +19,7 @@ export const ApiInvoice = {
 
 // Put Approval Invoice
   async approveInvoice(id) {
-    const token = localStorage.getItem('token');
+    const token = sessionStorage.getItem('token');
     const response = await fetch(`${BASE_URL}/invoice/approval/${id}`, {
       method: 'PUT',
       headers: {
@@ -35,7 +35,7 @@ export const ApiInvoice = {
 
 // Update Invoice
   async updateInvoice(id, data) {
-    const token = localStorage.getItem('token');
+    const token = sessionStorage.getItem('token');
     const response = await fetch(`${BASE_URL}/invoice/${id}`, {
       method: 'PUT',
       headers: {

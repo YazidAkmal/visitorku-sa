@@ -10,8 +10,8 @@ const isDropdownOpen = ref(false);
 const router = useRouter();
 
 const handleLogout = () => {
-  localStorage.removeItem('token');
-  localStorage.removeItem('user');
+  sessionStorage.removeItem('token');
+  sessionStorage.removeItem('user');
   
   router.push({ name: 'Login' });
 };
@@ -48,10 +48,7 @@ const handleLogout = () => {
             alt="Profile" 
             class="w-8 h-8 rounded-full border border-white/30 object-cover" 
           />
-          
-          <svg class="w-4 h-4 text-white transition-transform duration-200" :class="{ 'rotate-180': isDropdownOpen }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-          </svg>
+
         </div>
 
         <div v-if="isDropdownOpen" @click="isDropdownOpen = false" class="fixed inset-0 z-40"></div>

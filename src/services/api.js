@@ -1,7 +1,7 @@
 export const BASE_URL = 'https://visitorku.io/api-stg-su';
 
 export const apiClient = async (endpoint, options = {}) => {
-  const token = localStorage.getItem('token');
+  const token = sessionStorage.getItem('token');
 
   const headers = {
     'Content-Type': 'application/json',
@@ -9,9 +9,9 @@ export const apiClient = async (endpoint, options = {}) => {
     ...options.headers,
   };
 
-  const response = await fetch(`${BASE_URL}${endpoint}`, {
-    ...options,
-    headers,
+  const response = await fetch(`${BASE_URL}/admin`, {
+    method: 'GET',
+    headers: { 'Authorization': `Bearer ${token}` }
   });
 
   const result = await response.json();
@@ -19,7 +19,7 @@ export const apiClient = async (endpoint, options = {}) => {
   if (!response.ok) {
     if (response.status === 401) {
       console.warn("Token expired atau tidak valid. Silakan login ulang.");
-      localStorage.removeItem('token');
+      sessionStorage.removeItem('token');
     }
     throw new Error(result.message || 'Terjadi kesalahan pada server');
   }
