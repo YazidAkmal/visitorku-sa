@@ -1,4 +1,4 @@
-const BASE_URL = 'https://visitorku.io/api-stg-su';
+import { BASE_URL } from './api';
 
 export const ApiCompanyKey = {
   

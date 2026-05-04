@@ -1,8 +1,6 @@
 <script setup>
-import { defineProps } from 'vue';
 import TableSuperAdmin from '@/components/common/TableSuperAdmin.vue';
 
-// Menerima semua data detail dari Parent (DaftarPerusahaan.vue)
 const props = defineProps({
   isLoadingDetail: { type: Boolean, required: true },
   selectedDetail: { type: Object, required: true },
@@ -17,7 +15,6 @@ const props = defineProps({
 
 const emit = defineEmits(['update:activeTab']);
 
-// Fungsi Emit untuk mengubah Tab
 const changeTab = (tabName) => {
   emit('update:activeTab', tabName);
 };

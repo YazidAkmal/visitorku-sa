@@ -1,6 +1,3 @@
-<script setup>
-</script>
-
 <template>
   <button class="flex items-center justify-center p-2.5 md:px-5 md:py-2.5 border-2 border-[#2BB5F4] text-[#2BB5F4] rounded-xl font-medium text-[13px] md:text-sm hover:bg-[#2BB5F4] hover:text-white transition-all whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-[#2BB5F4]/50">
     

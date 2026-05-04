@@ -1,4 +1,4 @@
-export const BASE_URL = 'https://visitorku.io/api-stg-su';
+export const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export const apiClient = async (endpoint, options = {}) => {
   const token = sessionStorage.getItem('token');
@@ -9,8 +9,8 @@ export const apiClient = async (endpoint, options = {}) => {
     ...options.headers,
   };
 
-  const response = await fetch(`${BASE_URL}/admin`, {
-    method: 'GET',
+  const response = await fetch(`${BASE_URL}${endpoint}`, {
+    method: options.method || 'GET',
     headers: { 'Authorization': `Bearer ${token}` }
   });
 

@@ -12,7 +12,6 @@ import penggunaIcon from '@/assets/images/icon/pengguna-vector.svg';
 import paketlayananIcon from '@/assets/images/icon/paket-dan-layanan-vector.svg';
 import bahasawaktuIcon from '@/assets/images/icon/bahasa-dan-waktu-vector.svg';
 import pengaturanIcon from '@/assets/images/icon/pengaturan-vector.svg';
-
 import selectedDashboardIcon from '@/assets/images/icon/selected-dashboard-vector.svg';
 import selectedDaftarPerusahaanIcon from '@/assets/images/icon/selected-daftar-perusahaan-vector.svg';
 import selectedRiwayatTagihanIcon from '@/assets/images/icon/selected-riwayat-tagihan-vector.svg';

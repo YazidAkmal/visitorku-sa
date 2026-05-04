@@ -1,13 +1,10 @@
 <script setup>
-import { defineProps, defineEmits } from 'vue';
-
 const props = defineProps({
   selectedDetail: { type: Object, required: true }
 });
 
 const emit = defineEmits(['download', 'confirm']);
 
-// Format Rupiah khusus untuk komponen ini
 const formatRupiah = (angka) => {
   return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(angka || 0);
 };
@@ -21,7 +18,10 @@ const formatRupiah = (angka) => {
         <div class="text-[15px] text-gray-800 font-semibold">{{ selectedDetail.perusahaan }}</div>
       </div>
       
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-y-6 gap-x-4">
+      <div 
+        class="grid grid-cols-2 gap-y-6 gap-x-4"
+        :class="selectedDetail.statusCode === 'success' ? 'md:grid-cols-4' : 'md:grid-cols-3'"
+      >        
         <div>
           <div class="text-[13px] text-gray-400 font-medium mb-1">Nomor Tagihan</div>
           <div class="text-[15px] text-[#2BB5F4] font-semibold">{{ selectedDetail.noTagihan }}</div>
@@ -34,7 +34,7 @@ const formatRupiah = (angka) => {
           <div class="text-[13px] text-gray-400 font-medium mb-1">Status Tagihan</div>
           <div class="text-[15px] text-gray-800 font-semibold">{{ selectedDetail.status }}</div>
         </div>
-        <div>
+        <div v-if="selectedDetail.statusCode === 'success'">
           <div class="text-[13px] text-gray-400 font-medium mb-1">Metode Pembayaran</div>
           <div class="text-[15px] text-gray-800 font-semibold">-</div>
         </div>

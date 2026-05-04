@@ -1,0 +1,11 @@
+{
+  "sidebar": {
+    "main_menu": "Menu Utama",
+    "dashboard": "Dasbor",
+    "company_list": "Daftar Perusahaan"
+  },
+  "dashboard": {
+    "total_visitor": "Total Pengunjung",
+    "total_company": "Total Perusahaan"
+  }
+}

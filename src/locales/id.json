@@ -1,0 +1,68 @@
+{
+  "sidebar": {
+    "main_Menu": "Menu utama",
+    "dashboard": "dashboard",
+    "company_List": "daftar perusahaan",
+    "invoice": "Riwayat Tagihan",
+    "user": "pengguna",
+    "master_data": "data utama",
+    "package": "paket & Layanan",
+    "language": "Bahasa & Waktu",
+    "setting": "pengaturan"
+  },
+
+  "dashboard": {
+    "d_SuperAdmindesc": "dashboard super admin.",
+    "d_TotVisitor": "Total Visitor",
+    "d_TotVisit": "Total Visit",
+    "d_Totcompany": "Total perusahaan",
+    "d_Statistic": "Statistik Kunjungan Bulanan",
+    "d_Month": "Bulan",
+    "d_Newestcompany": "perusahaan Terbaru",
+    "d_companyName": "Nama perusahaan",
+    "d_Address": "Alamat",
+    "d_Joindate": "Tanggal Bergabung"
+  },
+
+  "company_list": {
+    "c_companyListdesc": "daftar perusahaan pengguna Visitorku.",
+    "c_Search": "cari berasarkan nama perusahaan",
+    "c_companyName": "Nama perusahaan",
+    "c_companyAddress": "Alamat perusahaan"
+  },
+
+  "invoice": {
+    "i_invoicedesc": "data seluruh tagihan dan pembayaran.",
+    "i_Total": "Total Tagihan",
+    "i_Nopaid": "Tagihan Belum dibayar",
+    "i_paid": "Tagihan Lunas",
+    "i_Search": "cari nama perusahaan / nomor tagihan",
+    "i_Number": "Nomor Tagihan",
+    "i_company": "perusahaan",
+    "i_period": "periode"
+  },
+
+  "user": {
+    "u_userTitle": "daftar pengguna",
+    "u_userdesc": "daftar admin visitorku.",
+    "u_Search": "cari berdasarkan nama / email",
+    "u_Name": "Nama",
+    "u_Button": "+ Tambah admin"
+  },
+
+  "package": {
+    "p_packagedesc": "Manajemen harga dan spesifikasi paket Visitorku.",
+    "p_Search": "cari berdasarkan nama paket",
+    "p_Button": "+ Buat paket Baru",
+    "p_info": "informasi paket",
+    "p_Monthly": "Bulanan",
+    "p_Yearly": "Tahunan"
+  },
+
+  "common_layout": {
+    "action": "Aksi",
+    "pagination": "Menampilkan {count} dari {total} data",
+    "first_page": "First",
+    "last_page": "Last"
+  }
+}

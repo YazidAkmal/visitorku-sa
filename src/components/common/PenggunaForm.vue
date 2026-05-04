@@ -1,6 +1,4 @@
 <script setup>
-import { defineProps, defineEmits } from 'vue';
-
 const props = defineProps({
   formData: { type: Object, required: true },
   panelMode: { type: String, default: 'create' },
