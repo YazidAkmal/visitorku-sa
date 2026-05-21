@@ -1,59 +1,59 @@
-import { BASE_URL } from './api';
+import { BASE_URL } from './api'
 
 export const ApiPrice = {
   // Ambil Semua Paket
   async getAllPrices() {
-    const token = sessionStorage.getItem('token');
+    const token = localStorage.getItem('token')
     const response = await fetch(`${BASE_URL}/price`, {
       method: 'GET',
-      headers: { 'Authorization': `Bearer ${token}` }
-    });
-    const result = await response.json();
-    if (!response.ok) throw new Error(result.message || 'Gagal memuat paket');
-    return result;
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    const result = await response.json()
+    if (!response.ok) throw new Error(result.message || 'Gagal memuat paket')
+    return result
   },
 
   // Buat Paket Baru
   async createPrice(data) {
-    const token = sessionStorage.getItem('token');
+    const token = localStorage.getItem('token')
     const response = await fetch(`${BASE_URL}/price`, {
       method: 'POST',
-      headers: { 
+      headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}` 
+        Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify(data)
-    });
-    const result = await response.json();
-    if (!response.ok) throw new Error(result.message || 'Gagal membuat paket');
-    return result;
+      body: JSON.stringify(data),
+    })
+    const result = await response.json()
+    if (!response.ok) throw new Error(result.message || 'Gagal membuat paket')
+    return result
   },
 
   // Update Paket
   async updatePrice(id, data) {
-    const token = sessionStorage.getItem('token');
+    const token = localStorage.getItem('token')
     const response = await fetch(`${BASE_URL}/price/${id}`, {
       method: 'PUT',
-      headers: { 
+      headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}` 
+        Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify(data)
-    });
-    const result = await response.json();
-    if (!response.ok) throw new Error(result.message || 'Gagal mengupdate paket');
-    return result;
+      body: JSON.stringify(data),
+    })
+    const result = await response.json()
+    if (!response.ok) throw new Error(result.message || 'Gagal mengupdate paket')
+    return result
   },
 
   // Hapus Paket
   async deletePrice(id) {
-    const token = sessionStorage.getItem('token');
+    const token = localStorage.getItem('token')
     const response = await fetch(`${BASE_URL}/price/${id}`, {
       method: 'DELETE',
-      headers: { 'Authorization': `Bearer ${token}` }
-    });
-    const result = await response.json();
-    if (!response.ok) throw new Error(result.message || 'Gagal menghapus paket');
-    return result;
-  }
-};
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    const result = await response.json()
+    if (!response.ok) throw new Error(result.message || 'Gagal menghapus paket')
+    return result
+  },
+}

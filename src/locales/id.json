@@ -1,68 +1,203 @@
 {
+  "topbar": {
+    "switchLang": "Ganti Bahasa"
+  },
+
   "sidebar": {
-    "main_Menu": "Menu utama",
-    "dashboard": "dashboard",
-    "company_List": "daftar perusahaan",
+    "main_Menu": "Menu Utama",
+    "dashboard": "Dashboard",
+    "company_List": "Daftar perusahaan",
     "invoice": "Riwayat Tagihan",
-    "user": "pengguna",
-    "master_data": "data utama",
-    "package": "paket & Layanan",
+    "user": "Pengguna",
+    "master_data": "Data Master",
+    "package": "Paket & Layanan",
     "language": "Bahasa & Waktu",
-    "setting": "pengaturan"
+    "setting": "Pengaturan"
   },
 
   "dashboard": {
-    "d_SuperAdmindesc": "dashboard super admin.",
-    "d_TotVisitor": "Total Visitor",
-    "d_TotVisit": "Total Visit",
-    "d_Totcompany": "Total perusahaan",
+    "d_SuperAdmindesc": "Dashboard super admin.",
+    "d_TotVisitor": "Total Pengunjung",
+    "d_TotVisit": "Total Kunjungan",
+    "d_TotCompany": "Total Perusahaan",
     "d_Statistic": "Statistik Kunjungan Bulanan",
     "d_Month": "Bulan",
-    "d_Newestcompany": "perusahaan Terbaru",
+    "d_NewestCompany": "perusahaan Terbaru",
     "d_companyName": "Nama perusahaan",
     "d_Address": "Alamat",
     "d_Joindate": "Tanggal Bergabung"
   },
 
   "company_list": {
-    "c_companyListdesc": "daftar perusahaan pengguna Visitorku.",
-    "c_Search": "cari berasarkan nama perusahaan",
+    "c_companyListdesc": "Daftar perusahaan pengguna Visitorku.",
+    "c_Search": "Cari berasarkan nama perusahaan",
     "c_companyName": "Nama perusahaan",
     "c_companyAddress": "Alamat perusahaan"
   },
 
+  "company_panel": {
+    "cp_registered": "Terdaftar sejak: ",
+    "cp_summary": "Ringkasan Perusahaan",
+    "cp_totVisitor": "Total Pengunjung",
+    "cp_totVisit": "Total Kunjungan",
+    "cp_totUser": "Total Pengguna",
+    "cp_information": "Informasi Perusahaan",
+    "cp_companyName": "Nama Perusahaan",
+    "cp_emailAddress": "Alamat Email",
+    "cp_phone": "Nomor Telepon",
+    "cp_address": "Alamat",
+    "cp_visitor": "Pengunjung",
+    "cp_visit": "Kunjungan",
+    "cp_latestVisitor": "Pengunjung Terakhir",
+    "cp_filterDesc1": "Jumlah pengunjung 1 tahun terakhir",
+    "cp_filterDesc2": "Pengunjung terbaru 30 hari terakhir",
+    "cp_month": "Bulan",
+    "cp_name": "Nama",
+    "cp_contact": "Kontak",
+    "cp_used": "Terpakai",
+    "cp_visitLimits": "Batas Kunjungan",
+    "cp_title": "Ringkasan Perusahaan",
+    "cp_subtitle": "Gambaran singkat kondisi dan aktivitas perusahaan saat ini",
+    "cp_informationTitle": "Informasi Perusahaan",
+    "cp_informationName": "Nama Perusahaan",
+    "cp_informationEmail": "Alamat Email",
+    "cp_informationPhone": "Nomor Telepon",
+    "cp_informationPIC": "PIC",
+    "cp_informationAddress": "Alamat",
+    "cp_visitorSubtitle": "Jumlah pengunjung 1 tahun terakhir",
+    "cp_latestSubtitle": "Pengunjung terbaru 30 hari terakhir",
+    "cp_caption": "Belum ada pengunjung bulan ini",
+    "cp_freePlan": "Rencana Gratis"
+  },
+
   "invoice": {
-    "i_invoicedesc": "data seluruh tagihan dan pembayaran.",
+    "i_invoicedesc": "Data seluruh tagihan dan pembayaran.",
     "i_Total": "Total Tagihan",
     "i_Nopaid": "Tagihan Belum dibayar",
     "i_paid": "Tagihan Lunas",
-    "i_Search": "cari nama perusahaan / nomor tagihan",
+    "i_Search": "Cari nama perusahaan / nomor tagihan",
     "i_Number": "Nomor Tagihan",
-    "i_company": "perusahaan",
-    "i_period": "periode"
+    "i_company": "Perusahaan",
+    "i_period": "Periode",
+    "i_waitingStatus": "Menunggu Pembayaran",
+    "i_paidStatus": "Lunas",
+    "i_verify": "Diverifikasi pada"
+  },
+
+  "invoice_panel": {
+    "ip_monthlyInvoice": "Tagihan Bulanan",
+    "ip_invoiceDate": "Tanggal Tagihan",
+    "ip_companyName": "Nama Perusahaan",
+    "ip_invoiceNumber": "Nomor Tagihan",
+    "ip_dueDate": "Tanggal Tenggat",
+    "ip_invoiceStatus": "Status Tagihan",
+    "ip_paymentMethod": "Metode Pembayaran",
+    "ip_packageDetail": "Rincian Paket",
+    "ip_detailDesc": "Paket dan layanan yang digunakan selama periode tagihan ini",
+    "ip_discount": "Diskon",
+    "ip_paymentTotal": "Total Pembayaran",
+    "ip_packageDetail2": "Pastikan pembayaran telah diterima sebelum melakukan konfirmasi",
+    "ip_downloadButon": "Unduh Tagihan",
+    "ip_condirm_button": "Konfirmasi Pembayaran",
+    "ip_editInvoiceData": "Edit Data Tagihan",
+    "ip_information": "Informasi status & periode",
+    "ip_startDate": "Tanggal Mulai Aktif",
+    "ip_endDate": "Tanggal Berakhir"
   },
 
   "user": {
-    "u_userTitle": "daftar pengguna",
-    "u_userdesc": "daftar admin visitorku.",
-    "u_Search": "cari berdasarkan nama / email",
+    "u_userTitle": "Daftar pengguna",
+    "u_userdesc": "Daftar admin visitorku.",
+    "u_Search": "Cari berdasarkan nama / email",
     "u_Name": "Nama",
-    "u_Button": "+ Tambah admin"
+    "u_Button": "+ Tambah admin",
+    "u_Update": "Diperbarui pada",
+    "u_Create": "Dibuat pada"
+  },
+
+  "user_panel": {
+    "up_headerPanel1": "Tambah Admin Baru",
+    "up_headerPanel2": "Edit Data Admin",
+    "up_userInfo": "Informasi Akun",
+    "up_name": "Nama Lengkap",
+    "up_email": "Alamat Email",
+    "up_password": "Kata Sandi",
+    "up_confirmPassword": "Konfirmasi Kata Sandi",
+    "up_saveButton": "Simpan Data",
+    "up_cancelButton": "Batal",
+    "up_namePlaceholder": "contoh: Budi Santoso ",
+    "up_emailPlaceholder": "contoh: budi@visitorku.id",
+    "up_passwordPlaceholder": "Masukkan kata sandi",
+    "up_confirmPasswordPlaceholder": "Ketik ulang kata sandi"
   },
 
   "package": {
     "p_packagedesc": "Manajemen harga dan spesifikasi paket Visitorku.",
-    "p_Search": "cari berdasarkan nama paket",
+    "p_Search": "Cari berdasarkan nama paket",
     "p_Button": "+ Buat paket Baru",
-    "p_info": "informasi paket",
+    "p_info": "Informasi paket",
     "p_Monthly": "Bulanan",
     "p_Yearly": "Tahunan"
   },
 
+  "package_panel": {
+    "pp_headerPanel1": "Buat Paket",
+    "pp_headerPanel2": "Edit Paket",
+    "pp_header1": "Informasi Paket",
+    "pp_name": "Nama Paket",
+    "pp_namePlaceholder": "Contoh: Visitor free",
+    "pp_desc": "Deskripasi",
+    "pp_descPlaceholder": "Masukkan deskripsi paket disini...",
+    "pp_header2": "Harga dan Durasi Paket",
+    "pp_h2desc": "Harga berlaku untuk pelanggan baru setelah paket diaktifkan",
+    "pp_price": "Harga Berbayar",
+    "pp_priceDesc": "Harga yang harus dibayar pelanggan",
+    "pp_monthlyPrice": "Harga Bulanan",
+    "pp_monthlyPricePlaceholder": "Masukkan harga bulanan",
+    "pp_duration": "Durasi",
+    "pp_yearlyButton": "Aktifkan Harga Tahunan",
+    "pp_yearlyPrice": "Harga Tahunan",
+    "pp_yearlyPricePlaceholder": "Masukkan harga tahunan",
+    "pp_free": "Gratis",
+    "pp_freeDesc": "Pelanggan tidak perlu membayar paket ini.",
+    "pp_header3": "Batas dan Fitur",
+    "pp_h3desc": "Batas layanan menentukan kapasitas penggunaan",
+    "pp_visitorLimits": "Batas Kunjungan",
+    "pp_vlPlaceholder": "Masukkan jumlah kuota",
+    "pp_month": "/ Bulan",
+    "pp_branch": "JumlahCabang",
+    "pp_branchPlaceholder": "Masukkan maksimum cabang",
+    "pp_account": "Jumlah Akun",
+    "pp_accountPlaceholder": "Masukkan maksimum akun",
+    "pp_storage": "Limit Penyimpanan (MB)",
+    "pp_storagePlaceholder": "Masukkan maksimum penyimpanan",
+    "pp_saveButton": "Simpan Data",
+    "pp_cancelButton": "Batal"
+  },
+
+  "language": {
+    "l_languagedesc": "Bahasa & waktu super admin."
+  },
+
+  "setting": {
+    "s_settingdesc": "Pengaturan super admin."
+  },
+
   "common_layout": {
     "action": "Aksi",
-    "pagination": "Menampilkan {count} dari {total} data",
-    "first_page": "First",
-    "last_page": "Last"
+    "pagination": "Menampilkan { showingCount } dari { totalData } data",
+    "first_page": "Pertama",
+    "last_page": "Teakhir",
+    "take_data": "Mengambil data...",
+    "graphic_rendering": "Merender grafik...",
+    "sync": "Menyinkronkan data..."
+  },
+
+  "button": {
+    "company_delete": "Hapus Perusahaan",
+    "user_delete": "Hapus Admin",
+    "package_delete": "Hapus Paket",
+    "user_edit": "Edit Admin",
+    "package_edit": "Edit Paket"
   }
 }

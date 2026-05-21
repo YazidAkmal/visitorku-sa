@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
-import Login from '../views/Login.vue' 
+import Login from '../views/Login.vue'
 import Dashboard from '../views/Dashboard.vue'
 import DaftarPerusahaan from '../views/DaftarPerusahaan.vue'
 import RiwayatTagihan from '../views/RiwayatTagihan.vue'
@@ -14,8 +14,8 @@ const router = createRouter({
   routes: [
     { path: '/login', name: 'Login', component: Login },
 
-    { path: '/', redirect: '/login' }, 
-    
+    { path: '/', redirect: '/login' },
+
     { path: '/dashboard', name: 'Dashboard', component: Dashboard, meta: { requiresAuth: true } },
     { path: '/daftar-perusahaan', component: DaftarPerusahaan, meta: { requiresAuth: true } },
     { path: '/riwayat-tagihan', component: RiwayatTagihan, meta: { requiresAuth: true } },
@@ -23,21 +23,18 @@ const router = createRouter({
     { path: '/paket-layanan', component: PaketLayanan, meta: { requiresAuth: true } },
     { path: '/bahasa-waktu', component: BahasaWaktu, meta: { requiresAuth: true } },
     { path: '/pengaturan', component: Pengaturan, meta: { requiresAuth: true } },
-  ]
+  ],
 })
 
-router.beforeEach((to, from, next) => {
-  const token = sessionStorage.getItem('token'); 
+router.beforeEach((to, from) => {
+  const token = localStorage.getItem('token')
 
   if (to.meta.requiresAuth && !token) {
-    next({ name: 'Login' })
-  } 
-  else if (to.name === 'Login' && token) {
-    next({ name: 'Dashboard' })
-  } 
-  else {
-    next()
+    return { name: 'Login' }
+  } else if (to.name === 'Login' && token) {
+    return { name: 'Dashboard' }
   }
+  return true
 })
 
 export default router

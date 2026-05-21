@@ -1,7 +1,6 @@
-import { BASE_URL } from './api';
+import { BASE_URL } from './api'
 
 export const AuthService = {
-  
   async login(email, password) {
     const response = await fetch(`${BASE_URL}/login`, {
       method: 'POST',
@@ -9,32 +8,32 @@ export const AuthService = {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ email, password }),
-    });
+    })
 
-    const result = await response.json();
+    const result = await response.json()
 
     if (!response.ok) {
-      throw new Error(result.message || 'Email atau Password salah.');
+      throw new Error(result.message || 'Email atau Password salah.')
     }
 
-    return result;
+    return result
   },
 
   async checkPassword(password) {
-    const token = sessionStorage.getItem('token');
+    const token = localStorage.getItem('token')
     const response = await fetch(`${BASE_URL}/check-password`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({ password }),
-    });
+    })
 
-    const result = await response.json();
+    const result = await response.json()
     if (!response.ok) {
-      throw new Error(result.message || 'Verifikasi password gagal.');
+      throw new Error(result.message || 'Verifikasi password gagal.')
     }
-    return result;
-  }
-};
+    return result
+  },
+}

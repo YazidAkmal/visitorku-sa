@@ -1,11 +1,203 @@
 {
-  "sidebar": {
-    "main_menu": "Menu Utama",
-    "dashboard": "Dasbor",
-    "company_list": "Daftar Perusahaan"
+  "topbar": {
+    "switchLang": "Switch Language"
   },
+
+  "sidebar": {
+    "main_Menu": "Main Menu",
+    "dashboard": "Dashboard",
+    "company_List": "Company List",
+    "invoice": "Invoice History",
+    "user": "Users",
+    "master_data": "Master Data",
+    "package": "Packages & Services",
+    "language": "Language & Time",
+    "setting": "Settings"
+  },
+
   "dashboard": {
-    "total_visitor": "Total Pengunjung",
-    "total_company": "Total Perusahaan"
+    "d_SuperAdmindesc": "Super admin dashboard.",
+    "d_TotVisitor": "Total Visitors",
+    "d_TotVisit": "Total Visits",
+    "d_TotCompany": "Total Companies",
+    "d_Statistic": "Monthly Visit Statistics",
+    "d_Month": "Month",
+    "d_NewestCompany": "Newest Companies",
+    "d_companyName": "Company Name",
+    "d_Address": "Address",
+    "d_Joindate": "Join Date"
+  },
+
+  "company_list": {
+    "c_companyListdesc": "List of Visitorku user companies.",
+    "c_Search": "Search by company name",
+    "c_companyName": "Company Name",
+    "c_companyAddress": "Company Address"
+  },
+
+  "company_panel": {
+    "cp_registered": "Registered since: ",
+    "cp_summary": "Company Summary",
+    "cp_totVisitor": "Total Visitors",
+    "cp_totVisit": "Total Visits",
+    "cp_totUser": "Total Users",
+    "cp_information": "Company Information",
+    "cp_companyName": "Company Name",
+    "cp_emailAddress": "Email Address",
+    "cp_phone": "Phone Number",
+    "cp_address": "Address",
+    "cp_visitor": "Visitor",
+    "cp_visit": "Visit",
+    "cp_latestVisitor": "Latest Visitor",
+    "cp_filterDesc1": "Total visitors in the last 1 year",
+    "cp_filterDesc2": "Latest visitors in the last 30 days",
+    "cp_month": "Month",
+    "cp_name": "Name",
+    "cp_contact": "Contact",
+    "cp_used": "Used",
+    "cp_visitLimits": "Visit Limits",
+    "cp_title": "Company Summary",
+    "cp_subtitle": "Brief overview of the current company condition and activities",
+    "cp_informationTitle": "Company Information",
+    "cp_informationName": "Company Name",
+    "cp_informationEmail": "Email Address",
+    "cp_informationPhone": "Phone Number",
+    "cp_informationPIC": "PIC",
+    "cp_informationAddress": "Address",
+    "cp_visitorSubtitle": "Total visitors in the last 1 year",
+    "cp_latestSubtitle": "Latest visitors in the last 30 days",
+    "cp_caption": "No visitors this month yet",
+    "cp_freePlan": "Free Plan"
+  },
+
+  "invoice": {
+    "i_invoicedesc": "Data of all invoices and payments.",
+    "i_Total": "Total Invoices",
+    "i_Nopaid": "Unpaid Invoices",
+    "i_paid": "Paid Invoices",
+    "i_Search": "Search company name / invoice number",
+    "i_Number": "Invoice Number",
+    "i_company": "Company",
+    "i_period": "Period",
+    "i_waitingStatus": "Waiting for Payment",
+    "i_paidStatus": "Paid",
+    "i_verify": "Verified on"
+  },
+
+  "invoice_panel": {
+    "ip_monthlyInvoice": "Monthly Invoice",
+    "ip_invoiceDate": "Invoice Date",
+    "ip_companyName": "Company Name",
+    "ip_invoiceNumber": "Invoice Number",
+    "ip_dueDate": "Due Date",
+    "ip_invoiceStatus": "Invoice Status",
+    "ip_paymentMethod": "Payment Method",
+    "ip_packageDetail": "Package Details",
+    "ip_detailDesc": "Packages and services used during this invoice period",
+    "ip_discount": "Discount",
+    "ip_paymentTotal": "Total Payment",
+    "ip_packageDetail2": "Ensure payment has been received before confirming",
+    "ip_downloadButon": "Download Invoice",
+    "ip_condirm_button": "Confirm Payment",
+    "ip_editInvoiceData": "Edit Invoice Data",
+    "ip_information": "Status & period information",
+    "ip_startDate": "Active Start Date",
+    "ip_endDate": "End Date"
+  },
+
+  "user": {
+    "u_userTitle": "User List",
+    "u_userdesc": "List of Visitorku admins.",
+    "u_Search": "Search by name / email",
+    "u_Name": "Name",
+    "u_Button": "+ Add Admin",
+    "u_Update": "Updated on",
+    "u_Create": "Created on"
+  },
+
+  "user_panel": {
+    "up_headerPanel1": "Add New Admin",
+    "up_headerPanel2": "Edit Admin Data",
+    "up_userInfo": "Account Information",
+    "up_name": "Full Name",
+    "up_email": "Email Address",
+    "up_password": "Password",
+    "up_confirmPassword": "Confirm Password",
+    "up_saveButton": "Save Data",
+    "up_cancelButton": "Cancel",
+    "up_namePlaceholder": "e.g. Budi Santoso ",
+    "up_emailPlaceholder": "e.g. budi@visitorku.id",
+    "up_passwordPlaceholder": "Enter password",
+    "up_confirmPasswordPlaceholder": "Re-enter password"
+  },
+
+  "package": {
+    "p_packagedesc": "Management of Visitorku package prices and specifications.",
+    "p_Search": "Search by package name",
+    "p_Button": "+ Create New Package",
+    "p_info": "Package Information",
+    "p_Monthly": "Monthly",
+    "p_Yearly": "Yearly"
+  },
+
+  "package_panel": {
+    "pp_headerPanel1": "Create Package",
+    "pp_headerPanel2": "Edit Package",
+    "pp_header1": "Package Information",
+    "pp_name": "Package Name",
+    "pp_namePlaceholder": "e.g. Visitor free",
+    "pp_desc": "Description",
+    "pp_descPlaceholder": "Enter package description here...",
+    "pp_header2": "Package Price and Duration",
+    "pp_h2desc": "Prices apply to new customers after the package is activated",
+    "pp_price": "Paid Price",
+    "pp_priceDesc": "The price that customers must pay",
+    "pp_monthlyPrice": "Monthly Price",
+    "pp_monthlyPricePlaceholder": "Enter monthly price",
+    "pp_duration": "Duration",
+    "pp_yearlyButton": "Enable Yearly Price",
+    "pp_yearlyPrice": "Yearly Price",
+    "pp_yearlyPricePlaceholder": "Enter yearly price",
+    "pp_free": "Free",
+    "pp_freeDesc": "Customers do not need to pay for this package.",
+    "pp_header3": "Limits and Features",
+    "pp_h3desc": "Service limits determine usage capacity",
+    "pp_visitorLimits": "Visit Limits",
+    "pp_vlPlaceholder": "Enter quota amount",
+    "pp_month": "/ Month",
+    "pp_branch": "Number of Branches",
+    "pp_branchPlaceholder": "Enter maximum branches",
+    "pp_account": "Number of Accounts",
+    "pp_accountPlaceholder": "Enter maximum accounts",
+    "pp_storage": "Storage Limit (MB)",
+    "pp_storagePlaceholder": "Enter maximum storage",
+    "pp_saveButton": "Save Data",
+    "pp_cancelButton": "Cancel"
+  },
+
+  "language": {
+    "l_languagedesc": "Super admin language & time."
+  },
+
+  "setting": {
+    "s_settingdesc": "Super admin settings."
+  },
+
+  "common_layout": {
+    "action": "Action",
+    "pagination": "Showing { showingCount } of { totalData } entries",
+    "first_page": "First",
+    "last_page": "Last",
+    "take_data": "Taking data...",
+    "graphic_rendering": "Rendering chart...",
+    "sync": "Synchronizing data..."
+  },
+
+  "button": {
+    "company_delete": "Delete Company",
+    "user_delete": "Delete Admin",
+    "package_delete": "Delete Package",
+    "user_edit": "Edit Admin",
+    "package_edit": "Edit Package"
   }
 }

@@ -1,16 +1,11 @@
 <script setup>
-
+import PageHeader from '@/components/common/PageHeader.vue'
 </script>
 
 <template>
   <div class="bg-white rounded-2xl p-6 shadow-sm min-h-full flex flex-col">
-    
-    <div>
-      <h1 class="text-2xl font-semibold text-gray-800 mb-1">Pengaturan</h1>
-      <p class="text-sm text-gray-500">Pengaturan super admin</p>
-    </div>
+    <PageHeader :title="$t('sidebar.setting')" :subtitle="$t('setting.s_settingdesc')" />
 
-      <hr class="border-gray-100 my-5" />
-
+    <hr class="border-gray-100 my-5" />
   </div>
 </template>

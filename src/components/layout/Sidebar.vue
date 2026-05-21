@@ -1,8 +1,11 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
+import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 
 const route = useRoute();
+const { t } = useI18n();
 
 // Import icon
 import dashboardIcon from '@/assets/images/icon/dashboard-vector.svg';
@@ -16,17 +19,17 @@ import selectedDashboardIcon from '@/assets/images/icon/selected-dashboard-vecto
 import selectedDaftarPerusahaanIcon from '@/assets/images/icon/selected-daftar-perusahaan-vector.svg';
 import selectedRiwayatTagihanIcon from '@/assets/images/icon/selected-riwayat-tagihan-vector.svg';
 
-const mainMenuItems = ref([
-  { name: 'Dashboard', path: '/dashboard', icon: dashboardIcon, iconSelected: selectedDashboardIcon },
-  { name: 'Daftar Perusahaan', path: '/daftar-perusahaan', icon: daftarperusahaanIcon, iconSelected: selectedDaftarPerusahaanIcon },
-  { name: 'Riwayat Tagihan', path: '/riwayat-tagihan', icon: riwayattagihanIcon, iconSelected: selectedRiwayatTagihanIcon },
-  { name: 'Pengguna', path: '/pengguna', icon: penggunaIcon },
+const mainMenuItems = computed(() => [
+  { name: t('sidebar.dashboard'), path: '/dashboard', icon: dashboardIcon, iconSelected: selectedDashboardIcon },
+  { name: t('sidebar.company_List'), path: '/daftar-perusahaan', icon: daftarperusahaanIcon, iconSelected: selectedDaftarPerusahaanIcon },
+  { name: t('sidebar.invoice'), path: '/riwayat-tagihan', icon: riwayattagihanIcon, iconSelected: selectedRiwayatTagihanIcon },
+  { name: t('sidebar.user'), path: '/pengguna', icon: penggunaIcon },
 ]);
 
-const masterDataItems = ref([
-  { name: 'Paket & Layanan', path: '/paket-layanan', icon: paketlayananIcon },
-  { name: 'Bahasa & Waktu', path: '/bahasa-waktu', icon: bahasawaktuIcon },
-  { name: 'Pengaturan', path: '/pengaturan', icon: pengaturanIcon },
+const masterDataItems = computed(() => [
+  { name: t('sidebar.package'), path: '/paket-layanan', icon: paketlayananIcon },
+  { name: t('sidebar.language'), path: '/bahasa-waktu', icon: bahasawaktuIcon },
+  { name: t('sidebar.setting'), path: '/pengaturan', icon: pengaturanIcon },
 ]);
 
 const isActive = (path) => {
@@ -40,7 +43,7 @@ const isActive = (path) => {
   <aside class="w-20 md:w-65 bg-[#F9FBFE] flex flex-col p-2 md:p-4 gap-3 font-['Poppins'] sticky top-14 h-[calc(100vh-3.5rem)] overflow-y-auto hide-scrollbar transition-all duration-300">    
     
     <div class="bg-white rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.06)] p-2 md:p-4">
-      <h3 class="hidden md:block text-[16px] font-semibold text-[#1E293B] mt-2 md:mt-5 mb-3 tracking-wide">Main Menu</h3>
+      <h3 class="hidden md:block text-[16px] font-semibold text-[#1E293B] mt-2 md:mt-5 mb-3 tracking-wide">{{ $t('sidebar.main_Menu') }}</h3>
       
       <div class="space-y-2 md:space-y-1 mt-2 md:mt-0">
         <router-link 
@@ -66,7 +69,7 @@ const isActive = (path) => {
     </div>
     
     <div class="bg-white rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.06)] p-2 md:p-4">
-      <h3 class="hidden md:block text-[16px] font-semibold text-[#1E293B] mt-2 md:mt-5 mb-3 tracking-wide">Master Data</h3>
+      <h3 class="hidden md:block text-[16px] font-semibold text-[#1E293B] mt-2 md:mt-5 mb-3 tracking-wide">{{ $t('sidebar.master_data') }}</h3>
       
       <div class="space-y-2 md:space-y-1 mt-2 md:mt-0">
         <router-link 
