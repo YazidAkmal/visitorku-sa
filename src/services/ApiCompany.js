@@ -1,6 +1,7 @@
 import { BASE_URL } from './api'
 
 export const ApiCompanyKey = {
+  // Get All Companies
   async getCompanies() {
     const token = localStorage.getItem('token')
     const response = await fetch(`${BASE_URL}/company`, {
@@ -15,6 +16,7 @@ export const ApiCompanyKey = {
     return result
   },
 
+  // Get Counters (company)
   async getCounters(companyId) {
     const token = localStorage.getItem('token')
     const response = await fetch(`${BASE_URL}/company/counter-data/${companyId}`, {
@@ -24,6 +26,7 @@ export const ApiCompanyKey = {
     return await response.json()
   },
 
+  // Get Monthly Data (company)
   async getMonthlyData(companyId) {
     const token = localStorage.getItem('token')
     const response = await fetch(`${BASE_URL}/company/monthly-data/${companyId}`, {
@@ -33,6 +36,7 @@ export const ApiCompanyKey = {
     return await response.json()
   },
 
+  // Get Latest Visitors
   async getLatestVisitors(companyId) {
     const token = localStorage.getItem('token')
     const response = await fetch(`${BASE_URL}/company/latest-visitor/${companyId}`, {
@@ -42,6 +46,7 @@ export const ApiCompanyKey = {
     return await response.json()
   },
 
+  // Get Detail Company (by id)
   async getDetailCompany(companyId) {
     const token = localStorage.getItem('token')
     const response = await fetch(`${BASE_URL}/company/${companyId}`, {

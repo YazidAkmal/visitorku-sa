@@ -1,4 +1,6 @@
 <script setup>
+import { Toast } from '@/components/utils/ToastState'
+
 const props = defineProps({
   formData: { type: Object, required: true },
   panelMode: { type: String, default: 'create' },
@@ -16,12 +18,24 @@ const handleSimpan = () => {
 }
 
 const validasiAngkaCustom = (event) => {
-  event.target.setCustomValidity('') // Bersihkan error lama
+  event.target.setCustomValidity('')
 
-  if (event.key === 'e' || event.key === 'E') {
-    event.preventDefault() // Mencegah huruf 'e' tertulis di kotak input
-    event.target.setCustomValidity('Please enter a number')
-    event.target.reportValidity() // Munculkan tooltip paksa
+  if (event.ctrlKey || event.metaKey || event.key.length > 1) return
+
+  if (!/^[0-9]$/.test(event.key)) {
+    event.preventDefault()
+    Toast.warning('Simbol tidak diperkenankan pada form')
+  }
+}
+
+const validasiSimbolString = (event) => {
+  event.target.setCustomValidity('')
+
+  if (event.ctrlKey || event.metaKey || event.key.length > 1) return
+
+  if (!/^[a-zA-Z0-9\s]$/.test(event.key)) {
+    event.preventDefault()
+    Toast.warning('Simbol tidak diperkenankan pada form')
   }
 }
 
@@ -43,6 +57,8 @@ const resetValidasi = (event) => {
           >
           <input
             v-model="formData.namaPaket"
+            @keydown="validasiSimbolString"
+            @input="resetValidasi"
             type="text"
             :placeholder="$t('package_panel.pp_namePlaceholder')"
             class="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-[13px] text-gray-700 focus:outline-none focus:ring-1 focus:ring-[#2BB5F4]"
@@ -54,6 +70,8 @@ const resetValidasi = (event) => {
           >
           <textarea
             v-model="formData.deskripsi"
+            @keydown="validasiSimbolString"
+            @input="resetValidasi"
             :placeholder="$t('package_panel.pp_descPlaceholder')"
             rows="3"
             class="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-[13px] text-gray-700 focus:outline-none focus:border-[#2BB5F4] resize-none"

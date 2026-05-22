@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import { useI18n } from 'vue-i18n' // 🌟 Import i18n
+import { useI18n } from 'vue-i18n'
 
 // IMPORT HELPER & API
 import { SwalHelper } from '@/components/utils/SweetAlertHelper'
@@ -12,13 +12,13 @@ import PageHeader from '@/components/common/PageHeader.vue'
 import SearchFilterBar from '@/components/common/SearchFilterBar.vue'
 import PaginationSuperAdmin from '@/components/common/PaginationSuperAdmin.vue'
 import DetailPanel from '@/components/common/DetailPanel.vue'
-import PaketLayananForm from '@/components/common/PaketLayananForm.vue'
+import PaketLayananForm from '@/components/packageComponent/PaketLayananForm.vue'
 import ButtonTambah from '@/components/common/ButtonTambah.vue'
 
 // Import API
-import { ApiPrice } from '@/services/ApiPrice'
+import { ApiPackage } from '@/services/ApiPackage'
 
-const { t } = useI18n() // 🌟 Deklarasi fungsi translate
+const { t } = useI18n()
 
 const searchQuery = ref('')
 const currentPage = ref(1)
@@ -31,7 +31,7 @@ const formatRupiah = (angka) => new Intl.NumberFormat('id-ID').format(angka || 0
 const fetchPrices = async () => {
   isLoadingData.value = true
   try {
-    const response = await ApiPrice.getAllPrices()
+    const response = await ApiPackage.getAllPrices()
     if (response.message === 'Success' && response.data) {
       listPaketLengkap.value = response.data.map((item) => ({
         id: item.id,
@@ -64,7 +64,6 @@ const listPaketDitampilkan = computed(() => {
   return listPaketFiltered.value.slice(start, end)
 })
 
-// 🌟 Jadikan tableColumns Reaktif
 const tableColumns = computed(() => [
   { key: 'info', label: t('package.p_info'), width: 'w-[45%]' },
   { key: 'bulanan', label: t('package.p_Monthly') },
@@ -185,8 +184,8 @@ const handleSave = async () => {
       event_visitor_limit: '1000',
     }
 
-    if (panelMode.value === 'create') await ApiPrice.createPrice(payload)
-    else await ApiPrice.updatePrice(selectedDetail.value.id, payload)
+    if (panelMode.value === 'create') await ApiPackage.createPrice(payload)
+    else await ApiPackage.updatePrice(selectedDetail.value.id, payload)
 
     isDetailOpen.value = false
     await fetchPrices()
@@ -195,7 +194,7 @@ const handleSave = async () => {
   } catch (error) {
     console.error('Error saat simpan paket:', error)
 
-    // 🌟 Menangkap error detail dari backend seperti di Pengguna.vue
+    // Catch error
     let errorMessage = 'Gagal menyimpan paket.'
     if (error.response && error.response.data) {
       errorMessage = error.response.data.message || error.response.data.error || errorMessage
@@ -216,7 +215,7 @@ const handleDelete = async (id) => {
     try {
       SwalHelper.showLoading('Menghapus Paket...')
 
-      await ApiPrice.deletePrice(id)
+      await ApiPackage.deletePrice(id)
       await fetchPrices()
 
       SwalHelper.close()

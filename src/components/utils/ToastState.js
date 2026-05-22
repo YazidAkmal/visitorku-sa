@@ -1,6 +1,5 @@
 import { ref } from 'vue'
 
-// Ini State Globalnya
 export const globalToast = ref({
   show: false,
   message: '',
@@ -8,7 +7,6 @@ export const globalToast = ref({
   duration: 3000,
 })
 
-// Ini Helper pemanggilnya
 export const Toast = {
   success(message, duration = 3000) {
     globalToast.value = { show: true, message, type: 'success', duration }

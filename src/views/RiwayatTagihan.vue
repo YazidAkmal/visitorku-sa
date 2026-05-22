@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import { useI18n } from 'vue-i18n' // 🌟 Import i18n
+import { useI18n } from 'vue-i18n'
 
 // Import Components Utama
 import PageHeader from '@/components/common/PageHeader.vue'
@@ -8,9 +8,9 @@ import SearchFilterBar from '@/components/common/SearchFilterBar.vue'
 import TableSuperAdmin from '@/components/common/TableSuperAdmin.vue'
 import PaginationSuperAdmin from '@/components/common/PaginationSuperAdmin.vue'
 import DetailPanel from '@/components/common/DetailPanel.vue'
-import TagihanViewDetail from '@/components/common/RiwayatTagihanDetail.vue'
-import TagihanEditForm from '@/components/common/RiwayatTagihanForm.vue'
-import TagihanCounter from '@/components/common/TagihanCounter.vue'
+import TagihanViewDetail from '@/components/invoiceComponent/RiwayatTagihanDetail.vue'
+import TagihanEditForm from '@/components/invoiceComponent/RiwayatTagihanForm.vue'
+import TagihanCounter from '@/components/invoiceComponent/RiwayatTagihanCounter.vue'
 
 // Import Icon
 import MenungguPembayaran from '@/assets/images/icon/menunggu-pembayaran-state-vector.svg'
@@ -19,16 +19,15 @@ import KonfirmasiBayar from '@/assets/images/alert-konfirmasi-pembayaran.svg'
 import Invoice from '@/assets/images/icon/monthly-invoice-vector.svg'
 
 import { ApiInvoice } from '@/services/ApiInvoice'
-import { Toast } from '@/components/utils/ToastState' // Sesuaikan path Helper
+import { Toast } from '@/components/utils/ToastState'
 
-const { t } = useI18n() // 🌟 Deklarasi fungsi translate
+const { t } = useI18n()
 
 const searchQuery = ref('')
 const currentPage = ref(1)
 const itemsPerPage = ref(5)
 const isLoading = ref(false)
 
-// 🌟 1. Buat wadah khusus untuk menyimpan data mentah dari API
 const rawListTagihan = ref([])
 
 const formatDateShort = (dateStr) => (!dateStr ? '-' : dateStr.split('T')[0])
@@ -38,7 +37,6 @@ const fetchInvoices = async () => {
   try {
     const response = await ApiInvoice.getAllInvoices()
     if (response.message === 'Success' && response.data) {
-      // 🌟 2. Cukup simpan data mentahnya saja di sini
       rawListTagihan.value = response.data
     }
   } catch (error) {
@@ -49,7 +47,6 @@ const fetchInvoices = async () => {
 }
 onMounted(() => fetchInvoices())
 
-// 🌟 3. Ubah listTagihan menjadi computed agar fungsi t() selalu dipantau dan dirender ulang saat bahasa berubah
 const listTagihan = computed(() => {
   return rawListTagihan.value.map((item) => {
     const isPaid = item.status === 'paid'
@@ -62,7 +59,6 @@ const listTagihan = computed(() => {
       periode: item.payment_type
         ? item.payment_type.charAt(0).toUpperCase() + item.payment_type.slice(1)
         : '-',
-      // 🌟 Status dan StatusDesc sekarang Reaktif 100%!
       status: isPaid ? t('invoice.i_paidStatus') : t('invoice.i_waitingStatus'),
       statusDesc: isPaid
         ? `${t('invoice.i_verify')} ${formatDateShort(item.updated_at)}`
@@ -83,7 +79,6 @@ const listTagihan = computed(() => {
 const summary = computed(() => {
   let lunas = 0,
     belumDibayar = 0
-  // Membaca dari computed listTagihan yang sudah kita buat
   listTagihan.value.forEach((item) =>
     item.statusCode === 'success'
       ? (lunas += item.payment_total)
@@ -108,7 +103,6 @@ const listTagihanDitampilkan = computed(() =>
   ),
 )
 
-// 🌟 Jadikan tableColumns Reaktif dengan Computed
 const tableColumns = computed(() => [
   { key: 'nomor', label: t('invoice.i_Number'), width: 'w-[25%]' },
   { key: 'perusahaan', label: t('invoice.i_company'), width: 'w-[25%]' },

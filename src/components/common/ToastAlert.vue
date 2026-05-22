@@ -1,7 +1,6 @@
 <script setup>
 import { watch, onUnmounted, computed } from 'vue'
 
-// Import ketiga SVG-nya
 import iconSuccess from '@/assets/images/icon/toast-alert-success.svg'
 import iconFailed from '@/assets/images/icon/toast-alert-failed.svg'
 import iconWarning from '@/assets/images/icon/toast-alert.svg'
@@ -9,7 +8,7 @@ import iconWarning from '@/assets/images/icon/toast-alert.svg'
 const props = defineProps({
   show: { type: Boolean, required: true },
   message: { type: String, default: 'Berhasil!' },
-  type: { type: String, default: 'success' }, // 'success', 'warning', atau 'error'
+  type: { type: String, default: 'success' },
   duration: { type: Number, default: 3000 },
 })
 
@@ -37,11 +36,10 @@ onUnmounted(() => {
   clearTimeout(timeoutId)
 })
 
-// 🌟 Mapping Ikon Sesuai Permintaanmu
 const toastIcon = computed(() => {
   if (props.type === 'success') return iconSuccess
-  if (props.type === 'error') return iconFailed // Kalau Gagal -> ikon failed
-  if (props.type === 'warning') return iconWarning // Kalau Warning (Account not found) -> ikon warning
+  if (props.type === 'error') return iconFailed
+  if (props.type === 'warning') return iconWarning
   return iconFailed
 })
 </script>
@@ -84,7 +82,7 @@ const toastIcon = computed(() => {
             class="absolute top-0 left-0 h-full animate-shrink"
             :class="{
               'bg-[#2BB5F4]': type === 'success',
-              'bg-[#EF4444]': type === 'error' || type === 'warning', // 🌟 Error & Warning sama-sama warna Merah
+              'bg-[#EF4444]': type === 'error' || type === 'warning', // Error & Warning sama-sama warna Merah
             }"
             :style="{ animationDuration: duration + 'ms' }"
           ></div>

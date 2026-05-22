@@ -3,7 +3,7 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { AuthService } from '@/services/AuthService.js'
 
-// 🌟 Import Toast Helper Global kita
+// Import Toast Helper Global kita
 import { Toast } from '@/components/utils/ToastState.js'
 
 import logoVisitorku from '@/assets/images/visitorku-logo.svg'
@@ -19,7 +19,6 @@ const isLoading = ref(false)
 const handleLogin = async () => {
   isLoading.value = true
 
-  // 🌟 Validasi Email (Gunakan Toast Warning)
   if (!email.value.includes('@')) {
     Toast.warning('Invalid Email value!')
     isLoading.value = false
@@ -39,24 +38,19 @@ const handleLogin = async () => {
           email: result.data.email,
         }),
       )
-
-      // 🌟 Jika sukses, pindah halaman dan munculkan Toast Hijau
       Toast.success('Login berhasil! Selamat datang.')
       router.push({ name: 'Dashboard' })
     } else {
-      // 🌟 Jika format aneh, munculkan Toast Error
       Toast.error('Format respons dari server tidak sesuai.')
     }
   } catch (error) {
     console.error('Login Gagal:', error)
 
-    // 🌟 Tangkap pesan error dari API (seperti 'Account not found!')
     const errMsg =
       error.response?.data?.message ||
       error.message ||
       'Terjadi kesalahan pada server. Silakan coba lagi.'
 
-    // 🌟 Panggil Toast Error (Otomatis warna merah & ikon silang)
     Toast.error(errMsg)
   } finally {
     isLoading.value = false

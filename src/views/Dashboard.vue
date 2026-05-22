@@ -6,7 +6,7 @@ import { useI18n } from 'vue-i18n'
 // Import Components
 import PageHeader from '@/components/common/PageHeader.vue'
 import TableSuperAdmin from '@/components/common/TableSuperAdmin.vue'
-import DashboardCounter from '@/components/common/DashboardCounter.vue'
+import DashboardCounter from '@/components/dashboardComponent/DashboardCounter.vue'
 
 // Import API
 import { ApiDashboard } from '@/services/ApiDashboard'
@@ -23,18 +23,14 @@ const counters = ref({
 })
 
 const latestCompanies = ref([])
-
-// 🌟 1. Buat ref terpisah khusus menampung datanya saja
 const visitorsData = ref([])
 const visitsData = ref([])
 
-// 🌟 2. Ubah chartSeries menjadi computed agar peka terhadap perubahan bahasa & data
 const chartSeries = computed(() => [
   { name: t('company_panel.cp_visitor'), data: visitorsData.value },
   { name: t('company_panel.cp_visit'), data: visitsData.value },
 ])
 
-// Konfigurasi Chart ApexCharts
 const chartOptions = ref({
   chart: {
     type: 'line',
@@ -123,7 +119,7 @@ const fetchDashboardData = async () => {
         xaxis: { ...chartOptions.value.xaxis, categories: dataAPI.titles },
       }
 
-      // 🌟 Cukup masukkan datanya saja ke ref terpisah yang kita buat tadi
+      // Cukup masukkan datanya saja ke ref terpisah yang kita buat tadi
       // Namanya nanti otomatis diurus dan diterjemahkan oleh computed di atas
       visitorsData.value = dataAPI.visitors || []
       visitsData.value = dataAPI.visits || []

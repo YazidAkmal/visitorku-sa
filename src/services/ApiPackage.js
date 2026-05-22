@@ -1,7 +1,7 @@
 import { BASE_URL } from './api'
 
-export const ApiPrice = {
-  // Ambil Semua Paket
+export const ApiPackage = {
+  // Get Semua Paket
   async getAllPrices() {
     const token = localStorage.getItem('token')
     const response = await fetch(`${BASE_URL}/price`, {

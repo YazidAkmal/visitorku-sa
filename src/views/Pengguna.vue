@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import { useI18n } from 'vue-i18n' // 🌟 Import i18n
+import { useI18n } from 'vue-i18n'
 
 // IMPORT COMPONENTS
 import TableSuperAdmin from '@/components/common/TableSuperAdmin.vue'
@@ -8,7 +8,7 @@ import PageHeader from '@/components/common/PageHeader.vue'
 import SearchFilterBar from '@/components/common/SearchFilterBar.vue'
 import PaginationSuperAdmin from '@/components/common/PaginationSuperAdmin.vue'
 import DetailPanel from '@/components/common/DetailPanel.vue'
-import AdminForm from '@/components/common/PenggunaForm.vue'
+import AdminForm from '@/components/userComponent/PenggunaForm.vue'
 import ButtonTambah from '@/components/common/ButtonTambah.vue'
 
 // IMPORT HELPER & API
@@ -16,7 +16,7 @@ import { ApiAdmin } from '@/services/ApiAdmin'
 import { SwalHelper } from '@/components/utils/SweetAlertHelper'
 import { Toast } from '@/components/utils/ToastState'
 
-const { t } = useI18n() // 🌟 Deklarasi fungsi translate
+const { t } = useI18n()
 
 const searchQuery = ref('')
 const currentPage = ref(1)
@@ -64,7 +64,7 @@ const listAdminDitampilkan = computed(() =>
   ),
 )
 
-// 🌟 Jadikan tableColumns Reaktif
+// Jadikan tableColumns Reaktif
 const tableColumns = computed(() => [
   { key: 'nama', label: t('user.u_Name'), width: 'w-[30%]' },
   { key: 'email', label: 'Email', width: 'w-[30%]' },
@@ -115,10 +115,19 @@ const openEditPanel = (item) => {
 }
 
 const handleSave = async () => {
+  if (/\d/.test(formData.value.nama)) {
+    return Toast.warning('Angka tidak diizinkan pada Nama Lengkap!')
+  }
+
   if (panelMode.value === 'create') {
     if (!formData.value.password) {
-      return Toast.warning('Password wajib diisi untuk Admin baru!')
+      return Toast.warning('Password wajib diisi!')
     }
+
+    if (formData.value.password.length < 6) {
+      return Toast.warning('Password tidak boleh kurang dari 6 karakter!')
+    }
+
     if (formData.value.password !== formData.value.confirmPassword) {
       return Toast.warning('Password dan Konfirmasi Password tidak cocok!')
     }
@@ -141,7 +150,7 @@ const handleSave = async () => {
 
     isDetailOpen.value = false
     await fetchAdminData()
-    Toast.success(`Data admin berhasil di${panelMode.value === 'create' ? 'simpan' : 'perbarui'}.`)
+    Toast.success(`Data berhasil di${panelMode.value === 'create' ? 'simpan' : 'perbarui'}.`)
   } catch (error) {
     console.error('Error saat simpan:', error)
     let errorMessage = 'Gagal menyimpan data admin.'

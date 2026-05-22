@@ -11,10 +11,10 @@ import PageHeader from '@/components/common/PageHeader.vue'
 import SearchFilterBar from '@/components/common/SearchFilterBar.vue'
 import PaginationSuperAdmin from '@/components/common/PaginationSuperAdmin.vue'
 import DetailPanel from '@/components/common/DetailPanel.vue'
-import PerusahaanDetailPanel from '@/components/common/DaftarPerusahaanForm.vue'
+import PerusahaanDetailPanel from '@/components/companyComponent/DaftarPerusahaanForm.vue'
 
 // IMPORT API SERVICE & HELPER
-import { ApiCompanyKey } from '@/services/ApiKeyCompany'
+import { ApiCompanyKey } from '@/services/ApiCompany'
 import { SwalHelper } from '@/components/utils/SweetAlertHelper'
 import { Toast } from '@/components/utils/ToastState'
 

@@ -1,7 +1,7 @@
 <script setup>
-import { useI18n } from 'vue-i18n' // 🌟 Import i18n
+import { useI18n } from 'vue-i18n'
 
-const { t } = useI18n() // 🌟 Deklarasi fungsi translate
+const { t } = useI18n()
 
 const props = defineProps({
   summary: {

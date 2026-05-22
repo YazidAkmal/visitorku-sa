@@ -1,6 +1,7 @@
 import { BASE_URL } from './api'
 
 export const ApiAdmin = {
+  // Get All Admins / Users
   async getAdmins() {
     const token = localStorage.getItem('token')
     const response = await fetch(`${BASE_URL}/admin`, {
@@ -12,6 +13,7 @@ export const ApiAdmin = {
     return result
   },
 
+  // Create Admin / User
   async createAdmin(data) {
     const token = localStorage.getItem('token')
     const response = await fetch(`${BASE_URL}/admin`, {
@@ -27,6 +29,7 @@ export const ApiAdmin = {
     return result
   },
 
+  // Update Admin / User
   async updateAdmin(id, data) {
     const token = localStorage.getItem('token')
     const response = await fetch(`${BASE_URL}/admin/${id}`, {
@@ -42,6 +45,7 @@ export const ApiAdmin = {
     return result
   },
 
+  // Delete Admin / User
   async deleteAdmin(id) {
     const token = localStorage.getItem('token')
     const response = await fetch(`${BASE_URL}/admin/${id}`, {

@@ -1,8 +1,8 @@
 <script setup>
 import Topbar from '@/components/layout/Topbar.vue'
 import Sidebar from '@/components/layout/Sidebar.vue'
-import { globalToast } from '@/components/utils/ToastState' // Sesuaikan path jika berbeda
-import ToastAlert from '@/components/common/ToastAlert.vue' // Sesuaikan path
+import { globalToast } from '@/components/utils/ToastState'
+import ToastAlert from '@/components/common/ToastAlert.vue'
 </script>
 
 <template>

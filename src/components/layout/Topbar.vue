@@ -10,19 +10,14 @@ import globeIcon from '@/assets/images/icon/globe-vector.svg'
 const isDropdownOpen = ref(false)
 const router = useRouter()
 
-// Ambil variabel locale dari i18n
 const { locale } = useI18n({ useScope: 'global' })
 
-// Fungsi untuk ganti bahasa (Toggle ID <-> EN)
 const toggleLanguage = () => {
-  // Cek bahasa saat ini, lalu balikkan
   locale.value = locale.value === 'id' ? 'en' : 'id'
 
-  // Simpan ke browser supaya tidak hilang saat refresh
   localStorage.setItem('app-language', locale.value)
 }
 
-// Cek apakah user sudah pernah milih bahasa sebelumnya saat web baru dimuat
 onMounted(() => {
   const savedLang = localStorage.getItem('app-language')
   if (savedLang) {
