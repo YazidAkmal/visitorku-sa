@@ -21,7 +21,7 @@ const formatRupiah = (angka) => {
 </script>
 
 <template>
-  <div class="mb-8 flex flex-col lg:flex-row items-center gap-3 bg-[#F9FBFE] p-4 rounded-xl">
+  <div class="mb-8 flex flex-col lg:flex-row items-center gap-3 bg-white-bg p-4 rounded-xl">
     <div class="flex-1 w-full p-5 rounded-xl flex flex-col justify-center">
       <div class="flex items-center gap-1.5 mb-1">
         <span class="text-[13px] font-medium text-gray-800">{{ $t('invoice.i_Total') }}</span>

@@ -1,8 +1,10 @@
 <script setup>
 import { useI18n } from 'vue-i18n'
 import TableSuperAdmin from '@/components/common/TableSuperAdmin.vue'
-
+import { defineAsyncComponent } from 'vue'
 const { t } = useI18n()
+
+const apexchart = defineAsyncComponent(() => import('vue3-apexcharts'))
 
 const props = defineProps({
   isLoadingDetail: { type: Boolean, required: true },
@@ -242,6 +244,7 @@ const changeTab = (tabName) => {
                 <img
                   v-if="item.photo"
                   :src="item.photo"
+                  loading="lazy"
                   class="w-8 h-8 rounded-full object-cover border border-gray-100 shrink-0 bg-white"
                 />
                 <div

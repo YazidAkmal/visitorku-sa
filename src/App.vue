@@ -10,7 +10,7 @@ import ToastAlert from '@/components/common/ToastAlert.vue'
     <router-view />
   </div>
 
-  <div v-else class="h-screen w-full bg-[#F9FBFE] flex flex-col font-['Poppins'] overflow-hidden">
+  <div v-else class="h-screen w-full bg-white-bg flex flex-col font-['Poppins'] overflow-hidden">
     <Topbar />
 
     <div class="flex flex-1 mt-4 overflow-hidden">

@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, defineAsyncComponent } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 // IMPORT COMPONENTS
@@ -7,9 +7,10 @@ import TableSuperAdmin from '@/components/common/TableSuperAdmin.vue'
 import PageHeader from '@/components/common/PageHeader.vue'
 import SearchFilterBar from '@/components/common/SearchFilterBar.vue'
 import PaginationSuperAdmin from '@/components/common/PaginationSuperAdmin.vue'
-import DetailPanel from '@/components/common/DetailPanel.vue'
-import AdminForm from '@/components/userComponent/PenggunaForm.vue'
 import ButtonTambah from '@/components/common/ButtonTambah.vue'
+
+const DetailPanel = defineAsyncComponent(() => import('@/components/common/DetailPanel.vue'))
+const AdminForm = defineAsyncComponent(() => import('@/components/userComponent/PenggunaForm.vue'))
 
 // IMPORT HELPER & API
 import { ApiAdmin } from '@/services/ApiAdmin'
@@ -213,7 +214,8 @@ const handleDelete = async (id) => {
         <template #nama="{ item }">
           <div class="flex items-center gap-3">
             <div
-              class="w-8 h-8 rounded-full bg-[#EAF8FF] text-[#2BB5F4] flex items-center justify-center text-[12px] font-bold shrink-0"
+              class="w-8 h-8 rounded-full bg-[#EAF8FF] text-[#0288D1] flex items-center justify-center text-[12px] font-bold shrink-0"
+              aria-hidden="true"
             >
               {{ item.nama.charAt(0).toUpperCase() }}
             </div>
@@ -225,10 +227,10 @@ const handleDelete = async (id) => {
         </template>
         <template #detail_tanggal="{ item }">
           <div class="flex flex-col gap-0.5 text-[12.5px] whitespace-nowrap">
-            <div class="text-gray-400">
+            <div class="text-gray-600">
               <span class="font-medium">{{ $t('user.u_Create') }}:</span> {{ item.created_at }}
             </div>
-            <div class="text-gray-400">
+            <div class="text-gray-600">
               <span class="font-medium">{{ $t('user.u_Update') }}:</span> {{ item.updated_at }}
             </div>
           </div>
@@ -237,9 +239,19 @@ const handleDelete = async (id) => {
           <div>
             <button
               @click="toggleDropdown(item.id, $event)"
-              class="w-8 h-8 flex items-center justify-center border border-[#2BB5F4] rounded-lg text-[#2BB5F4] hover:bg-[#E8F8F3] transition-colors focus:outline-none"
+              :aria-label="`Buka menu aksi untuk admin ${item.nama}`"
+              title="Buka Menu Aksi"
+              aria-haspopup="true"
+              :aria-expanded="activeDropdown === item.id"
+              class="w-8 h-8 flex items-center justify-center border border-[#2BB5F4] rounded-lg text-[#2BB5F4] hover:bg-[#E8F8F3] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2BB5F4]"
             >
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg
+                aria-hidden="true"
+                class="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
                 <path
                   stroke-linecap="round"
                   stroke-linejoin="round"
@@ -256,18 +268,18 @@ const handleDelete = async (id) => {
               ></div>
               <div
                 v-if="activeDropdown === item.id"
-                class="fixed w-36 bg-white border border-gray-100 rounded-lg z-999 py-1.5 font-['Poppins']"
+                class="fixed w-36 bg-white border border-gray-100 rounded-lg z-999 py-1.5 font-['Poppins'] shadow-xl"
                 :style="{ top: dropdownPos.top, right: dropdownPos.right }"
               >
                 <button
                   @click="openEditPanel(item)"
-                  class="w-full text-left px-4 py-2.5 text-[13px] font-medium text-gray-700 hover:bg-[#EAF8FF] hover:text-[#2BB5F4] transition-colors"
+                  class="w-full text-left px-4 py-2.5 text-[13px] font-medium text-gray-700 hover:bg-[#EAF8FF] hover:text-[#2BB5F4] transition-colors focus:outline-none focus-visible:bg-[#EAF8FF]"
                 >
                   {{ $t('button.user_edit') }}
                 </button>
                 <button
                   @click="handleDelete(item.id)"
-                  class="w-full text-left px-4 py-2.5 text-[13px] font-medium text-gray-700 hover:bg-red-50 hover:text-red-600 transition-colors"
+                  class="w-full text-left px-4 py-2.5 text-[13px] font-medium text-gray-700 hover:bg-red-50 hover:text-red-600 transition-colors focus:outline-none focus-visible:bg-red-50"
                 >
                   {{ $t('button.user_delete') }}
                 </button>

@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, defineAsyncComponent } from 'vue'
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 
@@ -7,6 +7,8 @@ import { useI18n } from 'vue-i18n'
 import PageHeader from '@/components/common/PageHeader.vue'
 import TableSuperAdmin from '@/components/common/TableSuperAdmin.vue'
 import DashboardCounter from '@/components/dashboardComponent/DashboardCounter.vue'
+
+const apexchart = defineAsyncComponent(() => import('vue3-apexcharts'))
 
 // Import API
 import { ApiDashboard } from '@/services/ApiDashboard'
@@ -55,7 +57,7 @@ const chartOptions = ref({
       offsetY: 5,
       style: { color: '#111827', fontSize: '12px', fontWeight: 'bold' },
     },
-    labels: { style: { colors: '#64748B', fontSize: '11px' } },
+    labels: { style: { colors: 'var(--color-secondary-text)', fontSize: '11px' } },
     axisBorder: { show: true, color: '#E2E8F0' },
     axisTicks: { show: true, color: '#E2E8F0' },
     tooltip: { enabled: true },
@@ -66,7 +68,7 @@ const chartOptions = ref({
     tickAmount: 4,
     labels: {
       formatter: (value) => Math.round(value),
-      style: { colors: '#64748B', fontSize: '12px' },
+      style: { colors: 'var(--color-secondary-text)', fontSize: '12px' },
     },
   },
   grid: {
@@ -149,7 +151,7 @@ onMounted(() => {
 
     <div class="mb-6 border border-gray-100 rounded-xl p-6">
       <div class="flex items-center justify-between mb-6">
-        <h3 class="text-[15px] font-bold text-gray-800">{{ $t('dashboard.d_Statistic') }}</h3>
+        <h2 class="text-[15px] font-bold text-gray-800">{{ $t('dashboard.d_Statistic') }}</h2>
 
         <div class="flex items-center gap-4 text-[12px] font-medium">
           <div class="flex items-center gap-1.5">
@@ -178,7 +180,7 @@ onMounted(() => {
 
     <div class="border border-gray-100 rounded-xl p-6 shadow-[0_2px_10px_rgb(0,0,0,0.02)]">
       <div class="flex items-center justify-between mb-5">
-        <h3 class="text-[15px] font-bold text-gray-800">{{ $t('dashboard.d_NewestCompany') }}</h3>
+        <h2 class="text-[15px] font-bold text-gray-800">{{ $t('dashboard.d_NewestCompany') }}</h2>
       </div>
 
       <div class="border border-gray-100 rounded-lg overflow-hidden">
@@ -188,6 +190,8 @@ onMounted(() => {
               <img
                 v-if="item.logo"
                 :src="item.logo"
+                :alt="`Logo ${item.name}`"
+                loading="lazy"
                 class="w-8 h-8 rounded-full object-cover border border-gray-100 shrink-0 bg-white"
               />
               <div

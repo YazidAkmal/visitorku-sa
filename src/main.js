@@ -3,7 +3,6 @@ import { createPinia } from 'pinia'
 import App from './App.vue'
 import router from './router'
 import './style.css'
-import VueApexCharts from 'vue3-apexcharts';
 import { createI18n } from 'vue-i18n'
 import id from './locales/id.json'
 import en from './locales/en.json'
@@ -15,8 +14,8 @@ const i18n = createI18n({
   globalInjection: true,
   messages: {
     id: id,
-    en: en
-  }
+    en: en,
+  },
 })
 
 const app = createApp(App)
@@ -24,5 +23,4 @@ const app = createApp(App)
 app.use(createPinia())
 app.use(i18n)
 app.use(router)
-app.use(VueApexCharts)
 app.mount('#app')

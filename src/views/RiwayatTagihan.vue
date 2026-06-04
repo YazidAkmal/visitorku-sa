@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, defineAsyncComponent } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 // Import Components Utama
@@ -7,10 +7,15 @@ import PageHeader from '@/components/common/PageHeader.vue'
 import SearchFilterBar from '@/components/common/SearchFilterBar.vue'
 import TableSuperAdmin from '@/components/common/TableSuperAdmin.vue'
 import PaginationSuperAdmin from '@/components/common/PaginationSuperAdmin.vue'
-import DetailPanel from '@/components/common/DetailPanel.vue'
-import TagihanViewDetail from '@/components/invoiceComponent/RiwayatTagihanDetail.vue'
-import TagihanEditForm from '@/components/invoiceComponent/RiwayatTagihanForm.vue'
 import TagihanCounter from '@/components/invoiceComponent/RiwayatTagihanCounter.vue'
+
+const DetailPanel = defineAsyncComponent(() => import('@/components/common/DetailPanel.vue'))
+const TagihanViewDetail = defineAsyncComponent(
+  () => import('@/components/invoiceComponent/RiwayatTagihanDetail.vue'),
+)
+const TagihanEditForm = defineAsyncComponent(
+  () => import('@/components/invoiceComponent/RiwayatTagihanForm.vue'),
+)
 
 // Import Icon
 import MenungguPembayaran from '@/assets/images/icon/menunggu-pembayaran-state-vector.svg'
@@ -306,9 +311,17 @@ const openInvoicePDF = (url) => {
           <div class="flex items-center gap-2">
             <button
               @click="openDetail(item)"
+              :aria-label="`Lihat detail tagihan ${item.noTagihan}`"
+              title="Lihat Detail"
               class="w-8 h-8 flex items-center justify-center border border-[#2BB5F4] rounded-lg text-[#2BB5F4] hover:bg-[#EAF8FF] transition-colors focus:outline-none"
             >
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg
+                aria-hidden="true"
+                class="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
                 <path
                   stroke-linecap="round"
                   stroke-linejoin="round"
@@ -324,6 +337,29 @@ const openInvoicePDF = (url) => {
               </svg>
             </button>
             <div>
+              <button
+                @click="toggleDropdown(item.id, $event)"
+                :aria-label="`Buka menu aksi untuk tagihan ${item.noTagihan}`"
+                title="Buka Menu Aksi"
+                aria-haspopup="true"
+                :aria-expanded="activeDropdown === item.id"
+                class="w-8 h-8 flex items-center justify-center border border-[#2BB5F4] rounded-lg text-[#2BB5F4] hover:bg-[#EAF8FF] transition-colors focus:outline-none"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"
+                  ></path>
+                </svg>
+              </button>
               <Teleport to="body">
                 <div
                   v-if="activeDropdown === item.id"
@@ -361,7 +397,7 @@ const openInvoicePDF = (url) => {
           <div
             class="w-12 h-12 bg-white rounded-full flex items-center justify-center shrink-0 shadow-sm"
           >
-            <img :src="Invoice" alt="Invoice Icon" class="w-6 h-6" />
+            <img :src="Invoice" alt="Invoice Icon" loading="lazy" class="w-6 h-6" />
           </div>
           <div class="flex-1">
             <div class="flex items-center gap-3 mb-1.5">
@@ -372,14 +408,14 @@ const openInvoicePDF = (url) => {
                 v-if="selectedDetail.statusCode === 'success'"
                 class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#CDF2E6] text-[#38CA99] text-[13px] shadow-sm"
               >
-                <img :src="Lunas" class="w-3.5 h-3.5" alt="Lunas" />
+                <img :src="Lunas" loading="lazy" class="w-3.5 h-3.5" alt="Lunas" />
                 {{ $t('invoice.i_paidStatus') }}
               </div>
               <div
                 v-else-if="selectedDetail.statusCode === 'pending'"
                 class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#FFF5DA] text-[#F59E0B] text-[13px] shadow-sm"
               >
-                <img :src="MenungguPembayaran" class="w-3.5 h-3.5" alt="Menunggu" />
+                <img :src="MenungguPembayaran" loading="lazy" class="w-3.5 h-3.5" alt="Menunggu" />
                 {{ $t('invoice.i_waitingStatus') }}
               </div>
             </div>
@@ -436,9 +472,12 @@ const openInvoicePDF = (url) => {
             <button
               @click="closeAlert"
               :disabled="isProcessingPayment"
+              aria-label="Tutup pesan alert"
+              title="Tutup"
               class="absolute top-5 right-5 text-gray-400 hover:text-gray-600 focus:outline-none transition-colors disabled:opacity-50"
             >
               <svg
+                aria-hidden="true"
                 class="w-5 h-5"
                 fill="none"
                 stroke="currentColor"
@@ -452,7 +491,12 @@ const openInvoicePDF = (url) => {
                 ></path>
               </svg>
             </button>
-            <img :src="KonfirmasiBayar" alt="Ilustrasi Konfirmasi" class="w-32 h-32 mb-4" />
+            <img
+              :src="KonfirmasiBayar"
+              alt="Ilustrasi Konfirmasi"
+              loading="lazy"
+              class="w-32 h-32 mb-4"
+            />
             <h3 class="text-[18px] font-bold text-gray-800 mb-3">
               {{ $t('invoice_panel.ip_condirm_button') }}
             </h3>

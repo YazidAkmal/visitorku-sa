@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, defineAsyncComponent } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 // IMPORT HELPER & API
@@ -11,9 +11,12 @@ import TableSuperAdmin from '@/components/common/TableSuperAdmin.vue'
 import PageHeader from '@/components/common/PageHeader.vue'
 import SearchFilterBar from '@/components/common/SearchFilterBar.vue'
 import PaginationSuperAdmin from '@/components/common/PaginationSuperAdmin.vue'
-import DetailPanel from '@/components/common/DetailPanel.vue'
-import PaketLayananForm from '@/components/packageComponent/PaketLayananForm.vue'
 import ButtonTambah from '@/components/common/ButtonTambah.vue'
+
+const DetailPanel = defineAsyncComponent(() => import('@/components/common/DetailPanel.vue'))
+const PaketLayananForm = defineAsyncComponent(
+  () => import('@/components/packageComponent/PaketLayananForm.vue'),
+)
 
 // Import API
 import { ApiPackage } from '@/services/ApiPackage'
@@ -265,9 +268,19 @@ const handleDelete = async (id) => {
           <div>
             <button
               @click="toggleDropdown(item.id, $event)"
+              :aria-label="`Buka menu aksi untuk paket ${item.infoPaket}`"
+              title="Buka Menu Aksi"
+              aria-haspopup="true"
+              :aria-expanded="activeDropdown === item.id"
               class="w-8 h-8 flex items-center justify-center border border-[#2BB5F4] rounded-lg text-[#2BB5F4] hover:bg-[#E8F8F3] transition-colors focus:outline-none"
             >
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg
+                aria-hidden="true"
+                class="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
                 <path
                   stroke-linecap="round"
                   stroke-linejoin="round"

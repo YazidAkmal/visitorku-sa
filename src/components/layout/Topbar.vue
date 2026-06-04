@@ -37,10 +37,12 @@ const handleLogout = () => {
   <header
     class="w-full h-20 bg-primary-blue flex items-center justify-between px-6 relative z-30 shadow-md"
   >
-    <div
-      class="absolute inset-0 z-0 opacity-100 bg-cover bg-center"
-      :style="{ backgroundImage: `url(${bgPattern})` }"
-    ></div>
+    <img
+      :src="bgPattern"
+      alt="Background Pattern"
+      fetchpriority="high"
+      class="absolute inset-0 z-0 w-full h-full object-cover opacity-100"
+    />
 
     <div class="relative z-10 flex items-center">
       <img :src="logoVisitorku" alt="Visitorku Logo" class="h-8 object-contain cursor-pointer" />

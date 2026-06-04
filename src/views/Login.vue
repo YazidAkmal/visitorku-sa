@@ -63,11 +63,12 @@ const handleLogin = async () => {
     <div class="hidden lg:flex w-3/4 relative bg-primary-blue overflow-hidden">
       <img
         :src="patternBg"
+        loading="lazy"
         class="absolute inset-0 w-full h-full object-cover opacity-80"
         alt="Pattern Background"
       />
       <div class="absolute top-8 left-8 z-10">
-        <img :src="logoVisitorku" alt="Visitorku Logo" class="h-10 md:h-10" />
+        <img :src="logoVisitorku" alt="Visitorku Logo" loading="lazy" class="h-10 md:h-10" />
       </div>
     </div>
 

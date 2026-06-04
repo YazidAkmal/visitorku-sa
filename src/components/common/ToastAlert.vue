@@ -73,7 +73,7 @@ const toastIcon = computed(() => {
             </svg>
           </button>
 
-          <img :src="toastIcon" alt="Alert Icon" class="w-6 h-6 shrink-0" />
+          <img :src="toastIcon" alt="Alert Icon" loading="lazy" class="w-6 h-6 shrink-0" />
           <p class="text-gray-600 text-[14px] font-medium leading-tight">{{ message }}</p>
         </div>
 

@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, defineAsyncComponent } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 // IMPORT ASSET
@@ -10,8 +10,11 @@ import TableSuperAdmin from '@/components/common/TableSuperAdmin.vue'
 import PageHeader from '@/components/common/PageHeader.vue'
 import SearchFilterBar from '@/components/common/SearchFilterBar.vue'
 import PaginationSuperAdmin from '@/components/common/PaginationSuperAdmin.vue'
-import DetailPanel from '@/components/common/DetailPanel.vue'
-import PerusahaanDetailPanel from '@/components/companyComponent/DaftarPerusahaanForm.vue'
+
+const DetailPanel = defineAsyncComponent(() => import('@/components/common/DetailPanel.vue'))
+const PerusahaanDetailPanel = defineAsyncComponent(
+  () => import('@/components/companyComponent/DaftarPerusahaanForm.vue'),
+)
 
 // IMPORT API SERVICE & HELPER
 import { ApiCompanyKey } from '@/services/ApiCompany'
@@ -293,12 +296,16 @@ const closeDropdown = () => {
             <div
               v-if="!item.logo"
               class="w-8 h-8 rounded-full bg-[#EAF8FF] text-[#2BB5F4] flex items-center justify-center text-[12px] font-bold shrink-0"
+              aria-hidden="true"
             >
               {{ item.nama.charAt(0).toUpperCase() }}
             </div>
             <img
               v-else
               :src="item.logo"
+              alt=""
+              aria-hidden="true"
+              loading="lazy"
               class="w-8 h-8 rounded-full object-cover border border-gray-100 shrink-0"
             />
             <span class="text-gray-800 font-medium whitespace-nowrap">{{ item.nama }}</span>
@@ -323,9 +330,17 @@ const closeDropdown = () => {
           <div class="flex items-center gap-2">
             <button
               @click="openDetail(item)"
+              :aria-label="`Lihat detail perusahaan ${item.nama}`"
+              title="Lihat Detail"
               class="w-8 h-8 flex items-center justify-center border border-[#2BB5F4] rounded-lg text-[#2BB5F4] hover:bg-[#E8F8F3] transition-colors focus:outline-none"
             >
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg
+                aria-hidden="true"
+                class="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
                 <path
                   stroke-linecap="round"
                   stroke-linejoin="round"
@@ -343,9 +358,19 @@ const closeDropdown = () => {
             <div>
               <button
                 @click="toggleDropdown(item.id, $event)"
+                :aria-label="`Buka menu aksi untuk ${item.nama}`"
+                aria-haspopup="true"
+                :aria-expanded="activeDropdown === item.id"
+                title="Buka Menu Aksi"
                 class="w-8 h-8 flex items-center justify-center border border-[#2BB5F4] rounded-lg text-[#2BB5F4] hover:bg-[#E8F8F3] transition-colors focus:outline-none"
               >
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg
+                  aria-hidden="true"
+                  class="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
                   <path
                     stroke-linecap="round"
                     stroke-linejoin="round"
@@ -391,11 +416,15 @@ const closeDropdown = () => {
           <img
             v-if="selectedDetail.logo"
             :src="selectedDetail.logo"
+            alt=""
+            aria-hidden="true"
+            loading="lazy"
             class="w-13 h-13 rounded-full object-cover border-2 border-white/20 shrink-0 bg-white"
           />
           <div
             v-else
             class="w-13 h-13 bg-white rounded-full flex items-center justify-center text-[#2BB5F4] text-[18px] font-bold shadow-sm shrink-0"
+            aria-hidden="true"
           >
             {{ selectedDetail.nama.charAt(0).toUpperCase() }}
           </div>
@@ -421,7 +450,13 @@ const closeDropdown = () => {
             <div
               class="bg-linear-to-r from-[#98E3FF] to-[#2BB5F4] px-5 flex items-center justify-center gap-2.5 shrink-0 rounded-tl-[14px] rounded-br-2xl"
             >
-              <img :src="FreePlanVector" alt="Free Plan Icon" class="w-5.5 h-5.5" />
+              <img
+                :src="FreePlanVector"
+                alt=""
+                aria-hidden="true"
+                loading="lazy"
+                class="w-5.5 h-5.5"
+              />
               <span class="text-white font-medium text-[15px]">{{
                 $t('company_panel.cp_freePlan')
               }}</span>
@@ -430,13 +465,22 @@ const closeDropdown = () => {
               <div class="text-[12px] text-gray-700 font-medium mb-1">
                 {{ $t('company_panel.cp_visitLimits') }}
               </div>
-              <div class="w-full h-1 bg-[#BCE6FF] rounded-full overflow-hidden mb-1.5">
+              <div
+                class="w-full h-1 bg-[#BCE6FF] rounded-full overflow-hidden mb-1.5"
+                role="progressbar"
+                :aria-valuenow="detailCounters.percentage"
+                aria-valuemin="0"
+                aria-valuemax="100"
+              >
                 <div
                   class="h-full bg-[#2BB5F4] transition-all duration-1000"
                   :style="{ width: `${detailCounters.percentage}%` }"
                 ></div>
               </div>
-              <div class="flex justify-between text-[10.5px] text-gray-500 font-medium">
+              <div
+                class="flex justify-between text-[10.5px] text-gray-500 font-medium"
+                aria-hidden="true"
+              >
                 <span>{{ detailCounters.percentage }}% {{ $t('company_panel.cp_used') }}</span>
                 <span>{{ detailCounters.quota }}/{{ $t('company_panel.cp_month') }}</span>
               </div>
