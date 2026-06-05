@@ -126,7 +126,7 @@
     "up_saveButton": "Save Data",
     "up_cancelButton": "Cancel",
     "up_namePlaceholder": "e.g. Budi Santoso ",
-    "up_emailPlaceholder": "e.g. budi@visitorku.id",
+    "up_emailPlaceholder": "e.g. budi{'@'}visitorku.id",
     "up_passwordPlaceholder": "Enter password",
     "up_confirmPasswordPlaceholder": "Re-enter password"
   },

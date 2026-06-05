@@ -126,7 +126,7 @@
     "up_saveButton": "Simpan Data",
     "up_cancelButton": "Batal",
     "up_namePlaceholder": "contoh: Budi Santoso ",
-    "up_emailPlaceholder": "contoh: budi@visitorku.id",
+    "up_emailPlaceholder": "contoh: budi{'@'}visitorku.id",
     "up_passwordPlaceholder": "Masukkan kata sandi",
     "up_confirmPasswordPlaceholder": "Ketik ulang kata sandi"
   },

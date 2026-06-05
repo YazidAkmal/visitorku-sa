@@ -337,29 +337,6 @@ const openInvoicePDF = (url) => {
               </svg>
             </button>
             <div>
-              <button
-                @click="toggleDropdown(item.id, $event)"
-                :aria-label="`Buka menu aksi untuk tagihan ${item.noTagihan}`"
-                title="Buka Menu Aksi"
-                aria-haspopup="true"
-                :aria-expanded="activeDropdown === item.id"
-                class="w-8 h-8 flex items-center justify-center border border-[#2BB5F4] rounded-lg text-[#2BB5F4] hover:bg-[#EAF8FF] transition-colors focus:outline-none"
-              >
-                <svg
-                  aria-hidden="true"
-                  class="w-4 h-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"
-                  ></path>
-                </svg>
-              </button>
               <Teleport to="body">
                 <div
                   v-if="activeDropdown === item.id"
