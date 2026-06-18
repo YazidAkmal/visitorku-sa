@@ -29,7 +29,6 @@ const itemsPerPage = ref(5)
 const listPaketLengkap = ref([])
 const isLoadingData = ref(false)
 
-// 🌟 LANGKAH 1: STATE & FUNGSI SORTING
 const sortKey = ref('info')
 const sortOrder = ref('asc')
 
@@ -75,7 +74,6 @@ const listPaketFiltered = computed(() => {
   )
 })
 
-// 🌟 LANGKAH 2: COMPUTED UNTUK MENGURUTKAN
 const listPaketDitampilkan = computed(() => {
   let result = [...listPaketFiltered.value]
 
@@ -84,7 +82,6 @@ const listPaketDitampilkan = computed(() => {
       let valA = sortKey.value === 'info' ? a.infoPaket : a[sortKey.value]
       let valB = sortKey.value === 'info' ? b.infoPaket : b[sortKey.value]
 
-      // Ekstraksi angka (harga) kalau yang disortir adalah harga bulanan/tahunan (hapus "Rp" dan "/")
       if (sortKey.value === 'bulanan' || sortKey.value === 'tahunan') {
         valA = a.raw[sortKey.value === 'bulanan' ? 'monthly_price' : 'yearly_price']
         valB = b.raw[sortKey.value === 'bulanan' ? 'monthly_price' : 'yearly_price']

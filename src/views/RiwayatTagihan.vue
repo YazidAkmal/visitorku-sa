@@ -35,7 +35,6 @@ const isLoading = ref(false)
 
 const rawListTagihan = ref([])
 
-// 🌟 LANGKAH 1: STATE DAN FUNGSI SORTING
 const sortKey = ref('nomor') // Default sort berdasarkan nomor tagihan
 const sortOrder = ref('asc')
 
@@ -116,17 +115,13 @@ const listTagihanFiltered = computed(() => {
   )
 })
 
-// 🌟 LANGKAH 2: COMPUTED UNTUK MENGURUTKAN SEBELUM PAGINATION
 const listTagihanDitampilkan = computed(() => {
-  // Ambil data hasil filter dengan spread operator
   let result = [...listTagihanFiltered.value]
 
-  // Proses Sorting
   if (sortKey.value) {
     result.sort((a, b) => {
       let valA, valB
 
-      // Mapping key kolom ke properti data
       if (sortKey.value === 'nomor') {
         valA = a.noTagihan
         valB = b.noTagihan

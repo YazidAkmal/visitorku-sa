@@ -27,8 +27,7 @@ const latestCompanies = ref([])
 const visitorsData = ref([])
 const visitsData = ref([])
 
-// 🌟 FIX 1: SOP SORTING - STATE DAN FUNGSI PENGGERAK
-const sortKey = ref('company') // Sort default berdasarkan nama perusahaan
+const sortKey = ref('company')
 const sortOrder = ref('asc')
 
 const handleSort = (key) => {
