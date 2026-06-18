@@ -25,7 +25,6 @@ const itemsPerPage = ref(5)
 const isLoadingData = ref(false)
 const listAdminLengkap = ref([])
 
-// 🌟 LANGKAH 1: STATE & FUNGSI SORTING
 const sortKey = ref('nama')
 const sortOrder = ref('asc')
 
@@ -72,13 +71,11 @@ const listAdminFiltered = computed(() => {
   )
 })
 
-// 🌟 LANGKAH 2: COMPUTED UNTUK MENGURUTKAN
 const listAdminDitampilkan = computed(() => {
   let result = [...listAdminFiltered.value]
 
   if (sortKey.value) {
     result.sort((a, b) => {
-      // Mapping untuk kolom detail_tanggal (sort berdasarkan created_at)
       let valA = sortKey.value === 'detail_tanggal' ? a.created_at : a[sortKey.value]
       let valB = sortKey.value === 'detail_tanggal' ? b.created_at : b[sortKey.value]
 
