@@ -60,7 +60,7 @@ const handleLogout = () => {
           class="w-5 h-5 group-hover:scale-110 transition-transform"
         />
 
-        <span class="absolute -bottom-4 text-[9px] font-bold text-white uppercase tracking-wider">
+        <span class="absolute -bottom-4 text-[9px] font-medium text-white uppercase tracking-wider">
           {{ locale }}
         </span>
       </button>

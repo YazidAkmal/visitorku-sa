@@ -29,6 +29,20 @@ const itemsPerPage = ref(5)
 const listPaketLengkap = ref([])
 const isLoadingData = ref(false)
 
+// 🌟 LANGKAH 1: STATE & FUNGSI SORTING
+const sortKey = ref('info')
+const sortOrder = ref('asc')
+
+const handleSort = (key) => {
+  if (sortKey.value === key) {
+    sortOrder.value = sortOrder.value === 'asc' ? 'desc' : 'asc'
+  } else {
+    sortKey.value = key
+    sortOrder.value = 'asc'
+  }
+  currentPage.value = 1
+}
+
 const formatRupiah = (angka) => new Intl.NumberFormat('id-ID').format(angka || 0)
 
 const fetchPrices = async () => {
@@ -61,10 +75,35 @@ const listPaketFiltered = computed(() => {
   )
 })
 
+// 🌟 LANGKAH 2: COMPUTED UNTUK MENGURUTKAN
 const listPaketDitampilkan = computed(() => {
+  let result = [...listPaketFiltered.value]
+
+  if (sortKey.value) {
+    result.sort((a, b) => {
+      let valA = sortKey.value === 'info' ? a.infoPaket : a[sortKey.value]
+      let valB = sortKey.value === 'info' ? b.infoPaket : b[sortKey.value]
+
+      // Ekstraksi angka (harga) kalau yang disortir adalah harga bulanan/tahunan (hapus "Rp" dan "/")
+      if (sortKey.value === 'bulanan' || sortKey.value === 'tahunan') {
+        valA = a.raw[sortKey.value === 'bulanan' ? 'monthly_price' : 'yearly_price']
+        valB = b.raw[sortKey.value === 'bulanan' ? 'monthly_price' : 'yearly_price']
+        valA = Number(valA || 0)
+        valB = Number(valB || 0)
+      } else {
+        valA = String(valA || '').toLowerCase()
+        valB = String(valB || '').toLowerCase()
+      }
+
+      if (valA < valB) return sortOrder.value === 'asc' ? -1 : 1
+      if (valA > valB) return sortOrder.value === 'asc' ? 1 : -1
+      return 0
+    })
+  }
+
   const start = (currentPage.value - 1) * itemsPerPage.value
   const end = start + itemsPerPage.value
-  return listPaketFiltered.value.slice(start, end)
+  return result.slice(start, end)
 })
 
 const tableColumns = computed(() => [
@@ -252,7 +291,13 @@ const handleDelete = async (id) => {
         }}</span>
       </div>
 
-      <TableSuperAdmin :columns="tableColumns" :data="listPaketDitampilkan">
+      <TableSuperAdmin
+        :columns="tableColumns"
+        :data="listPaketDitampilkan"
+        :sort-key="sortKey"
+        :sort-order="sortOrder"
+        @sort="handleSort"
+      >
         <template #info="{ item }">
           <div class="text-gray-700 font-medium">{{ item.infoPaket }}</div>
           <div class="text-gray-400 mt-0.5 text-[12px]">{{ item.detail }}</div>

@@ -1,7 +1,7 @@
 <script setup>
 import { useI18n } from 'vue-i18n'
 import TableSuperAdmin from '@/components/common/TableSuperAdmin.vue'
-import { defineAsyncComponent } from 'vue'
+import { defineAsyncComponent, ref, computed } from 'vue'
 const { t } = useI18n()
 
 const apexchart = defineAsyncComponent(() => import('vue3-apexcharts'))
@@ -23,6 +23,44 @@ const emit = defineEmits(['update:activeTab'])
 const changeTab = (tabName) => {
   emit('update:activeTab', tabName)
 }
+
+// --- LOGIKA SORTING SAJA ---
+const sortKey = ref('nama')
+const sortOrder = ref('asc')
+
+const handleSort = (key) => {
+  if (sortKey.value === key) {
+    sortOrder.value = sortOrder.value === 'asc' ? 'desc' : 'asc'
+  } else {
+    sortKey.value = key
+    sortOrder.value = 'asc'
+  }
+}
+
+const sortedLatestVisitors = computed(() => {
+  let result = [...props.detailLatestVisitors]
+
+  if (sortKey.value) {
+    result.sort((a, b) => {
+      let valA = a[sortKey.value]
+      let valB = b[sortKey.value]
+
+      if (sortKey.value === 'kontak') {
+        valA = a.email
+        valB = b.email
+      }
+
+      valA = String(valA || '').toLowerCase()
+      valB = String(valB || '').toLowerCase()
+
+      if (valA < valB) return sortOrder.value === 'asc' ? -1 : 1
+      if (valA > valB) return sortOrder.value === 'asc' ? 1 : -1
+      return 0
+    })
+  }
+
+  return result
+})
 </script>
 
 <template>
@@ -55,7 +93,7 @@ const changeTab = (tabName) => {
 
   <div v-else class="bg-[#F8FAFC] h-full min-h-[calc(100vh-200px)]">
     <div class="px-6 md:px-8 mb-8 mt-6">
-      <h3 class="text-[15px] font-semibold text-[#2BB5F4] mb-1">
+      <h3 class="text-[15px] font-medium text-[#2BB5F4] mb-1">
         {{ $t('company_panel.cp_summary') }}
       </h3>
       <p class="text-[12px] text-gray-400 mb-4">{{ $t('company_panel.cp_subtitle') }}</p>
@@ -65,7 +103,7 @@ const changeTab = (tabName) => {
           <div class="text-[12px] text-gray-500 font-medium mb-2.5">
             {{ $t('company_panel.cp_totVisitor') }}
           </div>
-          <div class="text-2xl font-bold text-gray-900 leading-none">
+          <div class="text-2xl font-semibold text-gray-900 leading-none">
             {{ detailCounters.visitor }}
           </div>
         </div>
@@ -73,7 +111,7 @@ const changeTab = (tabName) => {
           <div class="text-[12px] text-gray-500 font-medium mb-2.5">
             {{ $t('company_panel.cp_totVisit') }}
           </div>
-          <div class="text-2xl font-bold text-gray-900 leading-none">
+          <div class="text-2xl font-semibold text-gray-900 leading-none">
             {{ detailCounters.visit }}
           </div>
         </div>
@@ -81,19 +119,21 @@ const changeTab = (tabName) => {
           <div class="text-[12px] text-gray-500 font-medium mb-2.5">
             {{ $t('company_panel.cp_totUser') }}
           </div>
-          <div class="text-2xl font-bold text-gray-900 leading-none">{{ detailCounters.user }}</div>
+          <div class="text-2xl font-semibold text-gray-900 leading-none">
+            {{ detailCounters.user }}
+          </div>
         </div>
       </div>
     </div>
 
     <div class="px-6 md:px-8 mb-8 relative z-20">
       <div class="bg-white rounded-xl p-6 border border-gray-100">
-        <h3 class="text-[14px] font-semibold text-gray-800 mb-5">
+        <h3 class="text-[14px] font-medium text-gray-800 mb-5">
           {{ $t('company_panel.cp_information') }}
         </h3>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-y-5 gap-x-4">
           <div class="col-span-1 md:col-span-3">
-            <div class="text-[11px] text-gray-400 font-medium mb-1">
+            <div class="text-[12px] text-gray-400 font-medium mb-1">
               {{ $t('company_panel.cp_companyName') }}
             </div>
             <div
@@ -103,7 +143,7 @@ const changeTab = (tabName) => {
             </div>
           </div>
           <div class="col-span-1">
-            <div class="text-[11px] text-gray-400 font-medium mb-1">
+            <div class="text-[12px] text-gray-400 font-medium mb-1">
               {{ $t('company_panel.cp_emailAddress') }}
             </div>
             <div
@@ -113,7 +153,7 @@ const changeTab = (tabName) => {
             </div>
           </div>
           <div class="col-span-1">
-            <div class="text-[11px] text-gray-400 font-medium mb-1">
+            <div class="text-[12px] text-gray-400 font-medium mb-1">
               {{ $t('company_panel.cp_phone') }}
             </div>
             <div
@@ -123,7 +163,7 @@ const changeTab = (tabName) => {
             </div>
           </div>
           <div class="col-span-1">
-            <div class="text-[11px] text-gray-400 font-medium mb-1">
+            <div class="text-[12px] text-gray-400 font-medium mb-1">
               {{ $t('company_panel.cp_informationPIC') }}
             </div>
             <div
@@ -133,7 +173,7 @@ const changeTab = (tabName) => {
             </div>
           </div>
           <div class="col-span-1 md:col-span-3">
-            <div class="text-[11px] text-gray-400 font-medium mb-1">
+            <div class="text-[12px] text-gray-400 font-medium mb-1">
               {{ $t('company_panel.cp_address') }}
             </div>
             <div class="text-[13px] text-gray-800 leading-relaxed">{{ selectedDetail.alamat }}</div>
@@ -238,7 +278,13 @@ const changeTab = (tabName) => {
           v-if="detailLatestVisitors.length"
           class="border border-gray-100 rounded-lg overflow-hidden bg-white"
         >
-          <TableSuperAdmin :columns="miniTableColumns" :data="detailLatestVisitors">
+          <TableSuperAdmin
+            :columns="miniTableColumns"
+            :data="sortedLatestVisitors"
+            :sort-key="sortKey"
+            :sort-order="sortOrder"
+            @sort="handleSort"
+          >
             <template #nama="{ item }">
               <div class="flex items-center gap-3">
                 <img

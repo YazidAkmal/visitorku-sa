@@ -35,6 +35,20 @@ const isLoading = ref(false)
 
 const rawListTagihan = ref([])
 
+// 🌟 LANGKAH 1: STATE DAN FUNGSI SORTING
+const sortKey = ref('nomor') // Default sort berdasarkan nomor tagihan
+const sortOrder = ref('asc')
+
+const handleSort = (key) => {
+  if (sortKey.value === key) {
+    sortOrder.value = sortOrder.value === 'asc' ? 'desc' : 'asc'
+  } else {
+    sortKey.value = key
+    sortOrder.value = 'asc'
+  }
+  currentPage.value = 1 // Kembali ke halaman 1 saat sort diklik
+}
+
 const formatDateShort = (dateStr) => (!dateStr ? '-' : dateStr.split('T')[0])
 
 const fetchInvoices = async () => {
@@ -92,6 +106,7 @@ const summary = computed(() => {
   return { total: lunas + belumDibayar, lunas, belumDibayar }
 })
 
+// Filter data
 const listTagihanFiltered = computed(() => {
   if (!searchQuery.value) return listTagihan.value
   return listTagihan.value.filter(
@@ -101,12 +116,38 @@ const listTagihanFiltered = computed(() => {
   )
 })
 
-const listTagihanDitampilkan = computed(() =>
-  listTagihanFiltered.value.slice(
-    (currentPage.value - 1) * itemsPerPage.value,
-    (currentPage.value - 1) * itemsPerPage.value + itemsPerPage.value,
-  ),
-)
+// 🌟 LANGKAH 2: COMPUTED UNTUK MENGURUTKAN SEBELUM PAGINATION
+const listTagihanDitampilkan = computed(() => {
+  // Ambil data hasil filter dengan spread operator
+  let result = [...listTagihanFiltered.value]
+
+  // Proses Sorting
+  if (sortKey.value) {
+    result.sort((a, b) => {
+      let valA, valB
+
+      // Mapping key kolom ke properti data
+      if (sortKey.value === 'nomor') {
+        valA = a.noTagihan
+        valB = b.noTagihan
+      } else {
+        valA = a[sortKey.value]
+        valB = b[sortKey.value]
+      }
+
+      valA = String(valA || '').toLowerCase()
+      valB = String(valB || '').toLowerCase()
+
+      if (valA < valB) return sortOrder.value === 'asc' ? -1 : 1
+      if (valA > valB) return sortOrder.value === 'asc' ? 1 : -1
+      return 0
+    })
+  }
+
+  // Proses Pagination
+  const start = (currentPage.value - 1) * itemsPerPage.value
+  return result.slice(start, start + itemsPerPage.value)
+})
 
 const tableColumns = computed(() => [
   { key: 'nomor', label: t('invoice.i_Number'), width: 'w-[25%]' },
@@ -257,7 +298,13 @@ const openInvoicePDF = (url) => {
         }}</span>
       </div>
 
-      <TableSuperAdmin :columns="tableColumns" :data="listTagihanDitampilkan">
+      <TableSuperAdmin
+        :columns="tableColumns"
+        :data="listTagihanDitampilkan"
+        :sort-key="sortKey"
+        :sort-order="sortOrder"
+        @sort="handleSort"
+      >
         <template #nomor="{ item }">
           <div class="text-[13px] font-semibold text-gray-800 mb-0.5 whitespace-nowrap">
             {{ item.noTagihan }}
@@ -378,7 +425,7 @@ const openInvoicePDF = (url) => {
           </div>
           <div class="flex-1">
             <div class="flex items-center gap-3 mb-1.5">
-              <h2 class="text-[20px] font-bold text-white tracking-wide">
+              <h2 class="text-[18px] font-semibold text-white tracking-wide">
                 {{ selectedDetail.periode }} Invoice
               </h2>
               <div

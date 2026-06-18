@@ -10,7 +10,7 @@ const emit = defineEmits(['close', 'save'])
 <template>
   <div class="px-6 md:px-8 py-6 pb-10 bg-[#F8FAFC] h-full min-h-[calc(100vh-150px)] flex flex-col">
     <div class="bg-white rounded-xl p-6">
-      <h3 class="text-[15px] font-bold text-gray-800 mb-5 border-b border-gray-50 pb-3">
+      <h3 class="text-[15px] font-medium text-gray-800 mb-5 border-b border-gray-50 pb-3">
         {{ $t('invoice_panel.ip_information') }}
       </h3>
 

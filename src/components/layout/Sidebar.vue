@@ -57,7 +57,7 @@ const isActive = (path) => {
   <aside
     class="w-20 md:w-65 bg-white-bg flex flex-col p-2 md:p-4 gap-3 font-['Poppins'] sticky top-14 h-[calc(100vh-3.5rem)] overflow-y-auto hide-scrollbar transition-all duration-300"
   >
-    <div class="bg-white rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.06)] p-2 md:p-4">
+    <div class="bg-white rounded-2xl p-2 md:p-4">
       <h3
         class="hidden md:block text-[16px] font-semibold text-primary-text mt-1 md:mt-2 mb-3 tracking-wide"
       >
@@ -88,7 +88,7 @@ const isActive = (path) => {
       </div>
     </div>
 
-    <div class="bg-white rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.06)] p-2 md:p-4">
+    <div class="bg-white rounded-2xl p-2 md:p-4">
       <h3
         class="hidden md:block text-[16px] font-semibold text-primary-text mt-1 md:mt-2 mb-3 tracking-wide"
       >

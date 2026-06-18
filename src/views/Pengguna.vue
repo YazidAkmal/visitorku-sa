@@ -25,6 +25,20 @@ const itemsPerPage = ref(5)
 const isLoadingData = ref(false)
 const listAdminLengkap = ref([])
 
+// 🌟 LANGKAH 1: STATE & FUNGSI SORTING
+const sortKey = ref('nama')
+const sortOrder = ref('asc')
+
+const handleSort = (key) => {
+  if (sortKey.value === key) {
+    sortOrder.value = sortOrder.value === 'asc' ? 'desc' : 'asc'
+  } else {
+    sortKey.value = key
+    sortOrder.value = 'asc'
+  }
+  currentPage.value = 1
+}
+
 const formatDateShort = (dateStr) => (!dateStr ? '-' : dateStr.split('T')[0])
 
 const fetchAdminData = async () => {
@@ -58,12 +72,28 @@ const listAdminFiltered = computed(() => {
   )
 })
 
-const listAdminDitampilkan = computed(() =>
-  listAdminFiltered.value.slice(
-    (currentPage.value - 1) * itemsPerPage.value,
-    (currentPage.value - 1) * itemsPerPage.value + itemsPerPage.value,
-  ),
-)
+// 🌟 LANGKAH 2: COMPUTED UNTUK MENGURUTKAN
+const listAdminDitampilkan = computed(() => {
+  let result = [...listAdminFiltered.value]
+
+  if (sortKey.value) {
+    result.sort((a, b) => {
+      // Mapping untuk kolom detail_tanggal (sort berdasarkan created_at)
+      let valA = sortKey.value === 'detail_tanggal' ? a.created_at : a[sortKey.value]
+      let valB = sortKey.value === 'detail_tanggal' ? b.created_at : b[sortKey.value]
+
+      valA = String(valA || '').toLowerCase()
+      valB = String(valB || '').toLowerCase()
+
+      if (valA < valB) return sortOrder.value === 'asc' ? -1 : 1
+      if (valA > valB) return sortOrder.value === 'asc' ? 1 : -1
+      return 0
+    })
+  }
+
+  const start = (currentPage.value - 1) * itemsPerPage.value
+  return result.slice(start, start + itemsPerPage.value)
+})
 
 // Jadikan tableColumns Reaktif
 const tableColumns = computed(() => [
@@ -210,7 +240,13 @@ const handleDelete = async (id) => {
         }}</span>
       </div>
 
-      <TableSuperAdmin :columns="tableColumns" :data="listAdminDitampilkan">
+      <TableSuperAdmin
+        :columns="tableColumns"
+        :data="listAdminDitampilkan"
+        :sort-key="sortKey"
+        :sort-order="sortOrder"
+        @sort="handleSort"
+      >
         <template #nama="{ item }">
           <div class="flex items-center gap-3">
             <div
@@ -299,7 +335,7 @@ const handleDelete = async (id) => {
     <DetailPanel :is-open="isDetailOpen" @close="isDetailOpen = false">
       <template #header>
         <div class="px-6 md:px-8 pt-0 pb-0 relative z-20">
-          <h2 class="text-lg mb-4 font-bold text-white tracking-wide">
+          <h2 class="text-lg mb-4 font-semibold text-white tracking-wide">
             {{
               panelMode === 'create'
                 ? $t('user_panel.up_headerPanel1')

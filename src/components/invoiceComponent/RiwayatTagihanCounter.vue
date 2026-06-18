@@ -24,9 +24,9 @@ const formatRupiah = (angka) => {
   <div class="mb-8 flex flex-col lg:flex-row items-center gap-3 bg-white-bg p-4 rounded-xl">
     <div class="flex-1 w-full p-5 rounded-xl flex flex-col justify-center">
       <div class="flex items-center gap-1.5 mb-1">
-        <span class="text-[13px] font-medium text-gray-800">{{ $t('invoice.i_Total') }}</span>
+        <span class="text-[14px] font-medium text-gray-800">{{ $t('invoice.i_Total') }}</span>
       </div>
-      <div class="text-2xl font-semibold text-gray-900">{{ formatRupiah(summary.total) }}</div>
+      <div class="text-[20px] font-semibold text-gray-900">{{ formatRupiah(summary.total) }}</div>
     </div>
 
     <div
@@ -37,9 +37,9 @@ const formatRupiah = (angka) => {
 
     <div class="flex-1 w-full bg-white p-5 rounded-xl flex flex-col justify-center">
       <div class="flex items-center gap-1.5 mb-1">
-        <span class="text-[13px] font-medium text-gray-800">{{ $t('invoice.i_Nopaid') }}</span>
+        <span class="text-[14px] font-medium text-gray-800">{{ $t('invoice.i_Nopaid') }}</span>
       </div>
-      <div class="text-2xl font-semibold text-gray-900">
+      <div class="text-[20px] font-semibold text-gray-900">
         {{ formatRupiah(summary.belumDibayar) }}
       </div>
     </div>
@@ -52,9 +52,9 @@ const formatRupiah = (angka) => {
 
     <div class="flex-1 w-full bg-white p-5 rounded-xl flex flex-col justify-center">
       <div class="flex items-center gap-1.5 mb-1">
-        <span class="text-[13px] font-medium text-gray-800">{{ $t('invoice.i_paid') }}</span>
+        <span class="text-[14px] font-medium text-gray-800">{{ $t('invoice.i_paid') }}</span>
       </div>
-      <div class="text-2xl font-semibold text-gray-900">{{ formatRupiah(summary.lunas) }}</div>
+      <div class="text-[20px] font-semibold text-gray-900">{{ formatRupiah(summary.lunas) }}</div>
     </div>
   </div>
 </template>

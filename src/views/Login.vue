@@ -38,7 +38,7 @@ const handleLogin = async () => {
           email: result.data.email,
         }),
       )
-      Toast.success('Login berhasil! Selamat datang.')
+      Toast.success('Login berhasil!')
       router.push({ name: 'Dashboard' })
     } else {
       Toast.error('Format respons dari server tidak sesuai.')

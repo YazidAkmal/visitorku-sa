@@ -18,10 +18,10 @@ const formatRupiah = (angka) => {
   <div class="px-6 md:px-8 py-6 flex flex-col gap-6 h-full min-h-[calc(100vh-200px)]">
     <div class="bg-white rounded-xl border border-gray-100 p-6">
       <div class="mb-6 border-b border-gray-100 pb-5">
-        <div class="text-[13px] text-gray-400 font-medium mb-1">
+        <div class="text-[14px] text-gray-400 font-medium mb-1">
           {{ $t('invoice_panel.ip_companyName') }}
         </div>
-        <div class="text-[15px] text-gray-800 font-semibold">{{ selectedDetail.perusahaan }}</div>
+        <div class="text-[15px] text-gray-800 font-medium">{{ selectedDetail.perusahaan }}</div>
       </div>
 
       <div
@@ -29,39 +29,39 @@ const formatRupiah = (angka) => {
         :class="selectedDetail.statusCode === 'success' ? 'md:grid-cols-4' : 'md:grid-cols-3'"
       >
         <div>
-          <div class="text-[13px] text-gray-400 font-medium mb-1">
+          <div class="text-[14px] text-gray-400 font-medium mb-1">
             {{ $t('invoice_panel.ip_invoiceNumber') }}
           </div>
-          <div class="text-[15px] text-[#2BB5F4] font-semibold">{{ selectedDetail.noTagihan }}</div>
+          <div class="text-[15px] text-[#2BB5F4] font-medium">{{ selectedDetail.noTagihan }}</div>
         </div>
         <div>
-          <div class="text-[13px] text-gray-400 font-medium mb-1">
+          <div class="text-[14px] text-gray-400 font-medium mb-1">
             {{ $t('invoice_panel.ip_dueDate') }}
           </div>
-          <div class="text-[15px] text-gray-800 font-semibold">
+          <div class="text-[15px] text-gray-800 font-medium">
             {{ selectedDetail.dateRange.split(' • ')[1] }}
           </div>
         </div>
         <div>
-          <div class="text-[13px] text-gray-400 font-medium mb-1">
+          <div class="text-[14px] text-gray-400 font-medium mb-1">
             {{ $t('invoice_panel.ip_invoiceStatus') }}
           </div>
-          <div class="text-[15px] text-gray-800 font-semibold">{{ selectedDetail.status }}</div>
+          <div class="text-[15px] text-gray-800 font-medium">{{ selectedDetail.status }}</div>
         </div>
         <div v-if="selectedDetail.statusCode === 'success'">
-          <div class="text-[13px] text-gray-400 font-medium mb-1">
+          <div class="text-[14px] text-gray-400 font-medium mb-1">
             {{ $t('invoice_panel.ip_paymentMethod') }}
           </div>
-          <div class="text-[15px] text-gray-800 font-semibold">-</div>
+          <div class="text-[15px] text-gray-800 font-medium">-</div>
         </div>
       </div>
     </div>
 
     <div class="bg-white rounded-xl border border-gray-100 p-6">
-      <h3 class="text-[15px] font-bold text-gray-800 mb-1">
+      <h3 class="text-[15px] font-medium text-gray-800 mb-1">
         {{ $t('invoice_panel.ip_packageDetail') }}
       </h3>
-      <p class="text-[13px] text-gray-400 mb-6">{{ $t('invoice_panel.ip_detailDesc') }}</p>
+      <p class="text-[14px] text-gray-400 mb-6">{{ $t('invoice_panel.ip_detailDesc') }}</p>
 
       <div class="space-y-4">
         <div class="flex justify-between text-[15px]">
@@ -75,8 +75,8 @@ const formatRupiah = (angka) => {
           <span class="text-gray-800 font-medium"> {{ formatRupiah(selectedDetail.disc) }}</span>
         </div>
         <div class="flex justify-between text-[15px] pt-4 border-t border-gray-100">
-          <span class="text-gray-800 font-bold">{{ $t('invoice_panel.ip_paymentTotal') }}</span>
-          <span class="text-gray-800 font-bold">{{
+          <span class="text-gray-800 font-medium">{{ $t('invoice_panel.ip_paymentTotal') }}</span>
+          <span class="text-gray-800 font-medium">{{
             formatRupiah(selectedDetail.payment_total)
           }}</span>
         </div>

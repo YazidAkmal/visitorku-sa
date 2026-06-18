@@ -47,12 +47,12 @@ const resetValidasi = (event) => {
 <template>
   <div class="px-6 md:px-8 py-6 pb-10 space-y-6 bg-[#F8FAFC]">
     <div class="bg-white rounded-xl border border-gray-100 p-6">
-      <h3 class="text-[15px] font-bold text-gray-800 mb-5 border-b border-gray-50 pb-3">
+      <h3 class="text-[15px] font-medium text-gray-800 mb-5 border-b border-gray-50 pb-3">
         {{ $t('package_panel.pp_header1') }}
       </h3>
       <div class="space-y-4">
         <div>
-          <label class="block text-[13px] text-gray-800 font-medium mb-1.5"
+          <label class="block text-[14px] text-gray-800 font-medium mb-1.5"
             >{{ $t('package_panel.pp_name') }} <span class="text-red-500">*</span></label
           >
           <input
@@ -61,11 +61,11 @@ const resetValidasi = (event) => {
             @input="resetValidasi"
             type="text"
             :placeholder="$t('package_panel.pp_namePlaceholder')"
-            class="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-[13px] text-gray-700 focus:outline-none focus:ring-1 focus:ring-[#2BB5F4]"
+            class="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-[14px] text-gray-700 focus:outline-none focus:ring-1 focus:ring-[#2BB5F4]"
           />
         </div>
         <div>
-          <label class="block text-[13px] text-gray-800 font-medium mb-1.5"
+          <label class="block text-[14px] text-gray-800 font-medium mb-1.5"
             >{{ $t('package_panel.pp_desc') }} <span class="text-red-500">*</span></label
           >
           <textarea
@@ -74,15 +74,17 @@ const resetValidasi = (event) => {
             @input="resetValidasi"
             :placeholder="$t('package_panel.pp_descPlaceholder')"
             rows="3"
-            class="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-[13px] text-gray-700 focus:outline-none focus:border-[#2BB5F4] resize-none"
+            class="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-[14px] text-gray-700 focus:outline-none focus:border-[#2BB5F4] resize-none"
           ></textarea>
         </div>
       </div>
     </div>
 
     <div class="bg-white rounded-xl border border-gray-100 p-6">
-      <h3 class="text-[15px] font-bold text-gray-800 mb-1">{{ $t('package_panel.pp_header2') }}</h3>
-      <p class="text-[12px] text-gray-400 mb-5 border-b border-gray-50 pb-3">
+      <h3 class="text-[15px] font-medium text-gray-800 mb-1">
+        {{ $t('package_panel.pp_header2') }}
+      </h3>
+      <p class="text-[13px] text-gray-400 mb-5 border-b border-gray-50 pb-3">
         {{ $t('package_panel.pp_h2desc') }}
       </p>
 
@@ -99,14 +101,14 @@ const resetValidasi = (event) => {
               <div class="text-[14px] text-gray-800 font-medium">
                 {{ $t('package_panel.pp_price') }}
               </div>
-              <div class="text-[12px] text-gray-400">{{ $t('package_panel.pp_priceDesc') }}</div>
+              <div class="text-[13px] text-gray-400">{{ $t('package_panel.pp_priceDesc') }}</div>
             </div>
           </label>
 
           <div v-if="formData.jenisHarga === 'bulanan'" class="mt-4 ml-7 flex flex-col gap-4">
             <div class="flex flex-col md:flex-row gap-4">
               <div class="flex-1">
-                <label class="block text-[12px] text-gray-800 font-medium mb-1.5"
+                <label class="block text-[14px] text-gray-800 font-medium mb-1.5"
                   >{{ $t('package_panel.pp_monthlyPrice')
                   }}<span class="text-red-500">*</span></label
                 >
@@ -126,7 +128,7 @@ const resetValidasi = (event) => {
                 </div>
               </div>
               <div class="flex-1">
-                <label class="block text-[12px] text-gray-800 font-medium mb-1.5"
+                <label class="block text-[14px] text-gray-800 font-medium mb-1.5"
                   >{{ $t('package_panel.pp_duration') }} <span class="text-red-500">*</span></label
                 >
                 <div class="relative">
@@ -156,7 +158,7 @@ const resetValidasi = (event) => {
 
             <div v-if="formData.aktifkanTahunan" class="flex flex-col md:flex-row gap-4 pt-1">
               <div class="flex-1">
-                <label class="block text-[12px] text-gray-800 font-medium mb-1.5"
+                <label class="block text-[13px] text-gray-800 font-medium mb-1.5"
                   >{{ $t('package_panel.pp_yearlyPrice')
                   }}<span class="text-red-500">*</span></label
                 >
@@ -176,7 +178,7 @@ const resetValidasi = (event) => {
                 </div>
               </div>
               <div class="flex-1">
-                <label class="block text-[12px] text-gray-800 font-medium mb-1.5"
+                <label class="block text-[13px] text-gray-800 font-medium mb-1.5"
                   >{{ $t('package_panel.pp_duration') }} <span class="text-red-500">*</span></label
                 >
                 <div class="relative">
@@ -206,7 +208,7 @@ const resetValidasi = (event) => {
               <div class="text-[14px] text-gray-800 font-medium">
                 {{ $t('package_panel.pp_free') }}
               </div>
-              <div class="text-[12px] text-gray-400">{{ $t('package_panel.pp_freeDesc') }}</div>
+              <div class="text-[13px] text-gray-400">{{ $t('package_panel.pp_freeDesc') }}</div>
             </div>
           </label>
         </div>
@@ -214,8 +216,10 @@ const resetValidasi = (event) => {
     </div>
 
     <div class="bg-white rounded-xl border border-gray-100 p-6">
-      <h3 class="text-[15px] font-bold text-gray-800 mb-1">{{ $t('package_panel.pp_header3') }}</h3>
-      <p class="text-[12px] text-gray-400 mb-5 border-b border-gray-50 pb-3">
+      <h3 class="text-[15px] font-medum text-gray-800 mb-1">
+        {{ $t('package_panel.pp_header3') }}
+      </h3>
+      <p class="text-[13px] text-gray-400 mb-5 border-b border-gray-50 pb-3">
         {{ $t('package_panel.pp_h3desc') }}
       </p>
 

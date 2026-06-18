@@ -30,6 +30,19 @@ const itemsPerPage = ref(5)
 const listPerusahaan = ref([])
 const isLoadingData = ref(false)
 
+const sortKey = ref('nama')
+const sortOrder = ref('asc')
+
+const handleSort = (key) => {
+  if (sortKey.value === key) {
+    sortOrder.value = sortOrder.value === 'asc' ? 'desc' : 'asc'
+  } else {
+    sortKey.value = key
+    sortOrder.value = 'asc'
+  }
+  currentPage.value = 1
+}
+
 // Panel State
 const isDetailOpen = ref(false)
 const selectedDetail = ref(null)
@@ -225,11 +238,27 @@ const handleDelete = async (id) => {
 }
 
 const listPerusahaanDitampilkan = computed(() => {
-  let filtered = listPerusahaan.value
-  if (searchQuery.value)
-    filtered = filtered.filter((item) =>
-      item.nama.toLowerCase().includes(searchQuery.value.toLowerCase()),
-    )
+  let filtered = [...listPerusahaan.value]
+
+  if (searchQuery.value) {
+    const q = searchQuery.value.toLowerCase()
+    filtered = filtered.filter((item) => item.nama.toLowerCase().includes(q))
+  }
+
+  if (sortKey.value) {
+    filtered.sort((a, b) => {
+      let valA = sortKey.value === 'pic' ? a.pic_nama : a[sortKey.value]
+      let valB = sortKey.value === 'pic' ? b.pic_nama : b[sortKey.value]
+
+      valA = String(valA || '').toLowerCase()
+      valB = String(valB || '').toLowerCase()
+
+      if (valA < valB) return sortOrder.value === 'asc' ? -1 : 1
+      if (valA > valB) return sortOrder.value === 'asc' ? 1 : -1
+      return 0
+    })
+  }
+
   const start = (currentPage.value - 1) * itemsPerPage.value
   return filtered.slice(start, start + itemsPerPage.value)
 })
@@ -290,7 +319,13 @@ const closeDropdown = () => {
         }}</span>
       </div>
 
-      <TableSuperAdmin :columns="tableColumns" :data="listPerusahaanDitampilkan">
+      <TableSuperAdmin
+        :columns="tableColumns"
+        :data="listPerusahaanDitampilkan"
+        :sort-key="sortKey"
+        :sort-order="sortOrder"
+        @sort="handleSort"
+      >
         <template #nama="{ item }">
           <div class="flex items-center gap-3">
             <div
@@ -306,7 +341,7 @@ const closeDropdown = () => {
               alt=""
               aria-hidden="true"
               loading="lazy"
-              class="w-8 h-8 rounded-full object-cover border border-gray-100 shrink-0"
+              class="w-8 h-8 rounded-full object-cover border border-gray-100 shrink-0 bg-white"
             />
             <span class="text-gray-800 font-medium whitespace-nowrap">{{ item.nama }}</span>
           </div>
@@ -429,11 +464,11 @@ const closeDropdown = () => {
             {{ selectedDetail.nama.charAt(0).toUpperCase() }}
           </div>
           <div class="flex-1 overflow-hidden">
-            <h2 class="text-[20px] font-bold text-white mb-0.5 tracking-wide truncate">
+            <h2 class="text-[20px] font-semibold text-white mb-0.5 tracking-wide truncate">
               {{ selectedDetail.nama }}
             </h2>
             <div class="text-[12px] text-white/90">
-              <span class="font-semibold text-white">{{ $t('company_panel.cp_registered') }}</span>
+              <span class="font-medium text-white">{{ $t('company_panel.cp_registered') }}</span>
               {{
                 selectedDetail.created_at
                   ? new Date(selectedDetail.created_at).toLocaleDateString('id-ID')

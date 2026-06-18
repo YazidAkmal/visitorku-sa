@@ -1,6 +1,5 @@
 <script setup>
-import { ref, onMounted, defineAsyncComponent } from 'vue'
-import { computed } from 'vue'
+import { ref, onMounted, defineAsyncComponent, computed } from 'vue' // 🌟 FIX: Jangan lupa import computed
 import { useI18n } from 'vue-i18n'
 
 // Import Components
@@ -27,6 +26,52 @@ const counters = ref({
 const latestCompanies = ref([])
 const visitorsData = ref([])
 const visitsData = ref([])
+
+// 🌟 FIX 1: SOP SORTING - STATE DAN FUNGSI PENGGERAK
+const sortKey = ref('company') // Sort default berdasarkan nama perusahaan
+const sortOrder = ref('asc')
+
+const handleSort = (key) => {
+  if (sortKey.value === key) {
+    sortOrder.value = sortOrder.value === 'asc' ? 'desc' : 'asc'
+  } else {
+    sortKey.value = key
+    sortOrder.value = 'asc'
+  }
+}
+
+const listPerusahaanDitampilkan = computed(() => {
+  let result = [...latestCompanies.value]
+
+  if (sortKey.value) {
+    result.sort((a, b) => {
+      let valA, valB
+
+      if (sortKey.value === 'company') {
+        valA = a.name
+        valB = b.name
+      } else if (sortKey.value === 'address') {
+        valA = a.address
+        valB = b.address
+      } else if (sortKey.value === 'created') {
+        valA = a.created_at
+        valB = b.created_at
+      } else {
+        valA = a[sortKey.value]
+        valB = b[sortKey.value]
+      }
+
+      valA = String(valA || '').toLowerCase()
+      valB = String(valB || '').toLowerCase()
+
+      if (valA < valB) return sortOrder.value === 'asc' ? -1 : 1
+      if (valA > valB) return sortOrder.value === 'asc' ? 1 : -1
+      return 0
+    })
+  }
+
+  return result
+})
 
 const chartSeries = computed(() => [
   { name: t('company_panel.cp_visitor'), data: visitorsData.value },
@@ -95,11 +140,9 @@ const formatDate = (dateStr) => {
   return dateStr.split('T')[0]
 }
 
-// Try Catch untuk fetch data Dashboard
 const fetchDashboardData = async () => {
   isLoading.value = true
   try {
-    // Paralel manggil 3 API`
     const [resCounter, resMonthly, resLatest] = await Promise.all([
       ApiDashboard.getCounters(),
       ApiDashboard.getMonthlyData(),
@@ -121,8 +164,6 @@ const fetchDashboardData = async () => {
         xaxis: { ...chartOptions.value.xaxis, categories: dataAPI.titles },
       }
 
-      // Cukup masukkan datanya saja ke ref terpisah yang kita buat tadi
-      // Namanya nanti otomatis diurus dan diterjemahkan oleh computed di atas
       visitorsData.value = dataAPI.visitors || []
       visitsData.value = dataAPI.visits || []
     }
@@ -150,10 +191,12 @@ onMounted(() => {
     <DashboardCounter :counters="counters" />
 
     <div class="mb-6 border border-gray-100 rounded-xl p-6">
-      <div class="flex items-center justify-between mb-6">
-        <h2 class="text-[15px] font-bold text-gray-800">{{ $t('dashboard.d_Statistic') }}</h2>
+      <div class="flex items-start sm:items-center justify-between mb-6">
+        <h2 class="text-[15px] font-medium text-gray-800">{{ $t('dashboard.d_Statistic') }}</h2>
 
-        <div class="flex items-center gap-4 text-[12px] font-medium">
+        <div
+          class="flex flex-col sm:flex-row items-end sm:items-center gap-2 sm:gap-4 text-[12px] font-medium"
+        >
           <div class="flex items-center gap-1.5">
             <div class="w-3 h-3 rounded bg-[#2D51FD]"></div>
             <span class="text-gray-500">{{ $t('company_panel.cp_visitor') }}</span>
@@ -180,11 +223,17 @@ onMounted(() => {
 
     <div class="border border-gray-100 rounded-xl p-6 shadow-[0_2px_10px_rgb(0,0,0,0.02)]">
       <div class="flex items-center justify-between mb-5">
-        <h2 class="text-[15px] font-bold text-gray-800">{{ $t('dashboard.d_NewestCompany') }}</h2>
+        <h2 class="text-[15px] font-medium text-gray-800">{{ $t('dashboard.d_NewestCompany') }}</h2>
       </div>
 
       <div class="border border-gray-100 rounded-lg overflow-hidden">
-        <TableSuperAdmin :columns="tableColumns" :data="latestCompanies">
+        <TableSuperAdmin
+          :columns="tableColumns"
+          :data="listPerusahaanDitampilkan"
+          :sort-key="sortKey"
+          :sort-order="sortOrder"
+          @sort="handleSort"
+        >
           <template #company="{ item }">
             <div class="flex items-center gap-3">
               <img
