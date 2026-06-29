@@ -2,8 +2,6 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { AuthService } from '@/services/AuthService.js'
-
-// Import Toast Helper Global kita
 import { Toast } from '@/components/utils/ToastState.js'
 
 import logoVisitorku from '@/assets/images/visitorku-logo.svg'
@@ -46,10 +44,14 @@ const handleLogin = async () => {
   } catch (error) {
     console.error('Login Gagal:', error)
 
-    const errMsg =
+    let errMsg =
       error.response?.data?.message ||
       error.message ||
       'Terjadi kesalahan pada server. Silakan coba lagi.'
+
+    if (errMsg.toLowerCase().includes('validation error')) {
+      errMsg = 'Email validation error'
+    }
 
     Toast.error(errMsg)
   } finally {
@@ -75,12 +77,15 @@ const handleLogin = async () => {
     <div class="w-full lg:w-1/2 flex justify-center items-center bg-white p-8 md:p-12 relative">
       <div class="w-full max-w-100">
         <div class="mb-8">
-          <h1 class="text-[28px] font-bold text-gray-900 mb-2">Login</h1>
+          <h1 class="text-2xl font-semibold text-gray-900 mb-2">Login</h1>
+          <p class="mb-4 text-[#6E6E6E] font-light text-justify">
+            Welcome to VisitorKu Super Admin, write your email and password to login.
+          </p>
         </div>
 
         <form @submit.prevent="handleLogin" class="space-y-5">
           <div>
-            <label class="block text-[13px] text-gray-800 mb-1.5"
+            <label class="block text-[14px] text-gray-800 mb-1.5"
               >Email <span class="text-red-500">*</span></label
             >
             <input
@@ -93,7 +98,7 @@ const handleLogin = async () => {
           </div>
 
           <div>
-            <label class="block text-[13px] text-gray-800 mb-1.5"
+            <label class="block text-[14px] text-gray-800 mb-1.5"
               >Password <span class="text-red-500">*</span></label
             >
             <div class="relative">

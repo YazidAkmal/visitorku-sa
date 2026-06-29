@@ -23,7 +23,6 @@ import { Toast } from '@/components/utils/ToastState'
 
 const { t } = useI18n()
 
-// State Tabel Utama
 const searchQuery = ref('')
 const currentPage = ref(1)
 const itemsPerPage = ref(5)
@@ -43,14 +42,12 @@ const handleSort = (key) => {
   currentPage.value = 1
 }
 
-// Panel State
 const isDetailOpen = ref(false)
 const selectedDetail = ref(null)
 const isLoadingDetail = ref(false)
 const showChart = ref(false)
 const activeTab = ref('Jumlah Visitor')
 
-// State Data Detail
 const detailCounters = ref({ visitor: 0, visit: 0, user: 0, percentage: 0, quota: 0 })
 const detailLatestVisitors = ref([])
 
@@ -343,13 +340,15 @@ const closeDropdown = () => {
               loading="lazy"
               class="w-8 h-8 rounded-full object-cover border border-gray-100 shrink-0 bg-white"
             />
-            <span class="text-gray-800 font-medium whitespace-nowrap">{{ item.nama }}</span>
+            <span class="text-[#303030] font-medium text-[14px] whitespace-nowrap">{{
+              item.nama
+            }}</span>
           </div>
         </template>
 
         <template #alamat="{ item }">
           <div
-            class="text-gray-800 text-[13px] line-clamp-2 leading-relaxed max-w-50 md:max-w-87.5 lg:max-w-100"
+            class="text-[#303030] text-[14px] font-reguler line-clamp-2 leading-relaxed max-w-50 md:max-w-87.5 lg:max-w-100"
             :title="item.alamat"
           >
             {{ item.alamat }}
@@ -357,8 +356,12 @@ const closeDropdown = () => {
         </template>
 
         <template #pic="{ item }">
-          <div class="text-gray-700 font-medium whitespace-nowrap">{{ item.pic_nama }}</div>
-          <div class="text-gray-400 mt-0.5 whitespace-nowrap text-[12px]">{{ item.pic_telp }}</div>
+          <div class="text-[#1E1E1D] text-[14px] font-reguler whitespace-nowrap">
+            {{ item.pic_nama }}
+          </div>
+          <div class="text-[##6E6E6E] text-[13px] mt-0.5 whitespace-nowrap">
+            {{ item.pic_telp }}
+          </div>
         </template>
 
         <template #aksi="{ item }">

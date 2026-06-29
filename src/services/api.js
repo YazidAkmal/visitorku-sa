@@ -24,9 +24,15 @@ export const apiClient = async (endpoint, options = {}) => {
   }
 
   if (!response.ok) {
-    if (response.status === 401) {
+    if (response.status === 401 || response.status === 403) {
       console.warn('Token expired atau tidak valid. Silakan login ulang.')
+
       localStorage.removeItem('token')
+      localStorage.removeItem('user')
+
+      window.location.href = '/login'
+
+      return
     }
     throw new Error(result.message || result.error || 'Terjadi kesalahan pada server')
   }

@@ -1,5 +1,4 @@
 <script setup>
-import { ref, onMounted } from 'vue'
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
@@ -72,7 +71,7 @@ const isActive = (path) => {
           :class="[
             'flex items-center justify-center md:justify-start gap-3 p-2.5 md:px-3 md:py-2.5 rounded-lg cursor-pointer transition-all text-[14px] no-underline',
             isActive(item.path)
-              ? 'bg-light-blue text-primary-blue font-medium'
+              ? 'bg-[#D3F1FC] text-primary-blue font-medium'
               : 'text-secondary-text hover:bg-gray-50 font-normal',
           ]"
         >
@@ -103,7 +102,7 @@ const isActive = (path) => {
           :class="[
             'flex items-center justify-center md:justify-start gap-3 p-2.5 md:px-3 md:py-2.5 rounded-lg cursor-pointer transition-all text-[14px] no-underline',
             isActive(item.path)
-              ? 'bg-light-blue text-primary-blue font-medium'
+              ? 'bg-[#D3F1FC] text-primary-blue font-medium'
               : 'text-secondary-text hover:bg-gray-50 font-normal',
           ]"
         >

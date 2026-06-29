@@ -1,4 +1,6 @@
 <script setup>
+import { ref, computed, onMounted } from 'vue'
+
 const props = defineProps({
   formData: { type: Object, required: true },
   panelMode: { type: String, default: 'create' },
@@ -6,6 +8,36 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['close', 'save'])
+
+const initialData = ref({ nama: '', email: '' })
+
+onMounted(() => {
+  initialData.value = {
+    nama: props.formData.nama || '',
+    email: props.formData.email || '',
+  }
+})
+
+const isButtonDisabled = computed(() => {
+  if (props.isSaving) return true
+
+  if (props.panelMode === 'create') {
+    return (
+      !props.formData.nama ||
+      !props.formData.email ||
+      !props.formData.password ||
+      !props.formData.confirmPassword
+    )
+  } else {
+    const isUnchanged =
+      props.formData.nama === initialData.value.nama &&
+      props.formData.email === initialData.value.email
+
+    const isEmpty = !props.formData.nama || !props.formData.email
+
+    return isUnchanged || isEmpty
+  }
+})
 </script>
 
 <template>
@@ -81,8 +113,8 @@ const emit = defineEmits(['close', 'save'])
       </button>
       <button
         @click="emit('save')"
-        :disabled="isSaving"
-        class="flex-1 py-3 rounded-xl bg-[#2BB5F4] text-white font-semibold text-[13px] hover:bg-[#14A5E6] transition-colors flex items-center justify-center gap-2 disabled:opacity-70 focus:outline-none"
+        :disabled="isButtonDisabled"
+        class="flex-1 py-3 rounded-xl bg-[#2BB5F4] text-white font-semibold text-[13px] hover:bg-[#14A5E6] transition-colors flex items-center justify-center gap-2 disabled:bg-[#D8D5D3] disabled:text-[#B3ADA9] disabled:cursor-not-allowed focus:outline-none"
       >
         <svg
           v-if="isSaving"

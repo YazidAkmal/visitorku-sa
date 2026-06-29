@@ -105,7 +105,6 @@ const summary = computed(() => {
   return { total: lunas + belumDibayar, lunas, belumDibayar }
 })
 
-// Filter data
 const listTagihanFiltered = computed(() => {
   if (!searchQuery.value) return listTagihan.value
   return listTagihan.value.filter(
@@ -139,7 +138,6 @@ const listTagihanDitampilkan = computed(() => {
     })
   }
 
-  // Proses Pagination
   const start = (currentPage.value - 1) * itemsPerPage.value
   return result.slice(start, start + itemsPerPage.value)
 })
@@ -316,13 +314,14 @@ const openInvoicePDF = (url) => {
           <div class="flex flex-col items-start gap-1">
             <div
               v-if="item.statusCode === 'success'"
-              class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#E8F8F3] text-[#38CA99] border border-[#38CA99]/20 text-[12px] font-medium whitespace-nowrap"
+              class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#CDF2E6] text-[#06BD80] text-[12px] font-medium whitespace-nowrap"
             >
               <svg
                 class="w-3.5 h-3.5"
                 fill="none"
                 stroke="currentColor"
                 stroke-width="2.5"
+                loading="lazy"
                 viewBox="0 0 24 24"
               >
                 <circle cx="12" cy="12" r="8"></circle>
@@ -331,10 +330,11 @@ const openInvoicePDF = (url) => {
             </div>
             <div
               v-if="item.statusCode === 'pending'"
-              class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#FEF4E3] text-[#F59E0B] border border-[#F59E0B]/20 text-[12px] font-medium whitespace-nowrap"
+              class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#FFF5DA] text-[#FFCB45] text-[12px] font-medium whitespace-nowrap"
             >
               <svg
                 class="w-3.5 h-3.5"
+                loading="lazy"
                 fill="none"
                 stroke="currentColor"
                 stroke-width="2.5"
@@ -345,7 +345,7 @@ const openInvoicePDF = (url) => {
               </svg>
               {{ item.status }}
             </div>
-            <span class="text-[12px] text-gray-400 whitespace-nowrap">{{ item.statusDesc }}</span>
+            <span class="text-[12px] text-[#6E6E6E] whitespace-nowrap">{{ item.statusDesc }}</span>
           </div>
         </template>
 
@@ -359,6 +359,7 @@ const openInvoicePDF = (url) => {
             >
               <svg
                 aria-hidden="true"
+                loading="lazy"
                 class="w-4 h-4"
                 fill="none"
                 stroke="currentColor"
@@ -425,14 +426,14 @@ const openInvoicePDF = (url) => {
               </h2>
               <div
                 v-if="selectedDetail.statusCode === 'success'"
-                class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#CDF2E6] text-[#38CA99] text-[13px] shadow-sm"
+                class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#CDF2E6] text-[#06BD80] text-[13px] shadow-sm"
               >
                 <img :src="Lunas" loading="lazy" class="w-3.5 h-3.5" alt="Lunas" />
                 {{ $t('invoice.i_paidStatus') }}
               </div>
               <div
                 v-else-if="selectedDetail.statusCode === 'pending'"
-                class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#FFF5DA] text-[#F59E0B] text-[13px] shadow-sm"
+                class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#FFF5DA] text-[#FFCB45] text-[13px] shadow-sm"
               >
                 <img :src="MenungguPembayaran" loading="lazy" class="w-3.5 h-3.5" alt="Menunggu" />
                 {{ $t('invoice.i_waitingStatus') }}
@@ -497,6 +498,7 @@ const openInvoicePDF = (url) => {
             >
               <svg
                 aria-hidden="true"
+                loading="lazy"
                 class="w-5 h-5"
                 fill="none"
                 stroke="currentColor"
@@ -539,6 +541,7 @@ const openInvoicePDF = (url) => {
               >
                 <svg
                   v-if="isProcessingPayment"
+                  loading="lazy"
                   class="animate-spin h-4 w-4 text-white"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"

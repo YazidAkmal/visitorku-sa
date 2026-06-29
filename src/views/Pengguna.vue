@@ -92,7 +92,6 @@ const listAdminDitampilkan = computed(() => {
   return result.slice(start, start + itemsPerPage.value)
 })
 
-// Jadikan tableColumns Reaktif
 const tableColumns = computed(() => [
   { key: 'nama', label: t('user.u_Name'), width: 'w-[30%]' },
   { key: 'email', label: 'Email', width: 'w-[30%]' },

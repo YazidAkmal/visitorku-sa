@@ -1,22 +1,22 @@
 <script setup>
-import { ref, onMounted, defineAsyncComponent, computed } from 'vue' // 🌟 FIX: Jangan lupa import computed
+import { ref, onMounted, defineAsyncComponent, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useAutoLogout } from '@/composables/useAutoLogout.js'
+import { ApiDashboard } from '@/services/ApiDashboard'
 
 // Import Components
 import PageHeader from '@/components/common/PageHeader.vue'
 import TableSuperAdmin from '@/components/common/TableSuperAdmin.vue'
 import DashboardCounter from '@/components/dashboardComponent/DashboardCounter.vue'
 
-const apexchart = defineAsyncComponent(() => import('vue3-apexcharts'))
+useAutoLogout(15)
 
-// Import API
-import { ApiDashboard } from '@/services/ApiDashboard'
+const apexchart = defineAsyncComponent(() => import('vue3-apexcharts'))
 
 const isLoading = ref(true)
 
 const { t } = useI18n()
 
-// Initial State
 const counters = ref({
   visitor: 0,
   visit: 0,
@@ -126,14 +126,12 @@ const chartOptions = ref({
   legend: { show: false },
 })
 
-// Inisialisasi Kolom Tabel Latest Company
 const tableColumns = computed(() => [
   { key: 'company', label: t('dashboard.d_companyName'), width: 'w-[40%]' },
   { key: 'address', label: t('dashboard.d_Address'), width: 'w-[40%]' },
   { key: 'created', label: t('dashboard.d_Joindate'), width: 'w-[20%]' },
 ])
 
-// Format Tanggal
 const formatDate = (dateStr) => {
   if (!dateStr) return '-'
   return dateStr.split('T')[0]

@@ -1,4 +1,5 @@
 <script setup>
+import { ref, computed, onMounted } from 'vue'
 import { Toast } from '@/components/utils/ToastState'
 
 const props = defineProps({
@@ -8,6 +9,76 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['close', 'save'])
+
+const initialData = ref(null)
+
+onMounted(() => {
+  initialData.value = {
+    namaPaket: props.formData.namaPaket || '',
+    deskripsi: props.formData.deskripsi || '',
+    jenisHarga: props.formData.jenisHarga || 'free',
+    harga: props.formData.harga || '',
+    durasi: props.formData.durasi || '',
+    aktifkanTahunan: props.formData.aktifkanTahunan || false,
+    hargaTahunan: props.formData.hargaTahunan || '',
+    kuotaVisit: props.formData.kuotaVisit || '',
+    jumlahCabang: props.formData.jumlahCabang || '',
+    jumlahAkun: props.formData.jumlahAkun || '',
+    storageLimit: props.formData.storageLimit || '',
+  }
+})
+
+const isButtonDisabled = computed(() => {
+  if (props.isSaving) return true
+
+  const fd = props.formData
+
+  const isBaseEmpty =
+    !fd.namaPaket ||
+    !fd.deskripsi ||
+    fd.kuotaVisit === '' ||
+    fd.kuotaVisit === null ||
+    fd.jumlahCabang === '' ||
+    fd.jumlahCabang === null ||
+    fd.jumlahAkun === '' ||
+    fd.jumlahAkun === null ||
+    fd.storageLimit === '' ||
+    fd.storageLimit === null
+
+  let isConditionalEmpty = false
+  if (fd.jenisHarga === 'bulanan') {
+    if (fd.harga === '' || fd.harga === null || !fd.durasi) {
+      isConditionalEmpty = true
+    }
+    if (fd.aktifkanTahunan && (fd.hargaTahunan === '' || fd.hargaTahunan === null)) {
+      isConditionalEmpty = true
+    }
+  }
+
+  const hasEmptyRequired = isBaseEmpty || isConditionalEmpty
+
+  if (props.panelMode === 'create') {
+    return hasEmptyRequired
+  } else {
+    if (hasEmptyRequired) return true
+    if (!initialData.value) return false
+
+    const isUnchanged =
+      fd.namaPaket === initialData.value.namaPaket &&
+      fd.deskripsi === initialData.value.deskripsi &&
+      fd.jenisHarga === initialData.value.jenisHarga &&
+      String(fd.harga || '') === String(initialData.value.harga || '') &&
+      fd.durasi === initialData.value.durasi &&
+      fd.aktifkanTahunan === initialData.value.aktifkanTahunan &&
+      String(fd.hargaTahunan || '') === String(initialData.value.hargaTahunan || '') &&
+      String(fd.kuotaVisit || '') === String(initialData.value.kuotaVisit || '') &&
+      String(fd.jumlahCabang || '') === String(initialData.value.jumlahCabang || '') &&
+      String(fd.jumlahAkun || '') === String(initialData.value.jumlahAkun || '') &&
+      String(fd.storageLimit || '') === String(initialData.value.storageLimit || '')
+
+    return isUnchanged
+  }
+})
 
 const handleBatal = () => {
   emit('close')
@@ -297,8 +368,8 @@ const resetValidasi = (event) => {
     </button>
     <button
       @click="handleSimpan"
-      :disabled="isSaving"
-      class="flex-1 py-3 rounded-xl bg-[#2BB5F4] text-white font-semibold text-[13px] hover:bg-[#14A5E6] transition-colors flex items-center justify-center gap-2 disabled:opacity-70"
+      :disabled="isButtonDisabled"
+      class="flex-1 py-3 rounded-xl bg-[#2BB5F4] text-white font-semibold text-[13px] hover:bg-[#14A5E6] transition-colors flex items-center justify-center gap-2 disabled:bg-[#D8D5D3] disabled:text-[#B3ADA9] disabled:cursor-not-allowed"
     >
       <svg
         v-if="isSaving"

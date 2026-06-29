@@ -24,7 +24,6 @@ const changeTab = (tabName) => {
   emit('update:activeTab', tabName)
 }
 
-// --- LOGIKA SORTING SAJA ---
 const sortKey = ref('nama')
 const sortOrder = ref('asc')
 
@@ -100,26 +99,26 @@ const sortedLatestVisitors = computed(() => {
 
       <div class="grid grid-cols-3 gap-3 md:gap-4">
         <div class="bg-white rounded-xl p-4 text-center border border-gray-100">
-          <div class="text-[12px] text-gray-500 font-medium mb-2.5">
+          <div class="text-[14px] text-[#8C8784] font-medium mb-2.5">
             {{ $t('company_panel.cp_totVisitor') }}
           </div>
-          <div class="text-2xl font-semibold text-gray-900 leading-none">
+          <div class="text-[18px] font-semibold text-gray-900 leading-none">
             {{ detailCounters.visitor }}
           </div>
         </div>
         <div class="bg-white rounded-xl p-4 text-center border border-gray-100">
-          <div class="text-[12px] text-gray-500 font-medium mb-2.5">
+          <div class="text-[14px] text-[#8C8784] font-medium mb-2.5">
             {{ $t('company_panel.cp_totVisit') }}
           </div>
-          <div class="text-2xl font-semibold text-gray-900 leading-none">
+          <div class="text-[18px] font-semibold text-gray-900 leading-none">
             {{ detailCounters.visit }}
           </div>
         </div>
         <div class="bg-white rounded-xl p-4 text-center border border-gray-100">
-          <div class="text-[12px] text-gray-500 font-medium mb-2.5">
+          <div class="text-[14px] text-[#8C8784] font-medium mb-2.5">
             {{ $t('company_panel.cp_totUser') }}
           </div>
-          <div class="text-2xl font-semibold text-gray-900 leading-none">
+          <div class="text-[18px] font-semibold text-gray-900 leading-none">
             {{ detailCounters.user }}
           </div>
         </div>
@@ -128,55 +127,55 @@ const sortedLatestVisitors = computed(() => {
 
     <div class="px-6 md:px-8 mb-8 relative z-20">
       <div class="bg-white rounded-xl p-6 border border-gray-100">
-        <h3 class="text-[14px] font-medium text-gray-800 mb-5">
+        <h3 class="text-[13px] font-medium text-gray-800 mb-5">
           {{ $t('company_panel.cp_information') }}
         </h3>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-y-5 gap-x-4">
           <div class="col-span-1 md:col-span-3">
-            <div class="text-[12px] text-gray-400 font-medium mb-1">
+            <div class="text-[12px] text-[#878787] font-medium mb-1">
               {{ $t('company_panel.cp_companyName') }}
             </div>
             <div
-              class="text-[13px] text-gray-800 font-medium whitespace-nowrap overflow-hidden text-ellipsis"
+              class="text-[14px] text-gray-800 font-medium whitespace-nowrap overflow-hidden text-ellipsis"
             >
               {{ selectedDetail.nama }}
             </div>
           </div>
           <div class="col-span-1">
-            <div class="text-[12px] text-gray-400 font-medium mb-1">
+            <div class="text-[12px] text-[#878787] font-medium mb-1">
               {{ $t('company_panel.cp_emailAddress') }}
             </div>
             <div
-              class="text-[13px] text-gray-800 font-medium whitespace-nowrap overflow-hidden text-ellipsis"
+              class="text-[14px] text-gray-800 font-medium whitespace-nowrap overflow-hidden text-ellipsis"
             >
               {{ selectedDetail.email }}
             </div>
           </div>
           <div class="col-span-1">
-            <div class="text-[12px] text-gray-400 font-medium mb-1">
+            <div class="text-[12px] text-[#878787] font-medium mb-1">
               {{ $t('company_panel.cp_phone') }}
             </div>
             <div
-              class="text-[13px] text-gray-800 font-medium whitespace-nowrap overflow-hidden text-ellipsis"
+              class="text-[14px] text-gray-800 font-medium whitespace-nowrap overflow-hidden text-ellipsis"
             >
               {{ selectedDetail.pic_telp }}
             </div>
           </div>
           <div class="col-span-1">
-            <div class="text-[12px] text-gray-400 font-medium mb-1">
+            <div class="text-[12px] text-[#878787] font-medium mb-1">
               {{ $t('company_panel.cp_informationPIC') }}
             </div>
             <div
-              class="text-[13px] text-gray-800 font-medium whitespace-nowrap overflow-hidden text-ellipsis"
+              class="text-[14px] text-gray-800 font-medium whitespace-nowrap overflow-hidden text-ellipsis"
             >
               {{ selectedDetail.pic_nama }}
             </div>
           </div>
           <div class="col-span-1 md:col-span-3">
-            <div class="text-[12px] text-gray-400 font-medium mb-1">
+            <div class="text-[12px] text-[#878787] font-medium mb-1">
               {{ $t('company_panel.cp_address') }}
             </div>
-            <div class="text-[13px] text-gray-800 leading-relaxed">{{ selectedDetail.alamat }}</div>
+            <div class="text-[14px] text-gray-800 leading-relaxed">{{ selectedDetail.alamat }}</div>
           </div>
         </div>
       </div>
@@ -189,7 +188,7 @@ const sortedLatestVisitors = computed(() => {
         class="px-4 py-1.5 rounded-full text-[12px] font-medium border transition-colors focus:outline-none"
         :class="
           activeTab === 'Jumlah Visitor'
-            ? 'border-[#2BB5F4] text-[#2BB5F4] bg-[#2BB5F4]/5'
+            ? 'border-[#2BB5F4] text-[#2BB5F4] bg-[#FFFFFF]'
             : 'border-gray-200 text-gray-500 hover:bg-gray-50'
         "
       >
@@ -200,7 +199,7 @@ const sortedLatestVisitors = computed(() => {
         class="px-4 py-1.5 rounded-full text-[12px] font-medium border transition-colors focus:outline-none"
         :class="
           activeTab === 'Latest Visitor'
-            ? 'border-[#2BB5F4] text-[#2BB5F4] bg-[#2BB5F4]/5'
+            ? 'border-[#2BB5F4] text-[#2BB5F4] bg-[#FFFFFF]'
             : 'border-gray-200 text-gray-500 hover:bg-gray-50'
         "
       >
